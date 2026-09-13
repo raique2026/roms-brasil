@@ -345,7 +345,7 @@ button,
 <header>
 <nav>
 
-<div class="top">
+<div class="top" id="topBar">
 
   <div class="logo" onclick="goHome()">
     ROMS <b>BRASIL</b>
@@ -356,7 +356,7 @@ button,
     placeholder="Pesquisar jogos..."
   >
 
-  <div class="social">
+  <div class="social" id="socialX">
     <a
       href="https://x.com/museudosgames_"
       target="_blank"
@@ -512,6 +512,9 @@ function goHome(){
   q.style.display = "";
   filters.style.display = "flex";
 
+  document.getElementById("socialX").style.display = "";
+  document.getElementById("topBar").style.justifyContent = "";
+
   renderHome();
 
   window.scrollTo({
@@ -618,6 +621,9 @@ function openGame(slug){
 
   q.style.display = "none";
   filters.style.display = "none";
+
+  document.getElementById("socialX").style.display = "none";
+  document.getElementById("topBar").style.justifyContent = "center";
 
   let screenshotsHTML = "";
 
