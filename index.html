@@ -98,7 +98,88 @@ let p="Todos";const app=document.querySelector("#app"),q=document.querySelector(
 const cover=g=>g.cover||"https://placehold.co/600x800/161e35/ffffff?text="+encodeURIComponent(g.title);
 function menu(){filters.innerHTML=["Todos",...new Set(games.map(g=>g.platform))].map(x=>`<button class="${x===p?"active":""}" onclick="p='${x}';menu();home()">${x}</button>`).join("")}
 function home(){let s=q.value.toLowerCase(),list=games.filter(g=>(p==="Todos"||g.platform===p)&&g.title.toLowerCase().includes(s));app.innerHTML=`<section class="community"><div><h2>Faça parte da comunidade</h2><p>Acompanhe novidades e atualizações do ROMS BRASIL no X.</p></div><a href="https://x.com/museudosgames_" target="_blank">𝕏 @museudosgames_</a></section><section class="grid">${list.map(g=>`<article class="card" onclick="openGame('${g.slug}')"><div class="cover"><img src="${cover(g)}"></div><div class="info"><h3>${g.title}</h3><div class="meta">${g.platform} • ${g.language} • ${g.year}</div></div></article>`).join("")}</section>`}
-function openGame(slug){let g=games.find(x=>x.slug===slug);app.innerHTML=`<div class="back" onclick="home()">← Voltar ao catálogo</div><section class="detail"><div><img src="${cover(g)}"></div><div><h1>${g.title}</h1><p>${g.description}</p><div class="specs">${[["Plataforma",g.platform],["Ano",g.year],["Idioma",g.language],["Região",g.region],["Tamanho",g.size],["Formato",g.format],["Desenvolvedora",g.developer],["Publicadora",g.publisher]].map(x=>`<div class="spec"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("")}</div><a class="download" href="${g.download}" target="_blank">⬇ DOWNLOAD</a></div></section>`}
-q.oninput=home;menu();home();
-</script>
+function openGame(slug){
+
+  let g = games.find(x => x.slug === slug);
+
+  if(!g) return;
+
+  let screenshotsHTML = "";
+
+  if(g.screenshots && g.screenshots.length > 0){
+
+    screenshotsHTML = `
+      <h2 style="margin-top:35px;">Screenshots</h2>
+
+      <div class="shots">
+
+        ${g.screenshots.map(img => `
+          <img src="${img}" alt="${g.title}">
+        `).join("")}
+
+      </div>
+    `;
+
+  }
+
+  app.innerHTML = `
+
+    <div class="back" onclick="home()">
+      ← Voltar ao catálogo
+    </div>
+
+    <section class="detail">
+
+      <div>
+        <img src="${cover(g)}">
+      </div>
+
+      <div>
+
+        <h1>${g.title}</h1>
+
+        <p>${g.description}</p>
+
+        <div class="specs">
+
+          ${[
+            ["Plataforma",g.platform],
+            ["Ano",g.year],
+            ["Idioma",g.language],
+            ["Região",g.region],
+            ["Tamanho",g.size],
+            ["Formato",g.format],
+            ["Desenvolvedora",g.developer],
+            ["Publicadora",g.publisher]
+          ].map(x => `
+
+            <div class="spec">
+
+              <small>${x[0]}</small>
+
+              <b>${x[1]}</b>
+
+            </div>
+
+          `).join("")}
+
+        </div>
+
+        <a
+          class="download"
+          href="${g.download}"
+          target="_blank"
+        >
+          ⬇ DOWNLOAD
+        </a>
+
+        ${screenshotsHTML}
+
+      </div>
+
+    </section>
+
+  `;
+
+}
 </body></html>
