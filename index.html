@@ -1,163 +1,611 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ROMS BRASIL</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#090e1c;color:#fff;font-family:Arial,sans-serif}a{text-decoration:none;color:inherit}
-header{background:#10172b;border-bottom:1px solid #202946}nav,main{max-width:1180px;margin:auto;padding:0 18px}
-.top{display:flex;gap:18px;align-items:center;padding:18px 0}.logo{font-size:24px;font-weight:900;white-space:nowrap}.logo b{color:#29c36a}
-input{flex:1;padding:13px;border-radius:12px;border:1px solid #2b3555;background:#161e35;color:#fff}.social a,button,.pill{padding:10px 14px;border-radius:999px;background:#1c2643;color:#fff;border:0}
-.filters{display:flex;gap:8px;padding-bottom:16px}.active,.download{background:#6959f5}.community{background:#151f3a;border:1px solid #283658;border-radius:18px;padding:22px;margin:38px 0 28px;display:flex;justify-content:space-between;align-items:center}.community p{color:#aab3cd}.community a{background:#fff;color:#111;padding:11px 16px;border-radius:999px;font-weight:bold}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px}.card{background:#141c32;border:1px solid #242e4c;border-radius:16px;overflow:hidden;cursor:pointer}.cover{aspect-ratio:3/4;background:#11182c}.cover img{width:100%;height:100%;object-fit:cover}.info{padding:14px}.meta{color:#aab3cd;font-size:12px}
-.detail{display:grid;grid-template-columns:330px 1fr;gap:32px;padding:30px 0}.detail img{width:100%;border-radius:18px}.specs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:25px 0}.spec{background:#141c32;padding:14px;border-radius:14px}.spec small{display:block;color:#8f99b4}.download{display:inline-block;padding:11px 18px;border-radius:999px}.back{margin-top:25px;cursor:pointer}
-@media(max-width:700px){.top{flex-wrap:wrap}input{min-width:100%}.detail{grid-template-columns:1fr}.community{display:block}}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#090e1c;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif
+}
+
+a{
+  text-decoration:none;
+  color:inherit
+}
+
+header{
+  background:#10172b;
+  border-bottom:1px solid #202946
+}
+
+nav,main{
+  max-width:1180px;
+  margin:auto;
+  padding:0 18px
+}
+
+.top{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  padding:18px 0
+}
+
+.logo{
+  font-size:24px;
+  font-weight:900;
+  white-space:nowrap;
+  cursor:pointer
+}
+
+.logo b{
+  color:#29c36a
+}
+
+input{
+  flex:1;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1px solid #2b3555;
+  background:#161e35;
+  color:#fff;
+  outline:none
+}
+
+.social a,
+button,
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  background:#1c2643;
+  color:#fff;
+  border:0
+}
+
+.filters{
+  display:flex;
+  gap:8px;
+  padding-bottom:16px;
+  flex-wrap:wrap
+}
+
+.active,
+.download{
+  background:#6959f5
+}
+
+.community{
+  background:#151f3a;
+  border:1px solid #283658;
+  border-radius:18px;
+  padding:22px;
+  margin:38px 0 28px;
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:center
+}
+
+.community h2{
+  margin:0 0 6px
+}
+
+.community p{
+  margin:0;
+  color:#aab3cd
+}
+
+.community a{
+  background:#fff;
+  color:#111;
+  padding:11px 16px;
+  border-radius:999px;
+  font-weight:bold;
+  white-space:nowrap
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:18px
+}
+
+.card{
+  background:#141c32;
+  border:1px solid #242e4c;
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer
+}
+
+.cover{
+  aspect-ratio:3/4;
+  background:#11182c;
+  overflow:hidden
+}
+
+.cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+
+.info{
+  padding:14px
+}
+
+.info h3{
+  margin:0 0 8px;
+  font-size:15px
+}
+
+.meta{
+  color:#aab3cd;
+  font-size:12px
+}
+
+.back{
+  display:inline-block;
+  margin:28px 0 18px;
+  color:#b9c2dd;
+  cursor:pointer
+}
+
+.detail{
+  display:grid;
+  grid-template-columns:minmax(240px,330px) 1fr;
+  gap:32px;
+  padding-bottom:50px
+}
+
+.detail-cover img{
+  width:100%;
+  border-radius:18px;
+  aspect-ratio:3/4;
+  object-fit:cover
+}
+
+.detail-body h1{
+  font-size:38px;
+  margin:0 0 12px
+}
+
+.tags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:18px
+}
+
+.pill{
+  cursor:default;
+  font-size:12px
+}
+
+.desc{
+  color:#c0c7da;
+  line-height:1.7
+}
+
+.specs{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin:25px 0
+}
+
+.spec{
+  background:#141c32;
+  border:1px solid #27304d;
+  border-radius:14px;
+  padding:14px
+}
+
+.spec small{
+  display:block;
+  color:#8f99b4;
+  margin-bottom:5px
+}
+
+.download{
+  display:inline-block;
+  padding:11px 18px;
+  border-radius:999px;
+  font-weight:700
+}
+
+.screens-title{
+  margin-top:36px
+}
+
+.shots{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:12px
+}
+
+.shots img{
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:12px;
+  border:1px solid #27304d
+}
+
+.no-shots{
+  color:#8f99b4;
+  margin-top:12px
+}
+
+@media(max-width:780px){
+  .detail{grid-template-columns:1fr}
+  .community{flex-direction:column;align-items:flex-start}
+  .shots{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:620px){
+  .top{flex-wrap:wrap}
+  input{min-width:100%}
+  .specs{grid-template-columns:1fr}
+  .shots{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
-<header><nav><div class="top"><div class="logo">ROMS <b>BRASIL</b></div><input id="q" placeholder="Pesquisar jogos..."><div class="social"><a href="https://x.com/museudosgames_" target="_blank">𝕏 Seguir no X</a></div></div><div class="filters" id="filters"></div></nav></header>
+
+<header>
+<nav>
+
+<div class="top">
+
+  <div class="logo" onclick="goHome()">
+    ROMS <b>BRASIL</b>
+  </div>
+
+  <input
+    id="q"
+    placeholder="Pesquisar jogos..."
+  >
+
+  <div class="social">
+    <a
+      href="https://x.com/museudosgames_"
+      target="_blank"
+      rel="noopener"
+    >
+      𝕏 Seguir no X
+    </a>
+  </div>
+
+</div>
+
+<div
+  class="filters"
+  id="filters"
+></div>
+
+</nav>
+</header>
+
 <main id="app"></main>
+
 <script>
 
-/* ===== JOGOS DO SITE — EDITE SOMENTE ESTA ÁREA ===== */
+/* =========================================================
+   JOGOS DO SITE
+   EDITE SOMENTE ESTA ÁREA
+   ========================================================= */
+
 const games = [
+
   {
     slug: "need-for-speed-most-wanted-black-edition",
     title: "Need for Speed: Most Wanted - Black Edition",
     platform: "PS2",
     year: "2005",
-    language: "Português",
-    region: "NTSC-U",
-    size: "1.2 GB",
+    language: "Inglês",
+    region: "NTSC-U/C",
+    size: "Edite o tamanho",
     developer: "EA Canada",
     publisher: "Electronic Arts",
     genre: "Corrida",
     format: "ISO",
+
     cover: "images/need-for-speed-most-wanted-black-edition.jpg",
+
     description: "Need for Speed: Most Wanted - Black Edition é uma edição especial de Most Wanted, com conteúdos extras e foco em corridas de rua e perseguições policiais.",
-    screenshots: ["screenshots/need-for-speed-most-wanted-black-edition/screenshot-01.png",
-  "screenshots/need-for-speed-most-wanted-black-edition/screenshot-02.png",
-  "screenshots/need-for-speed-most-wanted-black-edition/screenshot-03.png"],
-    download: "#"
-  },
-  {
-    slug: "homebrew-demo",
-    title: "Homebrew Demo",
-    platform: "PS2",
-    year: "2026",
-    language: "Português",
-    region: "Homebrew",
-    size: "120 MB",
-    developer: "Comunidade",
-    publisher: "Comunidade",
-    genre: "Demo",
-    format: "ELF/ISO",
-    cover: "",
-    description: "Exemplo de jogo homebrew.",
-    screenshots: [],
-    download: "#"
-  },
-  {
-    slug: "community-demo",
-    title: "Community Demo",
-    platform: "PSP",
-    year: "2026",
-    language: "Português",
-    region: "Freeware",
-    size: "85 MB",
-    developer: "Comunidade",
-    publisher: "Comunidade",
-    genre: "Demo",
-    format: "ISO",
-    cover: "",
-    description: "Outro exemplo de item do catálogo.",
-    screenshots: [],
-    download: "#"
-  },
-  {
-    slug: "patch-de-traducao",
-    title: "Patch de Tradução",
-    platform: "PS1",
-    year: "2026",
-    language: "Português",
-    region: "PT-BR",
-    size: "4 MB",
-    developer: "Comunidade",
-    publisher: "Comunidade",
-    genre: "Patch",
-    format: "XDELTA/PPF",
-    cover: "",
-    description: "Exemplo para publicação de patch de tradução.",
-    screenshots: [],
+
+    screenshots: [
+      "screenshots/need-for-speed-most-wanted-black-edition/screenshot-01.png",
+      "screenshots/need-for-speed-most-wanted-black-edition/screenshot-02.png",
+      "screenshots/need-for-speed-most-wanted-black-edition/screenshot-03.png"
+    ],
+
     download: "#"
   }
-];
-/* ===== FIM DOS JOGOS — NÃO PRECISA EDITAR ABAIXO ===== */
 
-let p="Todos";const app=document.querySelector("#app"),q=document.querySelector("#q"),filters=document.querySelector("#filters");
-const cover=g=>g.cover||"https://placehold.co/600x800/161e35/ffffff?text="+encodeURIComponent(g.title);
-function menu(){filters.innerHTML=["Todos",...new Set(games.map(g=>g.platform))].map(x=>`<button class="${x===p?"active":""}" onclick="p='${x}';menu();home()">${x}</button>`).join("")}
-function home(){let s=q.value.toLowerCase(),list=games.filter(g=>(p==="Todos"||g.platform===p)&&g.title.toLowerCase().includes(s));app.innerHTML=`<section class="community"><div><h2>Faça parte da comunidade</h2><p>Acompanhe novidades e atualizações do ROMS BRASIL no X.</p></div><a href="https://x.com/museudosgames_" target="_blank">𝕏 @museudosgames_</a></section><section class="grid">${list.map(g=>`<article class="card" onclick="openGame('${g.slug}')"><div class="cover"><img src="${cover(g)}"></div><div class="info"><h3>${g.title}</h3><div class="meta">${g.platform} • ${g.language} • ${g.year}</div></div></article>`).join("")}</section>`}
+];
+
+/* =========================================================
+   FIM DOS JOGOS
+   NÃO PRECISA EDITAR ABAIXO
+   ========================================================= */
+
+let currentPlatform = "Todos";
+
+const app = document.getElementById("app");
+const q = document.getElementById("q");
+const filters = document.getElementById("filters");
+
+function placeholderCover(title){
+  return "https://placehold.co/600x800/161e35/ffffff?text=" + encodeURIComponent(title);
+}
+
+function getCover(game){
+  return game.cover || placeholderCover(game.title);
+}
+
+function renderFilters(){
+
+  const platforms = [
+    "Todos",
+    ...new Set(games.map(game => game.platform))
+  ];
+
+  filters.innerHTML = platforms.map(platform => `
+    <button
+      class="${platform === currentPlatform ? "active" : ""}"
+      onclick="setPlatform('${platform}')"
+    >
+      ${platform}
+    </button>
+  `).join("");
+
+}
+
+function setPlatform(platform){
+
+  currentPlatform = platform;
+
+  renderFilters();
+
+  renderHome();
+
+}
+
+function goHome(){
+
+  q.style.display = "";
+  filters.style.display = "flex";
+
+  renderHome();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+function renderHome(){
+
+  const search = q.value.toLowerCase().trim();
+
+  const filteredGames = games.filter(game => {
+
+    const matchesPlatform =
+      currentPlatform === "Todos" ||
+      game.platform === currentPlatform;
+
+    const matchesSearch =
+      game.title.toLowerCase().includes(search);
+
+    return matchesPlatform && matchesSearch;
+
+  });
+
+  app.innerHTML = `
+
+    <section class="community">
+
+      <div>
+
+        <h2>
+          Faça parte da comunidade
+        </h2>
+
+        <p>
+          Acompanhe novidades e atualizações do ROMS BRASIL no X.
+        </p>
+
+      </div>
+
+      <a
+        href="https://x.com/museudosgames_"
+        target="_blank"
+        rel="noopener"
+      >
+        𝕏 @museudosgames_
+      </a>
+
+    </section>
+
+    <section class="grid">
+
+      ${filteredGames.map(game => `
+
+        <article
+          class="card"
+          onclick="openGame('${game.slug}')"
+        >
+
+          <div class="cover">
+
+            <img
+              src="${getCover(game)}"
+              alt="${game.title}"
+            >
+
+          </div>
+
+          <div class="info">
+
+            <h3>
+              ${game.title}
+            </h3>
+
+            <div class="meta">
+              ${game.platform}
+              •
+              ${game.language}
+              •
+              ${game.year}
+            </div>
+
+          </div>
+
+        </article>
+
+      `).join("")}
+
+    </section>
+
+  `;
+
+}
+
 function openGame(slug){
 
-  let g = games.find(x => x.slug === slug);
+  const game = games.find(
+    item => item.slug === slug
+  );
 
-  if(!g) return;
+  if(!game) return;
+
+  q.style.display = "none";
+  filters.style.display = "none";
 
   let screenshotsHTML = "";
 
-  if(g.screenshots && g.screenshots.length > 0){
+  if(
+    game.screenshots &&
+    game.screenshots.length > 0
+  ){
 
     screenshotsHTML = `
-      <h2 style="margin-top:35px;">Screenshots</h2>
+
+      <h2 class="screens-title">
+        Screenshots
+      </h2>
 
       <div class="shots">
 
-        ${g.screenshots.map(img => `
-          <img src="${img}" alt="${g.title}">
+        ${game.screenshots.map(image => `
+
+          <img
+            src="${image}"
+            alt="${game.title}"
+          >
+
         `).join("")}
 
       </div>
+
+    `;
+
+  }else{
+
+    screenshotsHTML = `
+
+      <h2 class="screens-title">
+        Screenshots
+      </h2>
+
+      <p class="no-shots">
+        Nenhum screenshot adicionado.
+      </p>
+
     `;
 
   }
 
   app.innerHTML = `
 
-    <div class="back" onclick="home()">
+    <div
+      class="back"
+      onclick="goHome()"
+    >
       ← Voltar ao catálogo
     </div>
 
     <section class="detail">
 
-      <div>
-        <img src="${cover(g)}">
+      <div class="detail-cover">
+
+        <img
+          src="${getCover(game)}"
+          alt="${game.title}"
+        >
+
       </div>
 
-      <div>
+      <div class="detail-body">
 
-        <h1>${g.title}</h1>
+        <h1>
+          ${game.title}
+        </h1>
 
-        <p>${g.description}</p>
+        <div class="tags">
+
+          <span class="pill">
+            ${game.platform}
+          </span>
+
+          <span class="pill">
+            ${game.genre}
+          </span>
+
+          <span class="pill">
+            ${game.language}
+          </span>
+
+        </div>
+
+        <p class="desc">
+          ${game.description}
+        </p>
 
         <div class="specs">
 
           ${[
-            ["Plataforma",g.platform],
-            ["Ano",g.year],
-            ["Idioma",g.language],
-            ["Região",g.region],
-            ["Tamanho",g.size],
-            ["Formato",g.format],
-            ["Desenvolvedora",g.developer],
-            ["Publicadora",g.publisher]
-          ].map(x => `
+            ["Plataforma",game.platform],
+            ["Ano",game.year],
+            ["Idioma",game.language],
+            ["Região",game.region],
+            ["Tamanho",game.size],
+            ["Formato",game.format],
+            ["Desenvolvedora",game.developer],
+            ["Publicadora",game.publisher]
+          ].map(item => `
 
             <div class="spec">
 
-              <small>${x[0]}</small>
+              <small>
+                ${item[0]}
+              </small>
 
-              <b>${x[1]}</b>
+              <strong>
+                ${item[1]}
+              </strong>
 
             </div>
 
@@ -167,8 +615,9 @@ function openGame(slug){
 
         <a
           class="download"
-          href="${g.download}"
+          href="${game.download}"
           target="_blank"
+          rel="noopener"
         >
           ⬇ DOWNLOAD
         </a>
@@ -181,5 +630,23 @@ function openGame(slug){
 
   `;
 
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
 }
-</body></html>
+
+q.addEventListener(
+  "input",
+  renderHome
+);
+
+renderFilters();
+
+renderHome();
+
+</script>
+
+</body>
+</html>
