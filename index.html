@@ -511,12 +511,18 @@ function openGame(slug){
 
         ${game.screenshots.map(image => `
 
-          <img
-            src="${image}"
-            alt="${game.title}"
-          >
+  <a
+    href="${image}"
+    target="_blank"
+    rel="noopener"
+  >
+    <img
+      src="${image}"
+      alt="${game.title}"
+    >
+  </a>
 
-        `).join("")}
+`).join("")}
 
       </div>
 
