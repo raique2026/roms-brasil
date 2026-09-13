@@ -641,34 +641,6 @@ const games = [
   ],
 
   download: "#"
-},
-
-  {
-  slug: "god-of-war-2",
-  title: "God of War II",
-  platform: "PS2",
-  year: "2007",
-  language: "Português",
-  region: "NTSC-U/C",
-  size: "Edite o tamanho",
-  developer: "Santa Monica Studio",
-  publisher: "Sony Computer Entertainment",
-  genre: "Ação / Aventura",
-  format: "ISO",
-
-  cover: "images/god-of-war-2.jpg",
-
-  description: "God of War II continua a jornada de Kratos em uma aventura épica pela mitologia grega, com novos inimigos, armas, poderes e batalhas grandiosas.",
-
-  screenshots: [
-    "screenshots/god-of-war-2/screenshot-01.png",
-    "screenshots/god-of-war-2/screenshot-02.png",
-    "screenshots/god-of-war-2/screenshot-03.png"
-  ],
-
-  banner: "banners/god-of-war-2.jpg",
-
-  download: "#"
 }
 
 ];
@@ -688,75 +660,258 @@ let currentScreenshots = [];
 let currentScreenshotIndex = 0;
 
 let featuredIndex = 0;
+let featuredPosition = 1;
 let featuredTimer = null;
+let featuredAnimating = false;
 
-function updateFeatured(){
+function getFeaturedSlides(){
 
-  const track = document.getElementById("featuredTrack");
+  if(games.length === 0){
+    return [];
+  }
 
-  if(!track || games.length === 0){
+  if(games.length === 1){
+    return [
+      { game: games[0], logicalIndex: 0 }
+    ];
+  }
+
+  return [
+    {
+      game: games[games.length - 1],
+      logicalIndex: games.length - 1
+    },
+
+    ...games.map((game,index) => ({
+      game,
+      logicalIndex:index
+    })),
+
+    {
+      game: games[0],
+      logicalIndex:0
+    }
+  ];
+}
+
+function setFeaturedTransform(animate = true){
+
+  const track =
+    document.getElementById("featuredTrack");
+
+  if(!track){
     return;
   }
 
-  const cards = [...track.querySelectorAll(".featured-card")];
-  const dots = [...document.querySelectorAll(".featured-dot")];
+  const cards = [
+    ...track.querySelectorAll(".featured-card")
+  ];
 
-  cards.forEach((card,index) => {
-    card.classList.toggle("active", index === featuredIndex);
-  });
+  const dots = [
+    ...document.querySelectorAll(".featured-dot")
+  ];
 
-  dots.forEach((dot,index) => {
-    dot.classList.toggle("active", index === featuredIndex);
-  });
-
-  const card = cards[featuredIndex];
+  const card = cards[featuredPosition];
 
   if(!card){
     return;
   }
 
+  cards.forEach((item,index) => {
+    item.classList.toggle(
+      "active",
+      index === featuredPosition
+    );
+  });
+
+  dots.forEach((dot,index) => {
+    dot.classList.toggle(
+      "active",
+      index === featuredIndex
+    );
+  });
+
   const wrap = track.parentElement;
+
   const target =
     card.offsetLeft -
     (wrap.clientWidth - card.clientWidth) / 2;
 
-  track.style.transform = `translateX(${-Math.max(0,target)}px)`;
+  track.style.transition =
+    animate
+      ? "transform .7s ease"
+      : "none";
+
+  track.style.transform =
+    `translateX(${-Math.max(0,target)}px)`;
+}
+
+function updateFeatured(animate = true){
+
+  if(games.length === 0){
+    return;
+  }
+
+  setFeaturedTransform(animate);
+}
+
+function normalizeFeaturedPosition(){
+
+  if(games.length <= 1){
+    return;
+  }
+
+  if(featuredPosition === 0){
+
+    featuredPosition = games.length;
+    featuredIndex = games.length - 1;
+
+    setFeaturedTransform(false);
+
+  }else if(
+    featuredPosition === games.length + 1
+  ){
+
+    featuredPosition = 1;
+    featuredIndex = 0;
+
+    setFeaturedTransform(false);
+  }
 }
 
 function featuredNext(){
-  if(games.length === 0) return;
-  featuredIndex = (featuredIndex + 1) % games.length;
-  updateFeatured();
+
+  if(
+    games.length === 0 ||
+    featuredAnimating
+  ){
+    return;
+  }
+
+  if(games.length === 1){
+    return;
+  }
+
+  featuredAnimating = true;
+
+  featuredPosition++;
+  featuredIndex =
+    (featuredIndex + 1) % games.length;
+
+  updateFeatured(true);
   restartFeaturedTimer();
 }
 
 function featuredPrev(){
-  if(games.length === 0) return;
-  featuredIndex = (featuredIndex - 1 + games.length) % games.length;
-  updateFeatured();
+
+  if(
+    games.length === 0 ||
+    featuredAnimating
+  ){
+    return;
+  }
+
+  if(games.length === 1){
+    return;
+  }
+
+  featuredAnimating = true;
+
+  featuredPosition--;
+  featuredIndex =
+    (featuredIndex - 1 + games.length) %
+    games.length;
+
+  updateFeatured(true);
   restartFeaturedTimer();
 }
 
 function goToFeatured(index){
+
+  if(
+    games.length === 0 ||
+    index < 0 ||
+    index >= games.length
+  ){
+    return;
+  }
+
   featuredIndex = index;
-  updateFeatured();
+
+  featuredPosition =
+    games.length === 1
+      ? 0
+      : index + 1;
+
+  updateFeatured(true);
   restartFeaturedTimer();
 }
 
 function startFeaturedTimer(){
+
   clearInterval(featuredTimer);
 
   featuredTimer = setInterval(() => {
-    if(document.getElementById("featuredTrack")){
-      featuredIndex = (featuredIndex + 1) % games.length;
-      updateFeatured();
+
+    if(
+      document.getElementById("featuredTrack")
+    ){
+      featuredNext();
     }
+
   }, 4500);
 }
 
 function restartFeaturedTimer(){
   startFeaturedTimer();
 }
+
+function setupFeaturedLoop(){
+
+  const track =
+    document.getElementById("featuredTrack");
+
+  if(!track){
+    return;
+  }
+
+  track.addEventListener(
+    "transitionend",
+    function(event){
+
+      if(
+        event.propertyName !== "transform"
+      ){
+        return;
+      }
+
+      normalizeFeaturedPosition();
+
+      requestAnimationFrame(() => {
+        track.style.transition =
+          "transform .7s ease";
+
+        featuredAnimating = false;
+      });
+    }
+  );
+
+  setFeaturedTransform(false);
+
+  requestAnimationFrame(() => {
+    track.style.transition =
+      "transform .7s ease";
+  });
+}
+
+window.addEventListener(
+  "resize",
+  function(){
+    if(document.getElementById("featuredTrack")){
+      setFeaturedTransform(false);
+    }
+  }
+);
 
 function placeholderCover(title){
   return "https://placehold.co/600x800/161e35/ffffff?text=" + encodeURIComponent(title);
@@ -844,32 +999,32 @@ function renderHome(){
 
       <div class="featured-track" id="featuredTrack">
 
-        ${games.map((game,index) => `
+        ${getFeaturedSlides().map((slide,slideIndex) => `
 
           <article
-            class="featured-card ${index === featuredIndex ? "active" : ""}"
-            onclick="openGame('${game.slug}')"
+            class="featured-card ${slideIndex === featuredPosition ? "active" : ""}"
+            onclick="openGame('${slide.game.slug}')"
           >
 
             <img
-              src="${game.banner || getCover(game)}"
-              alt="${game.title}"
+              src="${slide.game.banner || getCover(slide.game)}"
+              alt="${slide.game.title}"
             >
 
             <div class="featured-overlay"></div>
 
             <div class="featured-info">
 
-              <h2>${game.title}</h2>
+              <h2>${slide.game.title}</h2>
 
               <p>
-                ${game.description}
+                ${slide.game.description}
               </p>
 
               <div class="featured-tags">
-                <span>${game.platform}</span>
-                <span>${game.genre}</span>
-                <span>${game.language}</span>
+                <span>${slide.game.platform}</span>
+                <span>${slide.game.genre}</span>
+                <span>${slide.game.language}</span>
               </div>
 
             </div>
@@ -937,7 +1092,7 @@ function renderHome(){
   `;
 
   requestAnimationFrame(() => {
-    updateFeatured();
+    setupFeaturedLoop();
     startFeaturedTimer();
   });
 
