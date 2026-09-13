@@ -161,6 +161,7 @@ button,
   display:grid;
   grid-template-columns:minmax(240px,330px) 1fr;
   gap:32px;
+  padding-top:48px;
   padding-bottom:50px
 }
 
@@ -549,7 +550,7 @@ const games = [
 
     cover: "images/need-for-speed-most-wanted-black-edition.jpg",
 
-    banner: "banners/need-for-speed-most-wanted-black-edition.png",
+    banner: "banners/need-for-speed-most-wanted-black-edition.jpg",
 
     description: "Need for Speed: Most Wanted - Black Edition é uma edição especial de Most Wanted, com conteúdos extras e foco em corridas de rua e perseguições policiais.",
 
@@ -577,7 +578,7 @@ const games = [
 
   cover: "images/midnight-club-3-dub-edition-remix.jpg",
 
-  banner: "banners/midnight-club-3-dub-edition-remix.png",
+  banner: "banners/midnight-club-3-dub-edition-remix.jpg",
 
   description: "Midnight Club 3: DUB Edition Remix é uma versão expandida do jogo de corrida da Rockstar, com novos veículos, músicas, corridas e a cidade de Tóquio adicionada ao conteúdo original.",
 
@@ -713,7 +714,15 @@ function setPlatform(platform){
 
 }
 
-function goHome(){
+function goHome(updateHistory = true){
+
+  if(updateHistory){
+    history.pushState(
+      { page: "home" },
+      "",
+      location.pathname
+    );
+  }
 
   q.style.display = "";
   filters.style.display = "flex";
@@ -854,7 +863,7 @@ function renderHome(){
 
 }
 
-function openGame(slug){
+function openGame(slug, updateHistory = true){
 
   clearInterval(featuredTimer);
 
@@ -863,6 +872,14 @@ function openGame(slug){
   );
 
   if(!game) return;
+
+  if(updateHistory){
+    history.pushState(
+      { page: "game", slug: slug },
+      "",
+      "#game=" + encodeURIComponent(slug)
+    );
+  }
 
   q.style.display = "none";
   filters.style.display = "none";
@@ -914,13 +931,6 @@ function openGame(slug){
   }
 
   app.innerHTML = `
-
-    <div
-      class="back"
-      onclick="goHome()"
-    >
-      ← Voltar ao catálogo
-    </div>
 
     <section class="detail">
 
@@ -1092,20 +1102,49 @@ document.addEventListener(
     const viewer =
       document.getElementById("imageViewer");
 
-    if(!viewer.classList.contains("active")){
+    if(viewer.classList.contains("active")){
+
+      if(event.key === "Escape"){
+        closeScreenshot();
+      }
+
+      if(event.key === "ArrowRight"){
+        nextScreenshot();
+      }
+
+      if(event.key === "ArrowLeft"){
+        prevScreenshot();
+      }
+
       return;
     }
 
-    if(event.key === "Escape"){
-      closeScreenshot();
+    if(
+      event.key === "Escape" &&
+      location.hash.startsWith("#game=")
+    ){
+      history.back();
     }
 
-    if(event.key === "ArrowRight"){
-      nextScreenshot();
-    }
+  }
+);
 
-    if(event.key === "ArrowLeft"){
-      prevScreenshot();
+window.addEventListener(
+  "popstate",
+  function(){
+
+    if(location.hash.startsWith("#game=")){
+
+      const slug = decodeURIComponent(
+        location.hash.replace("#game=", "")
+      );
+
+      openGame(slug, false);
+
+    }else{
+
+      goHome(false);
+
     }
 
   }
@@ -1118,7 +1157,19 @@ q.addEventListener(
 
 renderFilters();
 
-renderHome();
+if(location.hash.startsWith("#game=")){
+
+  const initialSlug = decodeURIComponent(
+    location.hash.replace("#game=", "")
+  );
+
+  openGame(initialSlug, false);
+
+}else{
+
+  renderHome();
+
+}
 
 </script>
 
