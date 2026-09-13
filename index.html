@@ -695,6 +695,40 @@ button,
   .viewer-prev{left:8px}
   .viewer-next{right:8px}
 }
+
+/* ÍCONE DO X NO CABEÇALHO */
+.social .x-icon{
+  width:44px;
+  height:44px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#1c2643;
+  border:1px solid #2b3555;
+  color:#fff;
+  font-size:21px;
+  font-weight:900;
+  line-height:1;
+  cursor:pointer;
+  transition:transform .2s ease,background .2s ease,border-color .2s ease;
+}
+
+.social .x-icon:hover{
+  background:#6959f5;
+  border-color:#6959f5;
+  transform:scale(1.08);
+}
+
+
+.social .x-icon img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
 </style>
 </head>
 
@@ -716,12 +750,13 @@ button,
 
   <div class="social" id="socialX">
     <a
+      class="x-icon"
       href="https://x.com/museudosgames_"
       target="_blank"
       rel="noopener"
-    >
-      𝕏 Seguir no X
-    </a>
+      title="Siga no X"
+      aria-label="Siga ROMS BRASIL no X"
+    ><img src="images/icons8-twitterx-96.png" alt="X"></a>
   </div>
 
 </div>
