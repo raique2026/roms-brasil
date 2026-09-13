@@ -161,7 +161,6 @@ button,
   display:grid;
   grid-template-columns:minmax(240px,330px) 1fr;
   gap:32px;
-  padding-top:45px;
   padding-bottom:50px
 }
 
@@ -323,10 +322,140 @@ button,
   font-size:14px
 }
 
+
+/* CARROSSEL DE DESTAQUES */
+.featured-wrap{
+  position:relative;
+  margin:28px 0 34px;
+  overflow:hidden;
+  border-radius:20px;
+}
+
+.featured-track{
+  display:flex;
+  align-items:stretch;
+  gap:18px;
+  transition:transform .7s ease;
+  will-change:transform;
+}
+
+.featured-card{
+  flex:0 0 76%;
+  min-height:320px;
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  border:1px solid #2b3555;
+  background:#141c32;
+  cursor:pointer;
+  opacity:.45;
+  transform:scale(.94);
+  transition:opacity .45s ease, transform .45s ease;
+}
+
+.featured-card.active{
+  opacity:1;
+  transform:scale(1);
+}
+
+.featured-card img{
+  width:100%;
+  height:100%;
+  min-height:320px;
+  object-fit:cover;
+  display:block;
+}
+
+.featured-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(7,12,25,.12) 35%,rgba(7,12,25,.9) 72%);
+}
+
+.featured-info{
+  position:absolute;
+  top:0;
+  right:0;
+  width:36%;
+  height:100%;
+  padding:26px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.featured-info h2{
+  margin:0 0 10px;
+  font-size:26px;
+  line-height:1.15;
+}
+
+.featured-info p{
+  margin:0 0 14px;
+  color:#b9c3dc;
+  line-height:1.45;
+  font-size:14px;
+}
+
+.featured-tags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.featured-tags span{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:12px;
+}
+
+.featured-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:5;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:0;
+  background:rgba(12,19,38,.78);
+  color:#fff;
+  font-size:26px;
+  cursor:pointer;
+}
+
+.featured-prev{left:14px}
+.featured-next{right:14px}
+
+.featured-dots{
+  display:flex;
+  justify-content:center;
+  gap:7px;
+  margin-top:12px;
+}
+
+.featured-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#53617f;
+  padding:0;
+}
+
+.featured-dot.active{
+  background:#8b7cff;
+}
+
 @media(max-width:780px){
   .detail{grid-template-columns:1fr}
   .community{flex-direction:column;align-items:flex-start}
   .shots{grid-template-columns:1fr 1fr}
+  .featured-card{flex-basis:88%;min-height:270px}
+  .featured-card img{min-height:270px}
+  .featured-info{width:48%;padding:18px}
+  .featured-info h2{font-size:20px}
 }
 
 @media(max-width:620px){
@@ -472,6 +601,77 @@ const filters = document.getElementById("filters");
 let currentScreenshots = [];
 let currentScreenshotIndex = 0;
 
+let featuredIndex = 0;
+let featuredTimer = null;
+
+function updateFeatured(){
+
+  const track = document.getElementById("featuredTrack");
+
+  if(!track || games.length === 0){
+    return;
+  }
+
+  const cards = [...track.querySelectorAll(".featured-card")];
+  const dots = [...document.querySelectorAll(".featured-dot")];
+
+  cards.forEach((card,index) => {
+    card.classList.toggle("active", index === featuredIndex);
+  });
+
+  dots.forEach((dot,index) => {
+    dot.classList.toggle("active", index === featuredIndex);
+  });
+
+  const card = cards[featuredIndex];
+
+  if(!card){
+    return;
+  }
+
+  const wrap = track.parentElement;
+  const target =
+    card.offsetLeft -
+    (wrap.clientWidth - card.clientWidth) / 2;
+
+  track.style.transform = `translateX(${-Math.max(0,target)}px)`;
+}
+
+function featuredNext(){
+  if(games.length === 0) return;
+  featuredIndex = (featuredIndex + 1) % games.length;
+  updateFeatured();
+  restartFeaturedTimer();
+}
+
+function featuredPrev(){
+  if(games.length === 0) return;
+  featuredIndex = (featuredIndex - 1 + games.length) % games.length;
+  updateFeatured();
+  restartFeaturedTimer();
+}
+
+function goToFeatured(index){
+  featuredIndex = index;
+  updateFeatured();
+  restartFeaturedTimer();
+}
+
+function startFeaturedTimer(){
+  clearInterval(featuredTimer);
+
+  featuredTimer = setInterval(() => {
+    if(document.getElementById("featuredTrack")){
+      featuredIndex = (featuredIndex + 1) % games.length;
+      updateFeatured();
+    }
+  }, 4500);
+}
+
+function restartFeaturedTimer(){
+  startFeaturedTimer();
+}
+
 function placeholderCover(title){
   return "https://placehold.co/600x800/161e35/ffffff?text=" + encodeURIComponent(title);
 }
@@ -508,15 +708,7 @@ function setPlatform(platform){
 
 }
 
-function goHome(updateHistory = true){
-
-  if(updateHistory){
-    history.pushState(
-      { page: "home" },
-      "",
-      location.pathname
-    );
-  }
+function goHome(){
 
   q.style.display = "";
   filters.style.display = "flex";
@@ -551,6 +743,62 @@ function renderHome(){
   });
 
   app.innerHTML = `
+
+    <section class="featured-wrap">
+
+      <button class="featured-arrow featured-prev" onclick="event.stopPropagation();featuredPrev()">❮</button>
+
+      <div class="featured-track" id="featuredTrack">
+
+        ${games.map((game,index) => `
+
+          <article
+            class="featured-card ${index === featuredIndex ? "active" : ""}"
+            onclick="openGame('${game.slug}')"
+          >
+
+            <img
+              src="${game.screenshots && game.screenshots.length ? game.screenshots[0] : getCover(game)}"
+              alt="${game.title}"
+            >
+
+            <div class="featured-overlay"></div>
+
+            <div class="featured-info">
+
+              <h2>${game.title}</h2>
+
+              <p>
+                ${game.description}
+              </p>
+
+              <div class="featured-tags">
+                <span>${game.platform}</span>
+                <span>${game.genre}</span>
+                <span>${game.language}</span>
+              </div>
+
+            </div>
+
+          </article>
+
+        `).join("")}
+
+      </div>
+
+      <button class="featured-arrow featured-next" onclick="event.stopPropagation();featuredNext()">❯</button>
+
+      <div class="featured-dots">
+        ${games.map((game,index) => `
+          <button
+            class="featured-dot ${index === featuredIndex ? "active" : ""}"
+            onclick="event.stopPropagation();goToFeatured(${index})"
+            aria-label="Ir para destaque ${index + 1}"
+          ></button>
+        `).join("")}
+      </div>
+
+    </section>
 
     <section class="community">
 
@@ -618,23 +866,22 @@ function renderHome(){
 
   `;
 
+  requestAnimationFrame(() => {
+    updateFeatured();
+    startFeaturedTimer();
+  });
+
 }
 
-function openGame(slug, updateHistory = true){
+function openGame(slug){
+
+  clearInterval(featuredTimer);
 
   const game = games.find(
     item => item.slug === slug
   );
 
   if(!game) return;
-
-  if(updateHistory){
-    history.pushState(
-      { page: "game", slug: slug },
-      "",
-      "#game=" + encodeURIComponent(slug)
-    );
-  }
 
   q.style.display = "none";
   filters.style.display = "none";
@@ -686,6 +933,13 @@ function openGame(slug, updateHistory = true){
   }
 
   app.innerHTML = `
+
+    <div
+      class="back"
+      onclick="goHome()"
+    >
+      ← Voltar ao catálogo
+    </div>
 
     <section class="detail">
 
@@ -857,49 +1111,20 @@ document.addEventListener(
     const viewer =
       document.getElementById("imageViewer");
 
-    if(viewer.classList.contains("active")){
-
-      if(event.key === "Escape"){
-        closeScreenshot();
-      }
-
-      if(event.key === "ArrowRight"){
-        nextScreenshot();
-      }
-
-      if(event.key === "ArrowLeft"){
-        prevScreenshot();
-      }
-
+    if(!viewer.classList.contains("active")){
       return;
     }
 
-    if(
-      event.key === "Escape" &&
-      location.hash.startsWith("#game=")
-    ){
-      history.back();
+    if(event.key === "Escape"){
+      closeScreenshot();
     }
 
-  }
-);
+    if(event.key === "ArrowRight"){
+      nextScreenshot();
+    }
 
-window.addEventListener(
-  "popstate",
-  function(){
-
-    if(location.hash.startsWith("#game=")){
-
-      const slug = decodeURIComponent(
-        location.hash.replace("#game=", "")
-      );
-
-      openGame(slug, false);
-
-    }else{
-
-      goHome(false);
-
+    if(event.key === "ArrowLeft"){
+      prevScreenshot();
     }
 
   }
@@ -912,19 +1137,7 @@ q.addEventListener(
 
 renderFilters();
 
-if(location.hash.startsWith("#game=")){
-
-  const initialSlug = decodeURIComponent(
-    location.hash.replace("#game=", "")
-  );
-
-  openGame(initialSlug, false);
-
-}else{
-
-  renderHome();
-
-}
+renderHome();
 
 </script>
 
