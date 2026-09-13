@@ -948,7 +948,7 @@ function getFeaturedSlides(){
 
   return [
     {
-      game: games[featuredGames.length - 1],
+      game: featuredGames[featuredGames.length - 1],
       logicalIndex: featuredGames.length - 1
     },
 
@@ -1283,9 +1283,7 @@ function setPlatform(platform){
 
   currentPlatform = platform;
 
-  chooseRandomFeaturedGames();
-
-renderFilters();
+  renderFilters();
 
   renderHome();
 
@@ -1915,6 +1913,8 @@ q.addEventListener(
   "input",
   renderHome
 );
+
+chooseRandomFeaturedGames();
 
 renderFilters();
 
