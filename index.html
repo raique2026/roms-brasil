@@ -1807,6 +1807,8 @@ function renderHome(){
 
     ` : ""}
 
+    ${!showHomeSections ? `
+
     <section class="grid">
 
       ${filteredGames.map(game => `
@@ -1846,6 +1848,8 @@ function renderHome(){
       `).join("")}
 
     </section>
+
+    ` : ""}
 
   `;
 
