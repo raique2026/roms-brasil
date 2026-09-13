@@ -71,9 +71,47 @@ button,
 
 .filters{
   display:flex;
-  gap:8px;
+  gap:10px;
   padding-bottom:16px;
-  flex-wrap:wrap
+  flex-wrap:wrap;
+  align-items:center
+}
+
+.console-filter{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid #283658;
+  background:#151f3a;
+  color:#dbe3f7;
+  cursor:pointer;
+  font-weight:700;
+  transition:.2s ease;
+}
+
+.console-filter:hover{
+  transform:translateY(-2px);
+  border-color:#586a9d
+}
+
+.console-filter.active{
+  background:#6959f5;
+  border-color:#6959f5;
+  color:#fff
+}
+
+.console-icon{
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:inline-grid;
+  place-items:center;
+  background:rgba(255,255,255,.08);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:-.3px
 }
 
 .active,
@@ -451,6 +489,134 @@ button,
 }
 
 
+
+/* ÚLTIMOS JOGOS ADICIONADOS */
+.latest-section{
+  margin:34px 0 38px;
+}
+
+.latest-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+}
+
+.latest-header h2{
+  margin:0;
+  font-size:24px;
+  letter-spacing:.3px;
+}
+
+.latest-controls{
+  display:flex;
+  gap:8px;
+}
+
+.latest-nav{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid #2b3555;
+  background:#151f3a;
+  color:#fff;
+  cursor:pointer;
+  font-size:24px;
+  display:grid;
+  place-items:center;
+}
+
+.latest-nav:disabled{
+  opacity:.35;
+  cursor:default;
+}
+
+.latest-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:16px;
+}
+
+.latest-card{
+  background:#141c32;
+  border:1px solid #242e4c;
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .2s ease,border-color .2s ease;
+}
+
+.latest-card:hover{
+  transform:translateY(-4px);
+  border-color:#566a9d;
+}
+
+.latest-cover{
+  background:#11182c;
+}
+
+.latest-cover img{
+  width:100%;
+  height:auto;
+  display:block;
+  object-fit:contain;
+}
+
+.latest-info{
+  padding:12px;
+}
+
+.latest-info h3{
+  margin:0 0 7px;
+  font-size:14px;
+  line-height:1.35;
+}
+
+.latest-meta{
+  color:#aab3cd;
+  font-size:12px;
+}
+
+@media(max-width:900px){
+  .latest-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(max-width:620px){
+  .latest-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .latest-header h2{
+    font-size:20px;
+  }
+}
+
+
+.latest-expand-wrap{
+  display:flex;
+  justify-content:center;
+  margin-top:20px;
+}
+
+.latest-expand{
+  padding:11px 22px;
+  border-radius:999px;
+  border:1px solid #2b3555;
+  background:#6959f5;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .2s ease,opacity .2s ease;
+}
+
+.latest-expand:hover{
+  transform:translateY(-2px);
+  opacity:.92;
+}
+
 /* RECOMENDAÇÕES ALEATÓRIAS NO FIM DA PÁGINA DO JOGO */
 .recommended{
   margin-top:46px;
@@ -514,6 +680,14 @@ button,
 
 @media(max-width:620px){
   .top{flex-wrap:wrap}
+  .filters{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding-bottom:14px;
+    scrollbar-width:none;
+  }
+  .filters::-webkit-scrollbar{display:none}
+  .console-filter{flex:0 0 auto}
   input{min-width:100%}
   .specs{grid-template-columns:1fr}
   .shots{grid-template-columns:1fr}
@@ -679,6 +853,9 @@ const games = [
    ========================================================= */
 
 let currentPlatform = "Todos";
+
+let latestExpanded = false;
+const latestInitialCount = 5;
 
 const app = document.getElementById("app");
 const q = document.getElementById("q");
@@ -1007,17 +1184,31 @@ function getCover(game){
 
 function renderFilters(){
 
-  const platforms = [
-    "Todos",
-    ...new Set(games.map(game => game.platform))
+  const platformOptions = [
+    { name:"Todos", icon:"★" },
+    { name:"PS1", icon:"PS1" },
+    { name:"PS2", icon:"PS2" },
+    { name:"PSP", icon:"PSP" },
+    { name:"Dreamcast", icon:"DC" },
+    { name:"N64", icon:"N64" },
+    { name:"SNES", icon:"SNES" },
+    { name:"Mega Drive", icon:"MD" },
+    { name:"GameCube", icon:"GC" }
   ];
 
-  filters.innerHTML = platforms.map(platform => `
+  filters.innerHTML = platformOptions.map(platform => `
     <button
-      class="${platform === currentPlatform ? "active" : ""}"
-      onclick="setPlatform('${platform}')"
+      class="console-filter ${platform.name === currentPlatform ? "active" : ""}"
+      onclick="setPlatform('${platform.name}')"
+      title="${platform.name}"
     >
-      ${platform}
+      <span class="console-icon">
+        ${platform.icon}
+      </span>
+
+      <span>
+        ${platform.name}
+      </span>
     </button>
   `).join("");
 
@@ -1056,6 +1247,38 @@ function goHome(updateHistory = true){
     behavior:"smooth"
   });
 
+}
+
+
+function getLatestGames(){
+
+  // O último jogo colocado no array "games" é tratado como o mais recente.
+  return [...games].reverse();
+}
+
+function getVisibleLatestGames(){
+
+  const latestGames = getLatestGames();
+
+  return latestExpanded
+    ? latestGames
+    : latestGames.slice(0, latestInitialCount);
+}
+
+function toggleLatestGames(){
+
+  latestExpanded = !latestExpanded;
+  renderHome();
+
+  const section =
+    document.querySelector(".latest-section");
+
+  if(section){
+    section.scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+  }
 }
 
 function renderHome(){
@@ -1130,6 +1353,73 @@ function renderHome(){
           ></button>
         `).join("")}
       </div>
+
+    </section>
+
+    <section class="latest-section">
+
+      <div class="latest-header">
+
+        <h2>
+          Últimos jogos adicionados
+        </h2>
+
+      </div>
+
+      <div class="latest-grid">
+
+        ${getVisibleLatestGames().map(game => `
+
+          <article
+            class="latest-card"
+            onclick="openGame('${game.slug}')"
+          >
+
+            <div class="latest-cover">
+
+              <img
+                src="${getCover(game)}"
+                alt="${game.title}"
+              >
+
+            </div>
+
+            <div class="latest-info">
+
+              <h3>
+                ${game.title}
+              </h3>
+
+              <div class="latest-meta">
+                ${game.platform}
+                •
+                ${game.year}
+              </div>
+
+            </div>
+
+          </article>
+
+        `).join("")}
+
+      </div>
+
+      ${games.length > latestInitialCount ? `
+
+        <div class="latest-expand-wrap">
+
+          <button
+            class="latest-expand"
+            onclick="toggleLatestGames()"
+          >
+            ${latestExpanded
+              ? "Mostrar menos"
+              : "Ver todos os jogos recentes"}
+          </button>
+
+        </div>
+
+      ` : ""}
 
     </section>
 
