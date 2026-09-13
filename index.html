@@ -641,34 +641,7 @@ const games = [
   ],
 
   download: "#"
-},
-
-  {
-  slug: "god-of-war-2",
-  title: "God of War II",
-  platform: "PS2",
-  year: "2007",
-  language: "Português",
-  region: "NTSC-U/C",
-  size: "Edite o tamanho",
-  developer: "Santa Monica Studio",
-  publisher: "Sony Computer Entertainment",
-  genre: "Ação / Aventura",
-  format: "ISO",
-
-  cover: "images/god-of-war-2.jpg",
-
-  description: "God of War II continua a jornada de Kratos em uma aventura épica pela mitologia grega, com novos inimigos, armas, poderes e batalhas grandiosas.",
-
-  screenshots: [
-    "screenshots/god-of-war-2/screenshot-01.png",
-    "screenshots/god-of-war-2/screenshot-02.png",
-    "screenshots/god-of-war-2/screenshot-03.png"
-  ],
-
-  banner: "banners/god-of-war-2.jpg",
-
-  download: "#"
+}
 
 ];
 
@@ -1157,7 +1130,23 @@ function openGame(slug, updateHistory = true){
     item => item.slug === slug
   );
 
-  if(!game) return;
+  if(!game){
+
+    history.replaceState(
+      { page: "home" },
+      "",
+      location.pathname
+    );
+
+    q.style.display = "";
+    filters.style.display = "flex";
+
+    document.getElementById("socialX").style.display = "";
+    document.getElementById("topBar").style.justifyContent = "";
+
+    renderHome();
+    return;
+  }
 
   if(updateHistory){
     history.pushState(
@@ -1494,7 +1483,25 @@ if(location.hash.startsWith("#game=")){
     location.hash.replace("#game=", "")
   );
 
-  openGame(initialSlug, false);
+  const initialGame = games.find(
+    game => game.slug === initialSlug
+  );
+
+  if(initialGame){
+
+    openGame(initialSlug, false);
+
+  }else{
+
+    history.replaceState(
+      { page: "home" },
+      "",
+      location.pathname
+    );
+
+    renderHome();
+
+  }
 
 }else{
 
