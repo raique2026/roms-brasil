@@ -507,7 +507,15 @@ function setPlatform(platform){
 
 }
 
-function goHome(){
+function goHome(updateHistory = true){
+
+  if(updateHistory){
+    history.pushState(
+      { page: "home" },
+      "",
+      location.pathname
+    );
+  }
 
   q.style.display = "";
   filters.style.display = "flex";
@@ -611,13 +619,21 @@ function renderHome(){
 
 }
 
-function openGame(slug){
+function openGame(slug, updateHistory = true){
 
   const game = games.find(
     item => item.slug === slug
   );
 
   if(!game) return;
+
+  if(updateHistory){
+    history.pushState(
+      { page: "game", slug: slug },
+      "",
+      "#game=" + encodeURIComponent(slug)
+    );
+  }
 
   q.style.display = "none";
   filters.style.display = "none";
@@ -669,13 +685,6 @@ function openGame(slug){
   }
 
   app.innerHTML = `
-
-    <div
-      class="back"
-      onclick="goHome()"
-    >
-      ← Voltar ao catálogo
-    </div>
 
     <section class="detail">
 
@@ -847,20 +856,49 @@ document.addEventListener(
     const viewer =
       document.getElementById("imageViewer");
 
-    if(!viewer.classList.contains("active")){
+    if(viewer.classList.contains("active")){
+
+      if(event.key === "Escape"){
+        closeScreenshot();
+      }
+
+      if(event.key === "ArrowRight"){
+        nextScreenshot();
+      }
+
+      if(event.key === "ArrowLeft"){
+        prevScreenshot();
+      }
+
       return;
     }
 
-    if(event.key === "Escape"){
-      closeScreenshot();
+    if(
+      event.key === "Escape" &&
+      location.hash.startsWith("#game=")
+    ){
+      history.back();
     }
 
-    if(event.key === "ArrowRight"){
-      nextScreenshot();
-    }
+  }
+);
 
-    if(event.key === "ArrowLeft"){
-      prevScreenshot();
+window.addEventListener(
+  "popstate",
+  function(){
+
+    if(location.hash.startsWith("#game=")){
+
+      const slug = decodeURIComponent(
+        location.hash.replace("#game=", "")
+      );
+
+      openGame(slug, false);
+
+    }else{
+
+      goHome(false);
+
     }
 
   }
@@ -873,7 +911,19 @@ q.addEventListener(
 
 renderFilters();
 
-renderHome();
+if(location.hash.startsWith("#game=")){
+
+  const initialSlug = decodeURIComponent(
+    location.hash.replace("#game=", "")
+  );
+
+  openGame(initialSlug, false);
+
+}else{
+
+  renderHome();
+
+}
 
 </script>
 
