@@ -602,19 +602,23 @@ button,
 }
 
 .latest-expand{
-  padding:11px 22px;
-  border-radius:999px;
-  border:1px solid #2b3555;
-  background:#6959f5;
+  min-width:145px;
+  padding:12px 24px;
+  border-radius:14px;
+  border:2px solid #6959f5;
+  background:transparent;
   color:#fff;
-  font-weight:700;
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:.8px;
   cursor:pointer;
-  transition:transform .2s ease,opacity .2s ease;
+  transition:transform .2s ease,background .2s ease,border-color .2s ease;
 }
 
 .latest-expand:hover{
   transform:translateY(-2px);
-  opacity:.92;
+  background:#6959f5;
+  border-color:#8b7cff;
 }
 
 /* RECOMENDAÇÕES ALEATÓRIAS NO FIM DA PÁGINA DO JOGO */
@@ -878,91 +882,7 @@ const games = [
   banner: "banners/god-of-war-2.jpg",
 
   download: "#"
-},
-
-  {
-  slug: "resident-evil-4",
-  title: "Resident Evil 4",
-  platform: "PS2",
-  year: "2005",
-  language: "Português",
-  region: "NTSC-U/C",
-  size: "4.37 GB",
-  developer: "Capcom",
-  publisher: "Capcom",
-  genre: "Survival Horror",
-  format: "ISO",
-
-  cover: "images/resident-evil-4.jpg",
-
-  description: "Resident Evil 4 acompanha Leon S. Kennedy em uma missão para resgatar a filha do presidente dos Estados Unidos em uma misteriosa região rural da Europa.",
-
-  banner: "banners/resident-evil-4.jpg",
-
-  screenshots: [
-    "screenshots/resident-evil-4/screenshot-01.png",
-    "screenshots/resident-evil-4/screenshot-02.png",
-    "screenshots/resident-evil-4/screenshot-03.png"
-  ],
-
-  download: "#"
-},
-
-  {
-  slug: "ben-10-protector-of-earth",
-  title: "Ben 10: Protector of Earth",
-  platform: "PS2",
-  year: "2007",
-  language: "Português",
-  region: "NTSC-U/C",
-  size: "Edite o tamanho",
-  developer: "High Voltage Software",
-  publisher: "D3 Publisher",
-  genre: "Ação / Aventura",
-  format: "ISO",
-
-  cover: "images/ben-10-protector-of-earth.jpg",
-
-  description: "Ben 10: Protector of Earth é um jogo de ação e aventura baseado na série Ben 10. Ben utiliza o Omnitrix para se transformar em diferentes alienígenas e enfrentar inimigos durante sua jornada.",
-
-  banner: "banners/ben-10-protector-of-earth.jpg",
-
-  screenshots: [
-    "screenshots/ben-10-protector-of-earth/screenshot-01.png",
-    "screenshots/ben-10-protector-of-earth/screenshot-02.png",
-    "screenshots/ben-10-protector-of-earth/screenshot-03.png"
-  ],
-
-  download: "#"
-},
-
-  {
-  slug: "need-for-speed-underground",
-  title: "Need for Speed: Underground",
-  platform: "PS2",
-  year: "2003",
-  language: "Português",
-  region: "NTSC-U/C",
-  size: "Edite o tamanho",
-  developer: "EA Black Box",
-  publisher: "Electronic Arts",
-  genre: "Corrida",
-  format: "ISO",
-
-  cover: "images/need-for-speed-underground.jpg",
-
-  description: "Need for Speed: Underground leva o jogador ao mundo das corridas de rua, com personalização de veículos, diversos eventos e uma campanha ambientada na cultura tuning.",
-
-  banner: "banners/need-for-speed-underground.jpg",
-
-  screenshots: [
-    "screenshots/need-for-speed-underground/screenshot-01.png",
-    "screenshots/need-for-speed-underground/screenshot-02.png",
-    "screenshots/need-for-speed-underground/screenshot-03.png"
-  ],
-
-  download: "#"
-},
+}
 
 ];
 
@@ -983,36 +903,62 @@ const filters = document.getElementById("filters");
 let currentScreenshots = [];
 let currentScreenshotIndex = 0;
 
+let featuredGames = [];
 let featuredIndex = 0;
 let featuredPosition = 1;
 let featuredTimer = null;
 let featuredAnimating = false;
 
+function chooseRandomFeaturedGames(){
+
+  const shuffled = [...games];
+
+  for(let i = shuffled.length - 1; i > 0; i--){
+
+    const j = Math.floor(
+      Math.random() * (i + 1)
+    );
+
+    [shuffled[i], shuffled[j]] =
+      [shuffled[j], shuffled[i]];
+
+  }
+
+  featuredGames = shuffled.slice(
+    0,
+    Math.min(3, shuffled.length)
+  );
+
+  featuredIndex = 0;
+  featuredPosition =
+    featuredGames.length > 1 ? 1 : 0;
+}
+
 function getFeaturedSlides(){
 
-  if(games.length === 0){
+  if(featuredGames.length === 0){
     return [];
   }
 
-  if(games.length === 1){
+  if(featuredGames.length === 1){
     return [
-      { game: games[0], logicalIndex: 0 }
+      { game: featuredGames[0], logicalIndex: 0 }
     ];
   }
 
   return [
     {
-      game: games[games.length - 1],
-      logicalIndex: games.length - 1
+      game: games[featuredGames.length - 1],
+      logicalIndex: featuredGames.length - 1
     },
 
-    ...games.map((game,index) => ({
+    ...featuredGames.map((game,index) => ({
       game,
       logicalIndex:index
     })),
 
     {
-      game: games[0],
+      game: featuredGames[0],
       logicalIndex:0
     }
   ];
@@ -1072,7 +1018,7 @@ function setFeaturedTransform(animate = true){
 
 function updateFeatured(animate = true){
 
-  if(games.length === 0){
+  if(featuredGames.length === 0){
     return;
   }
 
@@ -1081,7 +1027,7 @@ function updateFeatured(animate = true){
 
 function normalizeFeaturedPosition(){
 
-  if(games.length <= 1){
+  if(featuredGames.length <= 1){
     return false;
   }
 
@@ -1090,11 +1036,11 @@ function normalizeFeaturedPosition(){
 
   if(featuredPosition === 0){
 
-    newPosition = games.length;
-    newIndex = games.length - 1;
+    newPosition = featuredGames.length;
+    newIndex = featuredGames.length - 1;
 
   }else if(
-    featuredPosition === games.length + 1
+    featuredPosition === featuredGames.length + 1
   ){
 
     newPosition = 1;
@@ -1141,13 +1087,13 @@ function normalizeFeaturedPosition(){
 function featuredNext(){
 
   if(
-    games.length === 0 ||
+    featuredGames.length === 0 ||
     featuredAnimating
   ){
     return;
   }
 
-  if(games.length === 1){
+  if(featuredGames.length === 1){
     return;
   }
 
@@ -1155,7 +1101,7 @@ function featuredNext(){
 
   featuredPosition++;
   featuredIndex =
-    (featuredIndex + 1) % games.length;
+    (featuredIndex + 1) % featuredGames.length;
 
   updateFeatured(true);
   restartFeaturedTimer();
@@ -1164,13 +1110,13 @@ function featuredNext(){
 function featuredPrev(){
 
   if(
-    games.length === 0 ||
+    featuredGames.length === 0 ||
     featuredAnimating
   ){
     return;
   }
 
-  if(games.length === 1){
+  if(featuredGames.length === 1){
     return;
   }
 
@@ -1178,8 +1124,8 @@ function featuredPrev(){
 
   featuredPosition--;
   featuredIndex =
-    (featuredIndex - 1 + games.length) %
-    games.length;
+    (featuredIndex - 1 + featuredGames.length) %
+    featuredGames.length;
 
   updateFeatured(true);
   restartFeaturedTimer();
@@ -1188,9 +1134,9 @@ function featuredPrev(){
 function goToFeatured(index){
 
   if(
-    games.length === 0 ||
+    featuredGames.length === 0 ||
     index < 0 ||
-    index >= games.length
+    index >= featuredGames.length
   ){
     return;
   }
@@ -1198,7 +1144,7 @@ function goToFeatured(index){
   featuredIndex = index;
 
   featuredPosition =
-    games.length === 1
+    featuredGames.length === 1
       ? 0
       : index + 1;
 
@@ -1337,7 +1283,9 @@ function setPlatform(platform){
 
   currentPlatform = platform;
 
-  renderFilters();
+  chooseRandomFeaturedGames();
+
+renderFilters();
 
   renderHome();
 
@@ -1464,7 +1412,7 @@ function renderHome(){
       <button class="featured-arrow featured-next" onclick="event.stopPropagation();featuredNext()">❯</button>
 
       <div class="featured-dots">
-        ${games.map((game,index) => `
+        ${featuredGames.map((game,index) => `
           <button
             class="featured-dot ${index === featuredIndex ? "active" : ""}"
             onclick="event.stopPropagation();goToFeatured(${index})"
@@ -1532,8 +1480,8 @@ function renderHome(){
             onclick="toggleLatestGames()"
           >
             ${latestExpanded
-              ? "Mostrar menos"
-              : "Ver todos os jogos recentes"}
+              ? "MOSTRAR MENOS"
+              : "CONFIRA +"}
           </button>
 
         </div>
