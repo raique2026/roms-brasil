@@ -733,6 +733,103 @@ button,
   display:block;
 }
 
+
+/* ===== MENU PRINCIPAL COM DROPDOWN ===== */
+.filters{
+  display:flex;
+  align-items:center;
+  gap:28px;
+  padding-bottom:16px;
+  position:relative;
+  z-index:100;
+  flex-wrap:wrap;
+}
+
+.main-menu-item{
+  position:relative;
+}
+
+.main-menu-btn{
+  padding:10px 0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#8fd7ff;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  transition:color .2s ease;
+}
+
+.main-menu-btn:hover,
+.main-menu-btn.active{
+  color:#39d66f;
+}
+
+.menu-chevron{
+  font-size:12px;
+  transition:transform .2s ease;
+}
+
+.main-menu-item:hover .menu-chevron{
+  transform:rotate(180deg);
+}
+
+.dropdown-menu{
+  display:none;
+  position:absolute;
+  top:calc(100% + 4px);
+  left:0;
+  min-width:320px;
+  max-height:520px;
+  overflow-y:auto;
+  padding:12px 0;
+  background:#171f2b;
+  border:1px solid #263246;
+  border-radius:14px;
+  box-shadow:0 18px 45px rgba(0,0,0,.48);
+  z-index:999;
+}
+
+.main-menu-item:hover .dropdown-menu,
+.main-menu-item:focus-within .dropdown-menu{
+  display:block;
+}
+
+.dropdown-menu button{
+  display:block;
+  width:100%;
+  padding:13px 22px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#fff;
+  font-size:15px;
+  text-align:left;
+  cursor:pointer;
+}
+
+.dropdown-menu button:hover{
+  background:#202b3a;
+  color:#39d66f;
+}
+
+@media(max-width:620px){
+  .filters{
+    flex-wrap:wrap;
+    overflow:visible;
+    gap:18px;
+  }
+
+  .dropdown-menu{
+    min-width:260px;
+    max-width:90vw;
+  }
+}
+
 </style>
 </head>
 
@@ -976,6 +1073,8 @@ const games = [
    ========================================================= */
 
 let currentPlatform = "Todos";
+let currentGenre = "Todos";
+let dubbedOnly = false;
 
 let latestExpanded = false;
 const latestInitialCount = 5;
@@ -1334,43 +1433,149 @@ function getCover(game){
 function renderFilters(){
 
   const platformOptions = [
-    { name:"Todos", icon:"★" },
-    { name:"PS1", icon:"PS1" },
-    { name:"PS2", icon:"PS2" },
-    { name:"PSP", icon:"PSP" },
-    { name:"Dreamcast", icon:"DC" },
-    { name:"N64", icon:"N64" },
-    { name:"SNES", icon:"SNES" },
-    { name:"Mega Drive", icon:"MD" },
-    { name:"GameCube", icon:"GC" }
+    { name:"Todos", label:"Todos Jogos" },
+    { name:"Dreamcast", label:"Dreamcast" },
+    { name:"Game Boy", label:"Game Boy" },
+    { name:"Game Boy Color", label:"Game Boy Color GBC" },
+    { name:"Game Boy Advance", label:"Game Boy Advance GBA" },
+    { name:"GameCube", label:"Game Cube" },
+    { name:"Master System", label:"Master System" },
+    { name:"Mega Drive", label:"Mega Drive" },
+    { name:"N64", label:"Nintendo 64 N64" },
+    { name:"Nintendo DS", label:"Nintendo DS" },
+    { name:"NES", label:"Nintendo NES (Famicom)" },
+    { name:"Nintendo Wii", label:"Nintendo Wii" },
+    { name:"PS1", label:"Playstation 1 PS1" },
+    { name:"PS2", label:"Playstation 2 PS2" },
+    { name:"PSP", label:"PSP" },
+    { name:"Saturn", label:"Saturn" },
+    { name:"SNES", label:"Super Nintendo SNES" }
   ];
 
-  filters.innerHTML = platformOptions.map(platform => `
-    <button
-      class="console-filter ${platform.name === currentPlatform ? "active" : ""}"
-      onclick="setPlatform('${platform.name}')"
-      title="${platform.name}"
-    >
-      <span class="console-icon">
-        ${platform.icon}
-      </span>
+  const genreOptions = [
+    ...new Set(
+      games.map(game => game.genre).filter(Boolean)
+    )
+  ].sort((a,b) => a.localeCompare(b, "pt-BR"));
 
-      <span>
-        ${platform.name}
-      </span>
-    </button>
-  `).join("");
+  filters.innerHTML = `
 
+    <div class="main-menu-item">
+      <button
+        class="main-menu-btn ${currentPlatform === "Todos" && currentGenre === "Todos" && !dubbedOnly ? "active" : ""}"
+        onclick="goHomeMenu()"
+      >
+        INÍCIO
+      </button>
+    </div>
+
+    <div class="main-menu-item">
+
+      <button
+        class="main-menu-btn ${currentPlatform !== "Todos" ? "active" : ""}"
+        type="button"
+      >
+        ROMS EM PORTUGUÊS
+        <span class="menu-chevron">⌄</span>
+      </button>
+
+      <div class="dropdown-menu">
+
+        ${platformOptions.map(platform => `
+          <button onclick="setPlatform('${platform.name}')">
+            ${platform.label}
+          </button>
+        `).join("")}
+
+      </div>
+
+    </div>
+
+    <div class="main-menu-item">
+
+      <button
+        class="main-menu-btn ${currentGenre !== "Todos" ? "active" : ""}"
+        type="button"
+      >
+        GÊNEROS
+        <span class="menu-chevron">⌄</span>
+      </button>
+
+      <div class="dropdown-menu">
+
+        <button onclick="setGenre('Todos')">
+          Todos os gêneros
+        </button>
+
+        ${genreOptions.map(genre => `
+          <button
+            onclick="setGenre(decodeURIComponent('${encodeURIComponent(genre)}'))"
+          >
+            ${genre}
+          </button>
+        `).join("")}
+
+      </div>
+
+    </div>
+
+    <div class="main-menu-item">
+      <button
+        class="main-menu-btn ${dubbedOnly ? "active" : ""}"
+        onclick="showDubbed()"
+      >
+        DUBLADOS
+      </button>
+    </div>
+
+  `;
+}
+
+function goHomeMenu(){
+
+  currentPlatform = "Todos";
+  currentGenre = "Todos";
+  dubbedOnly = false;
+  q.value = "";
+
+  renderFilters();
+  renderHome();
 }
 
 function setPlatform(platform){
 
   currentPlatform = platform;
+  currentGenre = "Todos";
+  dubbedOnly = false;
 
   renderFilters();
+  renderHome();
+}
 
+function setGenre(genre){
+
+  currentPlatform = "Todos";
+  currentGenre = genre;
+  dubbedOnly = false;
+
+  renderFilters();
   renderHome();
 
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+function showDubbed(){
+
+  currentPlatform = "Todos";
+  currentGenre = "Todos";
+  dubbedOnly = true;
+
+  renderFilters();
+  renderHome();
 }
 
 function goHome(updateHistory = true){
@@ -1430,6 +1635,17 @@ function toggleLatestGames(){
   }
 }
 
+function isHomeView(){
+
+  return (
+    currentPlatform === "Todos" &&
+    currentGenre === "Todos" &&
+    !dubbedOnly &&
+    q.value.trim() === ""
+  );
+
+}
+
 function renderHome(){
 
   const search = q.value.toLowerCase().trim();
@@ -1440,14 +1656,31 @@ function renderHome(){
       currentPlatform === "Todos" ||
       game.platform === currentPlatform;
 
+    const matchesGenre =
+      currentGenre === "Todos" ||
+      game.genre === currentGenre;
+
+    const matchesDubbed =
+      !dubbedOnly ||
+      /dublado|dublada/i.test(game.language || "") ||
+      /dublado|dublada/i.test(game.title || "") ||
+      /dublado|dublada/i.test(game.description || "");
+
     const matchesSearch =
       game.title.toLowerCase().includes(search);
 
-    return matchesPlatform && matchesSearch;
+    return matchesPlatform &&
+           matchesGenre &&
+           matchesDubbed &&
+           matchesSearch;
 
   });
 
+  const showHomeSections = isHomeView();
+
   app.innerHTML = `
+
+    ${showHomeSections ? `
 
     <section class="featured-wrap">
 
@@ -1572,6 +1805,8 @@ function renderHome(){
 
     </section>
 
+    ` : ""}
+
     <section class="grid">
 
       ${filteredGames.map(game => `
@@ -1614,10 +1849,18 @@ function renderHome(){
 
   `;
 
-  requestAnimationFrame(() => {
-    setupFeaturedLoop();
-    startFeaturedTimer();
-  });
+  if(showHomeSections){
+
+    requestAnimationFrame(() => {
+      setupFeaturedLoop();
+      startFeaturedTimer();
+    });
+
+  }else{
+
+    clearInterval(featuredTimer);
+
+  }
 
 }
 
