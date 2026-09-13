@@ -786,25 +786,60 @@ function updateFeatured(animate = true){
 function normalizeFeaturedPosition(){
 
   if(games.length <= 1){
-    return;
+    return false;
   }
+
+  let newPosition = null;
+  let newIndex = null;
 
   if(featuredPosition === 0){
 
-    featuredPosition = games.length;
-    featuredIndex = games.length - 1;
-
-    setFeaturedTransform(false);
+    newPosition = games.length;
+    newIndex = games.length - 1;
 
   }else if(
     featuredPosition === games.length + 1
   ){
 
-    featuredPosition = 1;
-    featuredIndex = 0;
+    newPosition = 1;
+    newIndex = 0;
 
-    setFeaturedTransform(false);
+  }else{
+
+    return false;
   }
+
+  const track =
+    document.getElementById("featuredTrack");
+
+  if(!track){
+    return false;
+  }
+
+  const cards = [
+    ...track.querySelectorAll(".featured-card")
+  ];
+
+  /*
+    Desliga TODAS as animações por um instante.
+    Assim a troca do slide-clone para o slide real
+    acontece exatamente no mesmo lugar, sem o "pulo".
+  */
+  track.style.transition = "none";
+
+  cards.forEach(card => {
+    card.style.transition = "none";
+  });
+
+  featuredPosition = newPosition;
+  featuredIndex = newIndex;
+
+  setFeaturedTransform(false);
+
+  /* força o navegador a aplicar a posição sem animação */
+  void track.offsetWidth;
+
+  return true;
 }
 
 function featuredNext(){
@@ -907,15 +942,36 @@ function setupFeaturedLoop(){
     "transitionend",
     function(event){
 
+      /*
+        IMPORTANTE:
+        transitionend dos cards também "sobe" para o track.
+        Sem este teste, o carrossel entende a animação do card
+        como se fosse o fim do movimento principal e pode dar
+        aquela sensação de ir e voltar.
+      */
       if(
+        event.target !== track ||
         event.propertyName !== "transform"
       ){
         return;
       }
 
-      normalizeFeaturedPosition();
+      const wasReset =
+        normalizeFeaturedPosition();
 
       requestAnimationFrame(() => {
+
+        if(wasReset){
+
+          const cards = [
+            ...track.querySelectorAll(".featured-card")
+          ];
+
+          cards.forEach(card => {
+            card.style.transition = "";
+          });
+        }
+
         track.style.transition =
           "transform .7s ease";
 
