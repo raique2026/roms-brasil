@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROMS BRASIL</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#090e1c;color:#fff;font-family:Arial,sans-serif}a{text-decoration:none;color:inherit}
+header{background:#10172b;border-bottom:1px solid #202946}nav,main{max-width:1180px;margin:auto;padding:0 18px}
+.top{display:flex;gap:18px;align-items:center;padding:18px 0}.logo{font-size:24px;font-weight:900;white-space:nowrap}.logo b{color:#29c36a}
+input{flex:1;padding:13px;border-radius:12px;border:1px solid #2b3555;background:#161e35;color:#fff}.social a,button,.pill{padding:10px 14px;border-radius:999px;background:#1c2643;color:#fff;border:0}
+.filters{display:flex;gap:8px;padding-bottom:16px}.active,.download{background:#6959f5}.community{background:#151f3a;border:1px solid #283658;border-radius:18px;padding:22px;margin:38px 0 28px;display:flex;justify-content:space-between;align-items:center}.community p{color:#aab3cd}.community a{background:#fff;color:#111;padding:11px 16px;border-radius:999px;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px}.card{background:#141c32;border:1px solid #242e4c;border-radius:16px;overflow:hidden;cursor:pointer}.cover{aspect-ratio:3/4;background:#11182c}.cover img{width:100%;height:100%;object-fit:cover}.info{padding:14px}.meta{color:#aab3cd;font-size:12px}
+.detail{display:grid;grid-template-columns:330px 1fr;gap:32px;padding:30px 0}.detail img{width:100%;border-radius:18px}.specs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:25px 0}.spec{background:#141c32;padding:14px;border-radius:14px}.spec small{display:block;color:#8f99b4}.download{display:inline-block;padding:11px 18px;border-radius:999px}.back{margin-top:25px;cursor:pointer}
+@media(max-width:700px){.top{flex-wrap:wrap}input{min-width:100%}.detail{grid-template-columns:1fr}.community{display:block}}
+</style>
+</head>
+<body>
+<header><nav><div class="top"><div class="logo">ROMS <b>BRASIL</b></div><input id="q" placeholder="Pesquisar jogos..."><div class="social"><a href="https://x.com/museudosgames_" target="_blank">𝕏 Seguir no X</a></div></div><div class="filters" id="filters"></div></nav></header>
+<main id="app"></main>
+<script>
+
+/* ===== JOGOS DO SITE — EDITE SOMENTE ESTA ÁREA ===== */
+const games = [
+  {
+    slug: "7-wonders-of-the-ancient-world",
+    title: "7 Wonders of the Ancient World",
+    platform: "PS2",
+    year: "2007",
+    language: "Português",
+    region: "NTSC-U",
+    size: "1.2 GB",
+    developer: "MumboJumbo",
+    publisher: "MumboJumbo",
+    genre: "Puzzle",
+    format: "ISO",
+    cover: "",
+    description: "Viaje pelas sete maravilhas do mundo antigo resolvendo desafios e quebra-cabeças.",
+    screenshots: [],
+    download: "#"
+  },
+  {
+    slug: "homebrew-demo",
+    title: "Homebrew Demo",
+    platform: "PS2",
+    year: "2026",
+    language: "Português",
+    region: "Homebrew",
+    size: "120 MB",
+    developer: "Comunidade",
+    publisher: "Comunidade",
+    genre: "Demo",
+    format: "ELF/ISO",
+    cover: "",
+    description: "Exemplo de jogo homebrew.",
+    screenshots: [],
+    download: "#"
+  },
+  {
+    slug: "community-demo",
+    title: "Community Demo",
+    platform: "PSP",
+    year: "2026",
+    language: "Português",
+    region: "Freeware",
+    size: "85 MB",
+    developer: "Comunidade",
+    publisher: "Comunidade",
+    genre: "Demo",
+    format: "ISO",
+    cover: "",
+    description: "Outro exemplo de item do catálogo.",
+    screenshots: [],
+    download: "#"
+  },
+  {
+    slug: "patch-de-traducao",
+    title: "Patch de Tradução",
+    platform: "PS1",
+    year: "2026",
+    language: "Português",
+    region: "PT-BR",
+    size: "4 MB",
+    developer: "Comunidade",
+    publisher: "Comunidade",
+    genre: "Patch",
+    format: "XDELTA/PPF",
+    cover: "",
+    description: "Exemplo para publicação de patch de tradução.",
+    screenshots: [],
+    download: "#"
+  }
+];
+/* ===== FIM DOS JOGOS — NÃO PRECISA EDITAR ABAIXO ===== */
+
+let p="Todos";const app=document.querySelector("#app"),q=document.querySelector("#q"),filters=document.querySelector("#filters");
+const cover=g=>g.cover||"https://placehold.co/600x800/161e35/ffffff?text="+encodeURIComponent(g.title);
+function menu(){filters.innerHTML=["Todos",...new Set(games.map(g=>g.platform))].map(x=>`<button class="${x===p?"active":""}" onclick="p='${x}';menu();home()">${x}</button>`).join("")}
+function home(){let s=q.value.toLowerCase(),list=games.filter(g=>(p==="Todos"||g.platform===p)&&g.title.toLowerCase().includes(s));app.innerHTML=`<section class="community"><div><h2>Faça parte da comunidade</h2><p>Acompanhe novidades e atualizações do ROMS BRASIL no X.</p></div><a href="https://x.com/museudosgames_" target="_blank">𝕏 @museudosgames_</a></section><section class="grid">${list.map(g=>`<article class="card" onclick="openGame('${g.slug}')"><div class="cover"><img src="${cover(g)}"></div><div class="info"><h3>${g.title}</h3><div class="meta">${g.platform} • ${g.language} • ${g.year}</div></div></article>`).join("")}</section>`}
+function openGame(slug){let g=games.find(x=>x.slug===slug);app.innerHTML=`<div class="back" onclick="home()">← Voltar ao catálogo</div><section class="detail"><div><img src="${cover(g)}"></div><div><h1>${g.title}</h1><p>${g.description}</p><div class="specs">${[["Plataforma",g.platform],["Ano",g.year],["Idioma",g.language],["Região",g.region],["Tamanho",g.size],["Formato",g.format],["Desenvolvedora",g.developer],["Publicadora",g.publisher]].map(x=>`<div class="spec"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("")}</div><a class="download" href="${g.download}" target="_blank">⬇ DOWNLOAD</a></div></section>`}
+q.oninput=home;menu();home();
+</script>
+</body></html>
