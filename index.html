@@ -450,6 +450,58 @@ button,
   background:#8b7cff;
 }
 
+
+/* RECOMENDAÇÕES ALEATÓRIAS NO FIM DA PÁGINA DO JOGO */
+.recommended{
+  margin-top:46px;
+  padding:26px 0 10px;
+  border-top:1px solid #202946;
+}
+
+.recommended h2{
+  margin:0 0 20px;
+  font-size:24px;
+}
+
+.recommended-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:18px;
+}
+
+.recommended-card{
+  cursor:pointer;
+  text-align:center;
+}
+
+.recommended-card img{
+  width:100%;
+  aspect-ratio:3/4;
+  object-fit:contain;
+  display:block;
+  border-radius:12px;
+  border:1px solid #27304d;
+  background:#11182c;
+  transition:transform .2s ease,border-color .2s ease;
+}
+
+.recommended-card:hover img{
+  transform:translateY(-4px);
+  border-color:#5d6fa8;
+}
+
+.recommended-card h3{
+  margin:10px 4px 0;
+  font-size:14px;
+  line-height:1.35;
+}
+
+@media(max-width:900px){
+  .recommended-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
 @media(max-width:780px){
   .detail{grid-template-columns:1fr}
   .community{flex-direction:column;align-items:flex-start}
@@ -550,7 +602,7 @@ const games = [
 
     cover: "images/need-for-speed-most-wanted-black-edition.jpg",
 
-    banner: "banners/need-for-speed-most-wanted-black-edition.png",
+    banner: "banners/need-for-speed-most-wanted-black-edition.jpg",
 
     description: "Need for Speed: Most Wanted - Black Edition é uma edição especial de Most Wanted, com conteúdos extras e foco em corridas de rua e perseguições policiais.",
 
@@ -578,7 +630,7 @@ const games = [
 
   cover: "images/midnight-club-3-dub-edition-remix.jpg",
 
-  banner: "banners/midnight-club-3-dub-edition-remix.png",
+  banner: "banners/midnight-club-3-dub-edition-remix.jpg",
 
   description: "Midnight Club 3: DUB Edition Remix é uma versão expandida do jogo de corrida da Rockstar, com novos veículos, músicas, corridas e a cidade de Tóquio adicionada ao conteúdo original.",
 
@@ -863,6 +915,30 @@ function renderHome(){
 
 }
 
+
+function getRandomRecommendations(currentSlug, limit = 5){
+
+  const available = games.filter(
+    game => game.slug !== currentSlug
+  );
+
+  for(let i = available.length - 1; i > 0; i--){
+
+    const j = Math.floor(
+      Math.random() * (i + 1)
+    );
+
+    [available[i], available[j]] =
+      [available[j], available[i]];
+
+  }
+
+  return available.slice(
+    0,
+    Math.min(limit, available.length)
+  );
+}
+
 function openGame(slug, updateHistory = true){
 
   clearInterval(featuredTimer);
@@ -929,6 +1005,49 @@ function openGame(slug, updateHistory = true){
     `;
 
   }
+
+  const recommendedGames =
+    getRandomRecommendations(
+      game.slug,
+      5
+    );
+
+  const recommendationsHTML =
+    recommendedGames.length > 0
+      ? `
+        <section class="recommended">
+
+          <h2>
+            Escolhidos para você
+          </h2>
+
+          <div class="recommended-grid">
+
+            ${recommendedGames.map(item => `
+
+              <article
+                class="recommended-card"
+                onclick="openGame('${item.slug}')"
+              >
+
+                <img
+                  src="${getCover(item)}"
+                  alt="${item.title}"
+                >
+
+                <h3>
+                  ${item.title}
+                </h3>
+
+              </article>
+
+            `).join("")}
+
+          </div>
+
+        </section>
+      `
+      : "";
 
   app.innerHTML = `
 
@@ -1012,6 +1131,8 @@ function openGame(slug, updateHistory = true){
       </div>
 
     </section>
+
+    ${recommendationsHTML}
 
   `;
 
