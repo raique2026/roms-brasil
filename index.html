@@ -1015,6 +1015,36 @@ button,
   }
 }
 
+
+.pcsx2-bios-box{
+  margin-top:28px;
+  padding:20px;
+  border:1px solid #27304d;
+  border-radius:16px;
+  background:#141c32;
+}
+
+.pcsx2-bios-box h2{
+  margin:0 0 12px;
+  font-size:22px;
+}
+
+.pcsx2-bios-box p{
+  margin:0 0 12px;
+  color:#b8c2da;
+  line-height:1.65;
+}
+
+.pcsx2-bios-list{
+  margin:10px 0 0;
+  padding-left:18px;
+  color:#d6def1;
+}
+
+.pcsx2-bios-list li{
+  margin:7px 0;
+}
+
 </style>
 </head>
 
@@ -1796,7 +1826,7 @@ const emulators = [
     name:"PCSX2",
     platform:"PlayStation 2",
     image:"images/emulators/pcsx2.png",
-    description:"Emulador popular para jogos de PlayStation 2 no computador.",
+    description:"O PCSX2 é um emulador de PlayStation 2 para Windows, Linux e macOS. Ele permite executar jogos de PS2 no computador com recursos extras como aumento de resolução, filtros gráficos, widescreen, controles personalizados e melhorias de desempenho. O desempenho pode variar de acordo com o jogo e com o hardware do computador, por isso é recomendado manter o emulador atualizado e ajustar as configurações gráficas conforme a capacidade do PC.",
     download:"https://pcsx2.net/",
     bios:"#"
   },
@@ -1995,9 +2025,31 @@ function openEmulator(slug){
           </div>
 
           ${emulator.slug === "pcsx2" ? `
-            <p class="emulator-note">
-              Use uma BIOS obtida legalmente do seu próprio PlayStation 2.
-            </p>
+            <div class="pcsx2-bios-box">
+
+              <h2>Sobre a BIOS</h2>
+
+              <p>
+                A BIOS é o software de sistema original do PlayStation 2 utilizado pelo PCSX2
+                para inicializar e executar jogos corretamente.
+              </p>
+
+              <p>
+                O recomendado é extrair a BIOS do seu próprio console PlayStation 2.
+                O PCSX2 não inclui a BIOS junto com o emulador.
+              </p>
+
+              <p>
+                Existem diferentes versões de BIOS de acordo com a região e o modelo do console:
+              </p>
+
+              <ul class="pcsx2-bios-list">
+                <li><strong>NTSC-U</strong> — América do Norte</li>
+                <li><strong>PAL</strong> — Europa</li>
+                <li><strong>NTSC-J</strong> — Japão</li>
+              </ul>
+
+            </div>
           ` : ""}
 
         </div>
