@@ -2,6 +2,37 @@
 window.ps2Games = [
 
      {
+  slug: "shadow-of-the-colossus",
+  addedAt: "2026-09-14T01:38:00",
+
+  title: "Shadow of the Colossus",
+  platform: "PS2",
+  year: "2005",
+  language: "Português",
+  region: "NTSC-U/C",
+  size: "Edite o tamanho",
+  developer: "Team Ico",
+  publisher: "Sony Computer Entertainment",
+  genre: "Ação / Aventura",
+  format: "ISO",
+  translation: "Não informado",
+
+  cover: "images/shadow-of-the-colossus.jpg",
+
+  banner: "banners/shadow-of-the-colossus.jpg",
+
+  description: "Shadow of the Colossus é uma aventura épica em que Wander viaja por uma terra misteriosa para enfrentar gigantescos colossos. Cada batalha exige explorar o cenário, descobrir os pontos fracos das criaturas e encontrar uma maneira de derrotá-las.",
+
+  screenshots: [
+    "screenshots/shadow-of-the-colossus/screenshot-01.png",
+    "screenshots/shadow-of-the-colossus/screenshot-02.png",
+    "screenshots/shadow-of-the-colossus/screenshot-03.png"
+  ],
+
+  download: "#"
+},
+
+     {
   slug: "black",
   addedAt: "2026-09-14T00:00:00",
 
