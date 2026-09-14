@@ -1124,6 +1124,7 @@ const games = [
     publisher: "Electronic Arts",
     genre: "Corrida",
     format: "ISO",
+    translation: "Não informado",
 
     cover: "images/need-for-speed-most-wanted-black-edition.jpg",
 
@@ -1152,6 +1153,7 @@ const games = [
   publisher: "Rockstar Games",
   genre: "Corrida",
   format: "ISO",
+    translation: "Não informado",
 
   cover: "images/midnight-club-3-dub-edition-remix.jpg",
 
@@ -1180,6 +1182,7 @@ const games = [
   publisher: "Sony Computer Entertainment",
   genre: "Ação / Aventura",
   format: "ISO",
+    translation: "Não informado",
 
   cover: "images/god-of-war-2.jpg",
 
@@ -1208,6 +1211,7 @@ const games = [
   publisher: "Electronic Arts",
   genre: "Corrida",
   format: "ISO",
+    translation: "Não informado",
 
   cover: "images/need-for-speed-underground.jpg",
 
@@ -1236,6 +1240,7 @@ const games = [
   publisher: "D3 Publisher",
   genre: "Ação / Aventura",
   format: "ISO",
+    translation: "Não informado",
 
   cover: "images/ben-10-protector-of-earth.jpg",
 
@@ -1264,6 +1269,7 @@ const games = [
   publisher: "Capcom",
   genre: "Survival Horror",
   format: "ISO",
+    translation: "Não informado",
 
   cover: "images/resident-evil-4.jpg",
 
@@ -2586,7 +2592,8 @@ function openGame(slug, updateHistory = true){
             ["Tamanho",game.size],
             ["Formato",game.format],
             ["Desenvolvedora",game.developer],
-            ["Publicadora",game.publisher]
+            ["Publicadora",game.publisher],
+            ["Tradução",game.translation || "Não informado"]
           ].map(item => `
 
             <div class="spec">
