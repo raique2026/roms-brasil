@@ -1180,6 +1180,13 @@ body.light-mode .music-toggle{
   color:#172033;
 }
 
+
+.music-toggle:disabled,
+.music-volume:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
 </style>
 </head>
 
@@ -1300,10 +1307,8 @@ function playGameMusic(game){
   gameAudio.preload = "auto";
 
   gameAudio.play()
-    .then(() => updateMusicButton())
+    .then(updateMusicButton)
     .catch(() => {
-      // Autoplay pode ser bloqueado pelo navegador.
-      // O botão ▶ Música continuará disponível para iniciar manualmente.
       updateMusicButton();
     });
 }
@@ -1335,9 +1340,7 @@ function updateMusicButton(){
     return;
   }
 
-  button.innerHTML = gameAudio.paused
-    ? "▶ Música"
-    : "⏸ Música";
+  button.textContent = gameAudio.paused ? "▶ Música" : "⏸ Música";
 }
 
 /* =========================================================
@@ -3045,31 +3048,33 @@ function openGame(slug, updateHistory = true){
           ⬇ DOWNLOAD
         </a>
 
-        ${game.music ? `
-          <div class="music-player">
-            <button
-              id="musicToggle"
-              class="music-toggle"
-              type="button"
-              onclick="toggleGameMusic()"
-            >
-              ⏸ Música
-            </button>
+        <div class="music-player">
+          <button
+            id="musicToggle"
+            class="music-toggle"
+            type="button"
+            onclick="toggleGameMusic()"
+            ${game.music ? "" : "disabled"}
+          >
+            ${game.music ? "▶ Música" : "♪ Sem música"}
+          </button>
 
-            <span class="music-label">Som ambiente</span>
+          <span class="music-label">
+            ${game.music ? "Som ambiente" : "Nenhuma trilha adicionada"}
+          </span>
 
-            <input
-              class="music-volume"
-              type="range"
-              min="0"
-              max="0.35"
-              step="0.01"
-              value="0.12"
-              aria-label="Volume da música"
-              oninput="setGameMusicVolume(this.value)"
-            >
-          </div>
-        ` : ""}
+          <input
+            class="music-volume"
+            type="range"
+            min="0"
+            max="0.35"
+            step="0.01"
+            value="0.12"
+            aria-label="Volume da música"
+            oninput="setGameMusicVolume(this.value)"
+            ${game.music ? "" : "disabled"}
+          >
+        </div>
 
         ${screenshotsHTML}
 
