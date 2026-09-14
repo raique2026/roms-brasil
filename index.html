@@ -1826,7 +1826,8 @@ const emulators = [
     name:"PCSX2",
     platform:"PlayStation 2",
     image:"images/emulators/pcsx2.png",
-    description:"O PCSX2 é um emulador de PlayStation 2 para Windows, Linux e macOS. Ele permite executar jogos de PS2 no computador com recursos extras como aumento de resolução, filtros gráficos, widescreen, controles personalizados e melhorias de desempenho. O desempenho pode variar de acordo com o jogo e com o hardware do computador, por isso é recomendado manter o emulador atualizado e ajustar as configurações gráficas conforme a capacidade do PC.",
+    description:"Emulador de PlayStation 2 para PC, com alta compatibilidade e melhorias gráficas.",
+    detailDescription:"O PCSX2 é um emulador de PlayStation 2 para Windows, Linux e macOS. Ele permite executar jogos de PS2 no computador com recursos extras como aumento de resolução, filtros gráficos, widescreen, controles personalizados e melhorias de desempenho. O desempenho pode variar de acordo com o jogo e com o hardware do computador, por isso é recomendado manter o emulador atualizado e ajustar as configurações gráficas conforme a capacidade do PC.",
     download:"https://pcsx2.net/",
     bios:"#"
   },
@@ -1997,7 +1998,7 @@ function openEmulator(slug){
           </div>
 
           <p class="emulator-detail-desc">
-            ${emulator.description}
+            ${emulator.detailDescription || emulator.description}
           </p>
 
           <div class="emulator-actions">
