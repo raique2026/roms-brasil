@@ -1833,8 +1833,26 @@ function placeholderCover(title){
 }
 
 function getCover(game){
-  return game.cover || placeholderCover(game.title);
+  const cover = game.cover || placeholderCover(game.title);
+
+  if(cover.startsWith("images/")){
+    return cover + (cover.includes("?") ? "&" : "?") + "v=20260914";
+  }
+
+  return cover;
 }
+
+
+function getBanner(game){
+  const banner = game.banner || getCover(game);
+
+  if(banner.startsWith("banners/")){
+    return banner + (banner.includes("?") ? "&" : "?") + "v=20260914";
+  }
+
+  return banner;
+}
+
 
 function renderFilters(){
 
@@ -2314,8 +2332,8 @@ function goHome(updateHistory = true){
 
 function getLatestGames(){
 
-  // O último jogo colocado no const games aparece primeiro em "Últimos jogos adicionados".
-  return games.slice().reverse();
+  // O último jogo colocado no const games aparece primeiro.
+  return [...games].reverse();
 }
 
 function getVisibleLatestGames(){
@@ -2405,7 +2423,7 @@ function renderHome(){
           >
 
             <img
-              src="${slide.game.banner || getCover(slide.game)}"
+              src="${getBanner(slide.game)}"
               alt="${slide.game.title}"
             >
 
