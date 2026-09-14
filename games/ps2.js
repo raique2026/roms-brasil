@@ -1,36 +1,39 @@
 /* ===== JOGOS DE PLAYSTATION 2 ===== */
 window.ps2Games = [
 
-  /* ===== BLACK ===== */
-  {
-    slug: "black",
-    title: "Black",
-    platform: "PS2",
-    year: "2006",
-    language: "Português",
-    region: "NTSC-U",
-    size: "Edite o tamanho",
-    developer: "Criterion Games",
-    publisher: "Electronic Arts",
-    genre: "Ação / Tiro",
-    format: "ISO",
-    translation: "Não informado",
+     {
 
-    cover: "images/black.jpg",
+slug: "black",
+  addedAt: "2026-09-14T00:00:00",
+       
+  slug: "black",
+  title: "Black",
+  platform: "PS2",
+  year: "2006",
+  language: "Português",
+  region: "NTSC-U",
+  size: "Edite o tamanho",
+  developer: "Criterion Games",
+  publisher: "Electronic Arts",
+  genre: "Ação / Tiro",
+  format: "ISO",
+  translation: "Não informado",
 
-    banner: "banners/black.jpg",
+  cover: "images/black.jpg",
 
-    description: "Black é um jogo de tiro em primeira pessoa focado em ação intensa, combates cinematográficos e ambientes destrutíveis. O jogador participa de diversas operações utilizando um grande arsenal de armas.",
+  banner: "banners/black.jpg",
 
-    screenshots: [
-      "screenshots/black/screenshot-01.png",
-      "screenshots/black/screenshot-02.png",
-      "screenshots/black/screenshot-03.png"
-    ],
+  description: "Black é um jogo de tiro em primeira pessoa focado em ação intensa, combates cinematográficos e ambientes destrutíveis. O jogador participa de diversas operações utilizando um grande arsenal de armas.",
 
-    download: "#"
-  },
+  screenshots: [
+    "screenshots/black/screenshot-01.png",
+    "screenshots/black/screenshot-02.png",
+    "screenshots/black/screenshot-03.png"
+  ],
 
+  download: "COLOQUE_AQUI_O_LINK_DO_DOWNLOAD"
+},
+  
   {
       slug: "need-for-speed-most-wanted-black-edition",
       addedAt: "2026-09-07T00:00:00",
