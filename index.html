@@ -1817,6 +1817,7 @@ const emulators = [
     platform:"PlayStation 1",
     image:"images/emulators/duckstation.png",
     description:"Emulador moderno e leve para jogos de PlayStation 1.",
+    detailDescription:"O DuckStation é um emulador de PlayStation 1 para computador, desenvolvido com foco em alta compatibilidade, precisão e facilidade de uso. Ele permite executar jogos de PS1 com recursos como aumento de resolução interna, correção de perspectiva, filtros gráficos, controles personalizados, save states e outras melhorias que podem deixar os jogos clássicos mais confortáveis em computadores modernos.",
     download:"#",
     bios:"#"
   },
@@ -2043,29 +2044,39 @@ function openEmulator(slug, updateHistory = true){
 
           ${emulator.slug === "pcsx2" ? `
             <div class="pcsx2-bios-box">
-
               <h2>Sobre a BIOS</h2>
-
               <p>
                 A BIOS é o software de sistema original do PlayStation 2 utilizado pelo PCSX2
                 para inicializar e executar jogos corretamente.
               </p>
-
               <p>
                 O recomendado é extrair a BIOS do seu próprio console PlayStation 2.
                 O PCSX2 não inclui a BIOS junto com o emulador.
               </p>
-
-              <p>
-                Existem diferentes versões de BIOS de acordo com a região e o modelo do console:
-              </p>
-
+              <p>Existem diferentes versões de BIOS de acordo com a região e o modelo do console:</p>
               <ul class="pcsx2-bios-list">
                 <li><strong>NTSC-U</strong> — América do Norte</li>
                 <li><strong>PAL</strong> — Europa</li>
                 <li><strong>NTSC-J</strong> — Japão</li>
               </ul>
-
+            </div>
+          ` : emulator.slug === "duckstation" ? `
+            <div class="pcsx2-bios-box">
+              <h2>Sobre a BIOS</h2>
+              <p>
+                A BIOS contém o software de sistema original do PlayStation 1 e pode ser utilizada
+                pelo DuckStation para oferecer uma experiência mais fiel ao console.
+              </p>
+              <p>
+                O recomendado é extrair a BIOS do seu próprio PlayStation 1.
+                O DuckStation não acompanha arquivos de BIOS.
+              </p>
+              <p>As versões podem variar de acordo com a região do console:</p>
+              <ul class="pcsx2-bios-list">
+                <li><strong>NTSC-U</strong> — América do Norte</li>
+                <li><strong>PAL</strong> — Europa</li>
+                <li><strong>NTSC-J</strong> — Japão</li>
+              </ul>
             </div>
           ` : ""}
 
