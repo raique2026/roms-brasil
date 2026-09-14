@@ -1971,7 +1971,7 @@ function renderEmulators(){
   `;
 }
 
-function openEmulator(slug){
+function openEmulator(slug, updateHistory = true){
 
   const emulator = emulators.find(
     item => item.slug === slug
@@ -1979,6 +1979,14 @@ function openEmulator(slug){
 
   if(!emulator){
     return;
+  }
+
+  if(updateHistory){
+    history.pushState(
+      { page:"emulator", slug:slug },
+      "",
+      "#emulator=" + encodeURIComponent(slug)
+    );
   }
 
   clearInterval(featuredTimer);
@@ -2731,6 +2739,16 @@ window.addEventListener(
 
       openGame(slug, false);
 
+    }else if(location.hash.startsWith("#emulator=")){
+
+      const slug = decodeURIComponent(
+        location.hash.replace("#emulator=", "")
+      );
+
+      emulatorMode = true;
+      renderFilters();
+      openEmulator(slug, false);
+
     }else if(location.hash === "#emulators"){
 
       showEmulators(false);
@@ -2782,6 +2800,28 @@ if(location.hash.startsWith("#game=")){
     );
 
     renderHome();
+
+  }
+
+}else if(location.hash.startsWith("#emulator=")){
+
+  const initialEmulatorSlug = decodeURIComponent(
+    location.hash.replace("#emulator=", "")
+  );
+
+  const initialEmulator = emulators.find(
+    emulator => emulator.slug === initialEmulatorSlug
+  );
+
+  if(initialEmulator){
+
+    emulatorMode = true;
+    renderFilters();
+    openEmulator(initialEmulatorSlug, false);
+
+  }else{
+
+    showEmulators(false);
 
   }
 
