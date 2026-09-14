@@ -1891,24 +1891,16 @@ function placeholderCover(title){
 }
 
 function getCover(game){
-  const cover = game.cover || placeholderCover(game.title);
-
-  if(cover.startsWith("images/")){
-    return cover + (cover.includes("?") ? "&" : "?") + "v=20260914";
+  if(!game.cover){
+    return placeholderCover(game.title);
   }
 
-  return cover;
+  return game.cover;
 }
 
 
 function getBanner(game){
-  const banner = game.banner || getCover(game);
-
-  if(banner.startsWith("banners/")){
-    return banner + (banner.includes("?") ? "&" : "?") + "v=20260914";
-  }
-
-  return banner;
+  return game.banner || getCover(game);
 }
 
 
