@@ -1045,6 +1045,30 @@ button,
   margin:7px 0;
 }
 
+
+/* ===== MODO CLARO / ESCURO ===== */
+.theme-toggle{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;height:44px;padding:5px 6px 5px 14px;border:1px solid #2b3555;border-radius:999px;background:#1c2643;color:#fff;cursor:pointer;font-weight:700}
+.theme-toggle-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:#080d18;font-size:18px}
+body.light-mode{background:#f4f6fb;color:#172033}
+body.light-mode header{background:#fff;border-bottom-color:#dce2ee}
+body.light-mode input{background:#f1f4fa;border-color:#d5dcea;color:#172033}
+body.light-mode input::placeholder{color:#7b8498}
+body.light-mode .main-menu-btn{color:#287eb1}
+body.light-mode .main-menu-btn:hover,body.light-mode .main-menu-btn.active{color:#20b85b}
+body.light-mode .dropdown-menu{background:#fff;border-color:#dce2ee;box-shadow:0 18px 45px rgba(35,48,75,.16)}
+body.light-mode .dropdown-menu button{color:#172033}
+body.light-mode .dropdown-menu button:hover{background:#eef3f8;color:#20a957}
+body.light-mode .card,body.light-mode .latest-card,body.light-mode .spec,body.light-mode .community,body.light-mode .emulator-card,body.light-mode .emulator-detail-image,body.light-mode .pcsx2-bios-box{background:#fff;border-color:#dce2ee}
+body.light-mode .cover,body.light-mode .latest-cover,body.light-mode .emulator-cover{background:#f0f3f8;border-color:#dce2ee}
+body.light-mode .desc,body.light-mode .meta,body.light-mode .latest-meta,body.light-mode .community p,body.light-mode .emulators-header p,body.light-mode .emulator-card p,body.light-mode .emulator-detail-desc,body.light-mode .pcsx2-bios-box p,body.light-mode .pcsx2-bios-list,body.light-mode .emulator-note,body.light-mode .back{color:#5d677c}
+body.light-mode .emulator-platform,body.light-mode .emulator-detail-platform{color:#1683c5}
+body.light-mode .pill,body.light-mode .emulator-bios,body.light-mode .social .x-icon{background:#edf1f8;border-color:#d5dcea;color:#172033}
+body.light-mode .recommended{border-top-color:#dce2ee}
+body.light-mode .recommended-card img{background:#fff;border-color:#dce2ee}
+body.light-mode .latest-expand{color:#5545df}
+body.light-mode .theme-toggle{background:#6847f5;border-color:#6847f5;color:#fff}
+body.light-mode .theme-toggle-icon{background:#fff}
+
 </style>
 </head>
 
@@ -1063,6 +1087,12 @@ button,
     id="q"
     placeholder="Pesquisar jogos..."
   >
+
+
+  <button id="themeToggle" class="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Alternar modo claro e escuro">
+    <span id="themeText">Claro</span>
+    <span id="themeIcon" class="theme-toggle-icon">🌙</span>
+  </button>
 
   <div class="social" id="socialX">
     <a
@@ -1104,6 +1134,23 @@ button,
 </div>
 
 <script>
+
+/* ===== CONTROLE DO MODO CLARO / ESCURO ===== */
+function applyTheme(theme){
+  const isLight=theme==="light";
+  document.body.classList.toggle("light-mode",isLight);
+  const text=document.getElementById("themeText");
+  const icon=document.getElementById("themeIcon");
+  if(text) text.textContent=isLight?"Escuro":"Claro";
+  if(icon) icon.textContent=isLight?"☀️":"🌙";
+  localStorage.setItem("romsBrasilTheme",isLight?"light":"dark");
+}
+function toggleTheme(){
+  applyTheme(document.body.classList.contains("light-mode")?"dark":"light");
+}
+applyTheme(localStorage.getItem("romsBrasilTheme")||"dark");
+
+
 
 /* =========================================================
    JOGOS DO SITE
