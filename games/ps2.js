@@ -2,9 +2,9 @@
 window.ps2Games = [
 
      {
-
-  addedAt: "2026-09-14T00:00:00",    
   slug: "black",
+  addedAt: "2026-09-14T00:00:00",
+
   title: "Black",
   platform: "PS2",
   year: "2006",
@@ -18,7 +18,6 @@ window.ps2Games = [
   translation: "Não informado",
 
   cover: "images/black.jpg",
-
   banner: "banners/black.jpg",
 
   description: "Black é um jogo de tiro em primeira pessoa focado em ação intensa, combates cinematográficos e ambientes destrutíveis. O jogador participa de diversas operações utilizando um grande arsenal de armas.",
@@ -29,7 +28,7 @@ window.ps2Games = [
     "screenshots/black/screenshot-03.png"
   ],
 
-  download: "COLOQUE_AQUI_O_LINK_DO_DOWNLOAD"
+  download: "#"
 },
   
   {
