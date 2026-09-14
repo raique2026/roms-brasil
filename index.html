@@ -884,14 +884,16 @@ button,
 
 .emulator-card h3{
   margin:0 0 8px;
-  font-size:18px;
+  font-size:20px;
+  text-align:center;
 }
 
 .emulator-platform{
   color:#8fd7ff;
-  font-size:13px;
+  font-size:14px;
   font-weight:700;
-  margin-bottom:10px;
+  margin-bottom:14px;
+  text-align:center;
 }
 
 .emulator-card p{
@@ -899,6 +901,7 @@ button,
   color:#aab3cd;
   line-height:1.55;
   font-size:14px;
+  text-align:left;
 }
 
 
@@ -1908,10 +1911,6 @@ function renderEmulators(){
                 alt="${item.name}"
                 onerror="this.style.display='none'"
               >
-            </div>
-
-            <div class="emulator-icon">
-              ${item.short}
             </div>
 
             <h3>${item.name}</h3>
