@@ -1,35 +1,69 @@
 /* ===== JOGOS DE PLAYSTATION 2 ===== */
 window.ps2Games = [
 
+  /* ===== BLACK ===== */
   {
-      slug: "need-for-speed-most-wanted-black-edition",
-      title: "Need for Speed: Most Wanted - Black Edition",
-      platform: "PS2",
-      year: "2005",
-      language: "Portugues",
-      region: "NTSC-U/C",
-      size: "2.85 GB",
-      developer: "EA Canada",
-      publisher: "Electronic Arts",
-      genre: "Corrida",
-      format: "ISO",
-      translation: "Diogo Amaral - RafaSZ e ZANIT",
-  
-      cover: "images/need-for-speed-most-wanted-black-edition.jpg",
-  
-      banner: "banners/need-for-speed-most-wanted-black-edition.png",
-  
-      description: "Need for Speed: Most Wanted - Black Edition é uma edição especial de Most Wanted, com conteúdos extras e foco em corridas de rua e perseguições policiais.",
-  
-      screenshots: [
-        "screenshots/need-for-speed-most-wanted-black-edition/screenshot-01.png",
-        "screenshots/need-for-speed-most-wanted-black-edition/screenshot-02.png",
-        "screenshots/need-for-speed-most-wanted-black-edition/screenshot-03.png"
-      ],
-  
-      download: "https://gofile.io/d/0FxG10Az"
-    },
+    slug: "black",
+    title: "Black",
+    platform: "PS2",
+    year: "2006",
+    language: "Português",
+    region: "NTSC-U",
+    size: "Edite o tamanho",
+    developer: "Criterion Games",
+    publisher: "Electronic Arts",
+    genre: "Ação / Tiro",
+    format: "ISO",
+    translation: "Não informado",
 
+    cover: "images/black.jpg",
+
+    banner: "banners/black.jpg",
+
+    description: "Black é um jogo de tiro em primeira pessoa focado em ação intensa, combates cinematográficos e ambientes destrutíveis. O jogador participa de diversas operações utilizando um grande arsenal de armas.",
+
+    screenshots: [
+      "screenshots/black/screenshot-01.png",
+      "screenshots/black/screenshot-02.png",
+      "screenshots/black/screenshot-03.png"
+    ],
+
+    download: "#"
+  },
+
+
+  /* ===== NEED FOR SPEED MOST WANTED BLACK EDITION ===== */
+  {
+    slug: "need-for-speed-most-wanted-black-edition",
+    title: "Need for Speed: Most Wanted - Black Edition",
+    platform: "PS2",
+    year: "2005",
+    language: "Portugues",
+    region: "NTSC-U/C",
+    size: "2.85 GB",
+    developer: "EA Canada",
+    publisher: "Electronic Arts",
+    genre: "Corrida",
+    format: "ISO",
+    translation: "Diogo Amaral - RafaSZ e ZANIT",
+
+    cover: "images/need-for-speed-most-wanted-black-edition.jpg",
+
+    banner: "banners/need-for-speed-most-wanted-black-edition.png",
+
+    description: "Need for Speed: Most Wanted - Black Edition é uma edição especial de Most Wanted, com conteúdos extras e foco em corridas de rua e perseguições policiais.",
+
+    screenshots: [
+      "screenshots/need-for-speed-most-wanted-black-edition/screenshot-01.png",
+      "screenshots/need-for-speed-most-wanted-black-edition/screenshot-02.png",
+      "screenshots/need-for-speed-most-wanted-black-edition/screenshot-03.png"
+    ],
+
+    download: "https://gofile.io/d/0FxG10Az"
+  },
+
+
+  /* ===== MIDNIGHT CLUB 3 ===== */
   {
     slug: "midnight-club-3-dub-edition-remix",
     title: "Midnight Club 3: DUB Edition Remix",
@@ -42,23 +76,25 @@ window.ps2Games = [
     publisher: "Rockstar Games",
     genre: "Corrida",
     format: "ISO",
-      translation: "Não informado",
-  
+    translation: "Não informado",
+
     cover: "images/midnight-club-3-dub-edition-remix.jpg",
-  
+
     banner: "banners/midnight-club-3-dub-edition-remix.png",
-  
+
     description: "Midnight Club 3: DUB Edition Remix é uma versão expandida do jogo de corrida da Rockstar, com novos veículos, músicas, corridas e a cidade de Tóquio adicionada ao conteúdo original.",
-  
+
     screenshots: [
       "screenshots/midnight-club-3-dub-edition-remix/screenshot-01.png",
       "screenshots/midnight-club-3-dub-edition-remix/screenshot-02.png",
       "screenshots/midnight-club-3-dub-edition-remix/screenshot-03.png"
     ],
-  
+
     download: "#"
   },
 
+
+  /* ===== GOD OF WAR II ===== */
   {
     slug: "god-of-war-2",
     title: "God of War II",
@@ -71,23 +107,25 @@ window.ps2Games = [
     publisher: "Sony Computer Entertainment",
     genre: "Ação / Aventura",
     format: "ISO",
-      translation: "Não informado",
-  
+    translation: "Não informado",
+
     cover: "images/god-of-war-2.jpg",
-  
+
+    banner: "banners/god-of-war-2.jpg",
+
     description: "God of War II continua a jornada de Kratos em uma aventura épica pela mitologia grega, com novos inimigos, armas, poderes e batalhas grandiosas.",
-  
+
     screenshots: [
       "screenshots/god-of-war-2/screenshot-01.png",
       "screenshots/god-of-war-2/screenshot-02.png",
       "screenshots/god-of-war-2/screenshot-03.png"
     ],
-  
-    banner: "banners/god-of-war-2.jpg",
-  
+
     download: "#"
   },
 
+
+  /* ===== NEED FOR SPEED UNDERGROUND ===== */
   {
     slug: "need-for-speed-underground",
     title: "Need for Speed: Underground",
@@ -100,23 +138,25 @@ window.ps2Games = [
     publisher: "Electronic Arts",
     genre: "Corrida",
     format: "ISO",
-      translation: "Não informado",
-  
+    translation: "Não informado",
+
     cover: "images/need-for-speed-underground.jpg",
-  
-    description: "Need for Speed: Underground leva o jogador ao mundo das corridas de rua, com personalização de veículos, diversos eventos e uma campanha ambientada na cultura tuning.",
-  
+
     banner: "banners/need-for-speed-underground.jpg",
-  
+
+    description: "Need for Speed: Underground leva o jogador ao mundo das corridas de rua, com personalização de veículos, diversos eventos e uma campanha ambientada na cultura tuning.",
+
     screenshots: [
       "screenshots/need-for-speed-underground/screenshot-01.png",
       "screenshots/need-for-speed-underground/screenshot-02.png",
       "screenshots/need-for-speed-underground/screenshot-03.png"
     ],
-  
+
     download: "#"
   },
 
+
+  /* ===== BEN 10 PROTECTOR OF EARTH ===== */
   {
     slug: "ben-10-protector-of-earth",
     title: "Ben 10: Protector of Earth",
@@ -129,23 +169,25 @@ window.ps2Games = [
     publisher: "D3 Publisher",
     genre: "Ação / Aventura",
     format: "ISO",
-      translation: "Não informado",
-  
+    translation: "Não informado",
+
     cover: "images/ben-10-protector-of-earth.jpg",
-  
-    description: "Ben 10: Protector of Earth é um jogo de ação e aventura baseado na série Ben 10. Ben utiliza o Omnitrix para se transformar em diferentes alienígenas e enfrentar inimigos durante sua jornada.",
-  
+
     banner: "banners/ben-10-protector-of-earth.jpg",
-  
+
+    description: "Ben 10: Protector of Earth é um jogo de ação e aventura baseado na série Ben 10. Ben utiliza o Omnitrix para se transformar em diferentes alienígenas e enfrentar inimigos durante sua jornada.",
+
     screenshots: [
       "screenshots/ben-10-protector-of-earth/screenshot-01.png",
       "screenshots/ben-10-protector-of-earth/screenshot-02.png",
       "screenshots/ben-10-protector-of-earth/screenshot-03.png"
     ],
-  
+
     download: "#"
   },
 
+
+  /* ===== RESIDENT EVIL 4 ===== */
   {
     slug: "resident-evil-4",
     title: "Resident Evil 4",
@@ -158,49 +200,21 @@ window.ps2Games = [
     publisher: "Capcom",
     genre: "Survival Horror",
     format: "ISO",
-      translation: "Não informado",
-  
+    translation: "Não informado",
+
     cover: "images/resident-evil-4.jpg",
-  
-    description: "Resident Evil 4 acompanha Leon S. Kennedy em uma missão para resgatar a filha do presidente dos Estados Unidos em uma misteriosa região rural da Europa.",
-  
+
     banner: "banners/resident-evil-4.jpg",
-  
+
+    description: "Resident Evil 4 acompanha Leon S. Kennedy em uma missão para resgatar a filha do presidente dos Estados Unidos em uma misteriosa região rural da Europa.",
+
     screenshots: [
       "screenshots/resident-evil-4/screenshot-01.png",
       "screenshots/resident-evil-4/screenshot-02.png",
       "screenshots/resident-evil-4/screenshot-03.png"
     ],
-  
+
     download: "https://gofile.io/d/TRkXcw"
-  },
+  }
 
-  {
-  slug: "black",
-  title: "Black",
-  platform: "PS2",
-  year: "2006",
-  language: "Português",
-  region: "NTSC-U",
-  size: "Edite o tamanho",
-  developer: "Criterion Games",
-  publisher: "Electronic Arts",
-  genre: "Ação / Tiro",
-  format: "ISO",
-  translation: "Não informado",
-
-  cover: "images/black.jpg",
-
-  banner: "banners/black.jpg",
-
-  description: "Black é um jogo de tiro em primeira pessoa focado em ação intensa, combates cinematográficos e ambientes destrutíveis. O jogador participa de diversas operações utilizando um grande arsenal de armas.",
-
-  screenshots: [
-    "screenshots/black/screenshot-01.png",
-    "screenshots/black/screenshot-02.png",
-    "screenshots/black/screenshot-03.png"
-  ],
-
-  download: "COLOQUE_AQUI_O_LINK_DO_DOWNLOAD"
-},
 ];
