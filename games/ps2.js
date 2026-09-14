@@ -3,9 +3,7 @@ window.ps2Games = [
 
      {
 
-slug: "black",
-  addedAt: "2026-09-14T00:00:00",
-       
+  addedAt: "2026-09-14T00:00:00",    
   slug: "black",
   title: "Black",
   platform: "PS2",
