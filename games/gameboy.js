@@ -1,5 +1,5 @@
 /* ===== JOGOS DE GAME BOY ===== */
-const gameBoyGames = [
+window.gameBoyGames = [
 
   {
     slug: "tarzan-lord-of-the-jungle",
