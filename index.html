@@ -2085,8 +2085,12 @@ function goHome(updateHistory = true){
 
 function getLatestGames(){
 
-  // O último jogo colocado no array "games" é tratado como o mais recente.
-  return [...games].reverse();
+  // Ordena os jogos pela data de adição, do mais novo para o mais antigo.
+  return [...games].sort((a,b) => {
+    const dateA = new Date(a.addedAt || 0).getTime();
+    const dateB = new Date(b.addedAt || 0).getTime();
+    return dateB - dateA;
+  });
 }
 
 function getVisibleLatestGames(){
