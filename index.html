@@ -1140,6 +1140,46 @@ body.light-mode .theme-toggle-icon{background:#fff}
   }
 }
 
+
+/* ===== MÚSICA / SOM AMBIENTE DA PÁGINA DO JOGO ===== */
+.music-player{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+.music-toggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 18px;
+  border-radius:999px;
+  border:1px solid #2b3555;
+  background:#151f3a;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.music-toggle:hover{
+  border-color:#6959f5;
+  background:#1c2643;
+}
+.music-volume{
+  width:120px;
+  accent-color:#6959f5;
+}
+.music-label{
+  color:#aab3cd;
+  font-size:12px;
+}
+body.light-mode .music-toggle{
+  background:#edf1f8;
+  border-color:#d5dcea;
+  color:#172033;
+}
+
 </style>
 </head>
 
@@ -1230,6 +1270,73 @@ function toggleTheme(){
 applyTheme(localStorage.getItem("romsBrasilTheme")||"dark");
 
 
+
+
+/* ===== CONTROLE DE MÚSICA DOS JOGOS ===== */
+let gameAudio = null;
+let currentMusicGame = null;
+let gameMusicVolume = 0.12;
+
+function stopGameMusic(){
+  if(gameAudio){
+    gameAudio.pause();
+    gameAudio.currentTime = 0;
+    gameAudio = null;
+  }
+  currentMusicGame = null;
+}
+
+function playGameMusic(game){
+  stopGameMusic();
+
+  if(!game || !game.music){
+    return;
+  }
+
+  currentMusicGame = game.slug;
+  gameAudio = new Audio(game.music);
+  gameAudio.volume = gameMusicVolume;
+  gameAudio.loop = true;
+  gameAudio.preload = "auto";
+
+  gameAudio.play()
+    .then(updateMusicButton)
+    .catch(() => {
+      updateMusicButton();
+    });
+}
+
+function toggleGameMusic(){
+  if(!gameAudio){
+    return;
+  }
+
+  if(gameAudio.paused){
+    gameAudio.play().catch(() => {});
+  }else{
+    gameAudio.pause();
+  }
+
+  updateMusicButton();
+}
+
+function setGameMusicVolume(value){
+  gameMusicVolume = Number(value);
+  if(gameAudio){
+    gameAudio.volume = gameMusicVolume;
+  }
+}
+
+function updateMusicButton(){
+  const button = document.getElementById("musicToggle");
+  if(!button || !gameAudio){
+    return;
+  }
+
+  button.innerHTML = gameAudio.paused
+    ? "▶ Música"
+    : "⏸ Música";
+}
 
 /* =========================================================
    JOGOS DO SITE
@@ -2412,6 +2519,8 @@ function openEmulator(slug, updateHistory = true){
 
 function goHome(updateHistory = true){
 
+  stopGameMusic();
+
   emulatorMode = false;
 
   if(updateHistory){
@@ -2735,6 +2844,8 @@ function openGame(slug, updateHistory = true){
     item => item.slug === slug
   );
 
+  playGameMusic(game);
+
   if(!game){
 
     history.replaceState(
@@ -2930,6 +3041,32 @@ function openGame(slug, updateHistory = true){
         >
           ⬇ DOWNLOAD
         </a>
+
+        ${game.music ? `
+          <div class="music-player">
+            <button
+              id="musicToggle"
+              class="music-toggle"
+              type="button"
+              onclick="toggleGameMusic()"
+            >
+              ⏸ Música
+            </button>
+
+            <span class="music-label">Som ambiente</span>
+
+            <input
+              class="music-volume"
+              type="range"
+              min="0"
+              max="0.35"
+              step="0.01"
+              value="0.12"
+              aria-label="Volume da música"
+              oninput="setGameMusicVolume(this.value)"
+            >
+          </div>
+        ` : ""}
 
         ${screenshotsHTML}
 
