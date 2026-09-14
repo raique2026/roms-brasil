@@ -1893,12 +1893,20 @@ const emulators = [
   }
 ];
 
-function showEmulators(){
+function showEmulators(updateHistory = true){
 
   currentPlatform = "Todos";
   currentGenre = "Todos";
   dubbedOnly = false;
   emulatorMode = true;
+
+  if(updateHistory && location.hash !== "#emulators"){
+    history.pushState(
+      { page: "emulators" },
+      "",
+      "#emulators"
+    );
+  }
 
   renderFilters();
   renderEmulators();
@@ -2723,6 +2731,10 @@ window.addEventListener(
 
       openGame(slug, false);
 
+    }else if(location.hash === "#emulators"){
+
+      showEmulators(false);
+
     }else{
 
       goHome(false);
@@ -2772,6 +2784,10 @@ if(location.hash.startsWith("#game=")){
     renderHome();
 
   }
+
+}else if(location.hash === "#emulators"){
+
+  showEmulators(false);
 
 }else{
 
