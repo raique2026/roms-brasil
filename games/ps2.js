@@ -1,5 +1,5 @@
 /* ===== JOGOS DE PLAYSTATION 2 ===== */
-const ps2Games = [
+window.ps2Games = [
 
   {
       slug: "need-for-speed-most-wanted-black-edition",
