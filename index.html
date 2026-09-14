@@ -1211,6 +1211,7 @@ body.light-mode .theme-toggle-icon{background:#fff}
   <div id="viewerCounter" class="viewer-counter"></div>
 </div>
 
+
 <script>
 
 /* ===== CONTROLE DO MODO CLARO / ESCURO ===== */
@@ -1236,6 +1237,7 @@ applyTheme(localStorage.getItem("romsBrasilTheme")||"dark");
    ========================================================= */
 
 const games = [
+
 
   {
     slug: "need-for-speed-most-wanted-black-edition",
@@ -1416,9 +1418,9 @@ const games = [
   title: "Tarzan: Lord of the Jungle",
   platform: "Game Boy",
   year: "1994",
-  language: "Inglês",
+  language: "Portugues",
   region: "NTSC-U",
-  size: "Edite o tamanho",
+  size: "131 KB",
   developer: "Eurocom",
   publisher: "GameTek",
   genre: "Ação / Plataforma",
@@ -1437,7 +1439,7 @@ const games = [
     "screenshots/tarzan-lord-of-the-jungle/screenshot-03.png"
   ],
 
-  download: "#"
+  download: "https://www.mediafire.com/file/hf8j1c4pvfqc25o/Tarzan_-_Lord_of_the_Jungle_%28BR-U%29_%28T1.02%29_%5BROMS_BRASIL%5D.gb/file"
  },
 
 {
@@ -1467,8 +1469,7 @@ const games = [
   ],
 
   download: "#"
-},
-  
+}
 ];
 
 /* =========================================================
@@ -2313,7 +2314,7 @@ function goHome(updateHistory = true){
 
 function getLatestGames(){
 
-  // O último jogo colocado no array "games" é tratado como o mais recente.
+  // O último jogo colocado no array "games" aparece primeiro.
   return [...games].reverse();
 }
 
