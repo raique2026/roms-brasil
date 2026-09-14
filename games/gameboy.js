@@ -3,6 +3,7 @@ window.gameBoyGames = [
 
   {
     slug: "tarzan-lord-of-the-jungle",
+    addedAt: "2026-09-13T00:00:00",
     title: "Tarzan: Lord of the Jungle",
     platform: "Game Boy",
     year: "1994",
