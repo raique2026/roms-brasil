@@ -1239,8 +1239,8 @@ applyTheme(localStorage.getItem("romsBrasilTheme")||"dark");
    ========================================================= */
 
 const games = [
-  ...ps2Games,
-  ...gameBoyGames
+  ...(window.ps2Games || []),
+  ...(window.gameBoyGames || [])
 ];
 
 /* =========================================================
