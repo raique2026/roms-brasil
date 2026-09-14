@@ -1069,6 +1069,76 @@ body.light-mode .latest-expand{color:#5545df}
 body.light-mode .theme-toggle{background:#6847f5;border-color:#6847f5;color:#fff}
 body.light-mode .theme-toggle-icon{background:#fff}
 
+
+/* ===== AJUSTES: PESQUISA COM LUPA + X SEM CÍRCULO ===== */
+.top{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.search-wrap{
+  position:relative;
+  flex:0 1 650px;
+  width:100%;
+}
+
+.search-wrap input{
+  width:100%;
+  padding-right:48px;
+}
+
+.search-icon{
+  position:absolute;
+  right:15px;
+  top:50%;
+  transform:translateY(-50%);
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  color:#8f99b4;
+  pointer-events:none;
+}
+
+.search-icon svg{
+  width:20px;
+  height:20px;
+  display:block;
+}
+
+/* remove completamente o círculo do X */
+.social .x-icon{
+  width:38px !important;
+  height:38px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+
+.social .x-icon:hover{
+  background:transparent !important;
+  border:0 !important;
+  transform:scale(1.08);
+}
+
+.social .x-icon img{
+  width:32px !important;
+  height:32px !important;
+  object-fit:contain;
+  display:block;
+}
+
+@media(max-width:760px){
+  .top{flex-wrap:wrap}
+  .search-wrap{
+    order:3;
+    flex:1 0 100%;
+  }
+}
+
 </style>
 </head>
 
@@ -1083,10 +1153,18 @@ body.light-mode .theme-toggle-icon{background:#fff}
     ROMS <b>BRASIL</b>
   </div>
 
-  <input
-    id="q"
-    placeholder="Pesquisar jogos..."
-  >
+  <div class="search-wrap">
+    <input
+      id="q"
+      placeholder="Pesquisar jogos..."
+    >
+    <span class="search-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M20 20l-3.6-3.6"></path>
+      </svg>
+    </span>
+  </div>
 
 
   <button id="themeToggle" class="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Alternar modo claro e escuro">
