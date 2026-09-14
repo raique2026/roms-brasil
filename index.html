@@ -901,6 +901,117 @@ button,
   font-size:14px;
 }
 
+
+/* ===== CAPAS DOS EMULADORES ===== */
+.emulator-card{
+  cursor:pointer;
+  overflow:hidden;
+}
+
+.emulator-cover{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:12px;
+  overflow:hidden;
+  background:#0f1628;
+  margin-bottom:16px;
+  border:1px solid #27304d;
+}
+
+.emulator-cover img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  padding:14px;
+  box-sizing:border-box;
+}
+
+/* ===== PÁGINA INTERNA DO EMULADOR ===== */
+.emulator-detail{
+  padding:42px 0 54px;
+}
+
+.emulator-detail-grid{
+  display:grid;
+  grid-template-columns:minmax(280px,420px) 1fr;
+  gap:34px;
+  align-items:start;
+}
+
+.emulator-detail-image{
+  background:#141c32;
+  border:1px solid #27304d;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.emulator-detail-image img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+.emulator-detail-body h1{
+  margin:0 0 10px;
+  font-size:38px;
+}
+
+.emulator-detail-platform{
+  color:#8fd7ff;
+  font-weight:800;
+  margin-bottom:18px;
+}
+
+.emulator-detail-desc{
+  color:#b8c2da;
+  line-height:1.7;
+  margin-bottom:26px;
+}
+
+.emulator-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.emulator-download,
+.emulator-bios{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:150px;
+  padding:12px 20px;
+  border-radius:999px;
+  font-weight:900;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.emulator-download{
+  background:#6959f5;
+  color:#fff;
+}
+
+.emulator-bios{
+  background:#151f3a;
+  color:#fff;
+  border:1px solid #2b3555;
+}
+
+.emulator-note{
+  margin-top:18px;
+  color:#8f99b4;
+  font-size:13px;
+  line-height:1.5;
+}
+
+@media(max-width:780px){
+  .emulator-detail-grid{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 </head>
 
@@ -1664,6 +1775,90 @@ function showDubbed(){
 }
 
 
+
+const emulators = [
+  {
+    slug:"duckstation",
+    short:"PS1",
+    name:"DuckStation",
+    platform:"PlayStation 1",
+    image:"images/emulators/duckstation.png",
+    description:"Emulador moderno e leve para jogos de PlayStation 1.",
+    download:"#",
+    bios:"#"
+  },
+  {
+    slug:"pcsx2",
+    short:"PS2",
+    name:"PCSX2",
+    platform:"PlayStation 2",
+    image:"images/emulators/pcsx2.png",
+    description:"Emulador popular para jogos de PlayStation 2 no computador.",
+    download:"#",
+    bios:"#"
+  },
+  {
+    slug:"ppsspp",
+    short:"PSP",
+    name:"PPSSPP",
+    platform:"PSP",
+    image:"images/emulators/ppsspp.png",
+    description:"Emulador conhecido por oferecer boa compatibilidade com jogos de PSP.",
+    download:"#",
+    bios:"#"
+  },
+  {
+    slug:"flycast",
+    short:"DC",
+    name:"Flycast",
+    platform:"Dreamcast",
+    image:"images/emulators/flycast.png",
+    description:"Emulador voltado para Sega Dreamcast.",
+    download:"#",
+    bios:"#"
+  },
+  {
+    slug:"mupen64plus",
+    short:"N64",
+    name:"Mupen64Plus",
+    platform:"Nintendo 64",
+    image:"images/emulators/mupen64plus.png",
+    description:"Emulador para jogos de Nintendo 64.",
+    download:"#",
+    bios:"#"
+  },
+  {
+    slug:"snes9x",
+    short:"SNES",
+    name:"Snes9x",
+    platform:"Super Nintendo",
+    image:"images/emulators/snes9x.png",
+    description:"Emulador leve para jogos de Super Nintendo.",
+    download:"#",
+    bios:"#"
+  },
+  {
+    slug:"genesis-plus-gx",
+    short:"MD",
+    name:"Genesis Plus GX",
+    platform:"Mega Drive",
+    image:"images/emulators/genesis-plus-gx.png",
+    description:"Emulador para Mega Drive e Master System.",
+    download:"#",
+    bios:"#"
+  },
+  {
+    slug:"dolphin",
+    short:"GC",
+    name:"Dolphin",
+    platform:"GameCube / Wii",
+    image:"images/emulators/dolphin.png",
+    description:"Emulador para Nintendo GameCube e Wii.",
+    download:"#",
+    bios:"#"
+  }
+];
+
 function showEmulators(){
 
   currentPlatform = "Todos";
@@ -1700,30 +1895,32 @@ function renderEmulators(){
 
       <div class="emulators-grid">
 
-        ${[
-          ["PS1","DuckStation","PlayStation 1","Emulador moderno e leve para jogos de PlayStation 1."],
-          ["PS2","PCSX2","PlayStation 2","Emulador popular para jogos de PlayStation 2 no computador."],
-          ["PSP","PPSSPP","PSP","Emulador conhecido por oferecer boa compatibilidade com jogos de PSP."],
-          ["DC","Flycast","Dreamcast","Emulador voltado para Sega Dreamcast."],
-          ["N64","Mupen64Plus","Nintendo 64","Emulador para jogos de Nintendo 64."],
-          ["SNES","Snes9x","Super Nintendo","Emulador leve para jogos de Super Nintendo."],
-          ["MD","Genesis Plus GX","Mega Drive","Emulador para Mega Drive e Master System."],
-          ["GC","Dolphin","GameCube / Wii","Emulador para Nintendo GameCube e Wii."]
-        ].map(item => `
+        ${emulators.map(item => `
 
-          <article class="emulator-card">
+          <article
+            class="emulator-card"
+            onclick="openEmulator('${item.slug}')"
+          >
+
+            <div class="emulator-cover">
+              <img
+                src="${item.image}"
+                alt="${item.name}"
+                onerror="this.style.display='none'"
+              >
+            </div>
 
             <div class="emulator-icon">
-              ${item[0]}
+              ${item.short}
             </div>
 
-            <h3>${item[1]}</h3>
+            <h3>${item.name}</h3>
 
             <div class="emulator-platform">
-              ${item[2]}
+              ${item.platform}
             </div>
 
-            <p>${item[3]}</p>
+            <p>${item.description}</p>
 
           </article>
 
@@ -1734,6 +1931,88 @@ function renderEmulators(){
     </section>
 
   `;
+}
+
+function openEmulator(slug){
+
+  const emulator = emulators.find(
+    item => item.slug === slug
+  );
+
+  if(!emulator){
+    return;
+  }
+
+  clearInterval(featuredTimer);
+
+  app.innerHTML = `
+
+    <section class="emulator-detail">
+
+      <div class="emulator-detail-grid">
+
+        <div class="emulator-detail-image">
+          <img
+            src="${emulator.image}"
+            alt="${emulator.name}"
+            onerror="this.style.display='none'"
+          >
+        </div>
+
+        <div class="emulator-detail-body">
+
+          <h1>${emulator.name}</h1>
+
+          <div class="emulator-detail-platform">
+            ${emulator.platform}
+          </div>
+
+          <p class="emulator-detail-desc">
+            ${emulator.description}
+          </p>
+
+          <div class="emulator-actions">
+
+            <a
+              class="emulator-download"
+              href="${emulator.download}"
+              target="_blank"
+              rel="noopener"
+            >
+              ⬇ DOWNLOAD
+            </a>
+
+            ${emulator.slug === "pcsx2" ? `
+              <a
+                class="emulator-bios"
+                href="${emulator.bios}"
+                target="_blank"
+                rel="noopener"
+              >
+                BIOS
+              </a>
+            ` : ""}
+
+          </div>
+
+          ${emulator.slug === "pcsx2" ? `
+            <p class="emulator-note">
+              Use uma BIOS obtida legalmente do seu próprio PlayStation 2.
+            </p>
+          ` : ""}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  `;
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 }
 
 function goHome(updateHistory = true){
