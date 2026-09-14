@@ -1300,8 +1300,10 @@ function playGameMusic(game){
   gameAudio.preload = "auto";
 
   gameAudio.play()
-    .then(updateMusicButton)
+    .then(() => updateMusicButton())
     .catch(() => {
+      // Autoplay pode ser bloqueado pelo navegador.
+      // O botão ▶ Música continuará disponível para iniciar manualmente.
       updateMusicButton();
     });
 }
@@ -2846,7 +2848,6 @@ function openGame(slug, updateHistory = true){
     item => item.slug === slug
   );
 
-  playGameMusic(game);
 
   if(!game){
 
@@ -3079,6 +3080,8 @@ function openGame(slug, updateHistory = true){
     ${recommendationsHTML}
 
   `;
+
+  playGameMusic(game);
 
   window.scrollTo({
     top:0,
