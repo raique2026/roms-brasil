@@ -1168,6 +1168,8 @@ body.light-mode .theme-toggle-icon{background:#fff}
 }
 .music-volume{
   width:120px;
+  max-width:120px;
+  flex:0 0 120px;
   accent-color:#6959f5;
 }
 .music-label{
@@ -1178,13 +1180,6 @@ body.light-mode .music-toggle{
   background:#edf1f8;
   border-color:#d5dcea;
   color:#172033;
-}
-
-
-.music-toggle:disabled,
-.music-volume:disabled{
-  opacity:.45;
-  cursor:not-allowed;
 }
 
 </style>
@@ -1282,7 +1277,7 @@ applyTheme(localStorage.getItem("romsBrasilTheme")||"dark");
 /* ===== CONTROLE DE MÚSICA DOS JOGOS ===== */
 let gameAudio = null;
 let currentMusicGame = null;
-let gameMusicVolume = 0.02;
+let gameMusicVolume = 0.015;
 
 function stopGameMusic(){
   if(gameAudio){
@@ -1340,7 +1335,9 @@ function updateMusicButton(){
     return;
   }
 
-  button.textContent = gameAudio.paused ? "▶ Música" : "⏸ Música";
+  button.innerHTML = gameAudio.paused
+    ? "▶ Música"
+    : "⏸ Música";
 }
 
 /* =========================================================
@@ -2851,6 +2848,7 @@ function openGame(slug, updateHistory = true){
     item => item.slug === slug
   );
 
+  playGameMusic(game);
 
   if(!game){
 
@@ -3048,33 +3046,31 @@ function openGame(slug, updateHistory = true){
           ⬇ DOWNLOAD
         </a>
 
-        <div class="music-player">
-          <button
-            id="musicToggle"
-            class="music-toggle"
-            type="button"
-            onclick="toggleGameMusic()"
-            ${game.music ? "" : "disabled"}
-          >
-            ${game.music ? "▶ Música" : "♪ Sem música"}
-          </button>
+        ${game.music ? `
+          <div class="music-player">
+            <button
+              id="musicToggle"
+              class="music-toggle"
+              type="button"
+              onclick="toggleGameMusic()"
+            >
+              ⏸ Música
+            </button>
 
-          <span class="music-label">
-            ${game.music ? "Som ambiente" : "Nenhuma trilha adicionada"}
-          </span>
+            <span class="music-label">Som ambiente</span>
 
-          <input
-            class="music-volume"
-            type="range"
-            min="0"
-            max="0.35"
-            step="0.01"
-            value="0.12"
-            aria-label="Volume da música"
-            oninput="setGameMusicVolume(this.value)"
-            ${game.music ? "" : "disabled"}
-          >
-        </div>
+            <input
+              class="music-volume"
+              type="range"
+              min="0"
+              max="0.08"
+              step="0.005"
+              value="0.015"
+              aria-label="Volume da música"
+              oninput="setGameMusicVolume(this.value)"
+            >
+          </div>
+        ` : ""}
 
         ${screenshotsHTML}
 
@@ -3085,8 +3081,6 @@ function openGame(slug, updateHistory = true){
     ${recommendationsHTML}
 
   `;
-
-  playGameMusic(game);
 
   window.scrollTo({
     top:0,
