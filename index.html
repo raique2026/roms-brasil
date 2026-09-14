@@ -1045,6 +1045,27 @@ button,
   margin:7px 0;
 }
 
+
+/* ===== CRÉDITOS DA TRADUÇÃO ===== */
+.translation-spec{
+  grid-column:1 / -1;
+}
+.translation-lines{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-top:8px;
+  line-height:1.45;
+}
+.translation-lines div{
+  color:#fff;
+  font-weight:400;
+}
+.translation-lines span{
+  color:#d64cff;
+  font-weight:400;
+}
+
 </style>
 </head>
 
@@ -1124,11 +1145,7 @@ const games = [
     publisher: "Electronic Arts",
     genre: "Corrida",
     format: "ISO",
-    translation: {
-  author: "Diogo Amaral",
-  subtitles: "RafaSZ e ZANIT",
-  onlineTexts: "Resdryn"
-},
+    translation: "Não informado",
 
     cover: "images/need-for-speed-most-wanted-black-edition.jpg",
 
@@ -1244,7 +1261,11 @@ const games = [
   publisher: "D3 Publisher",
   genre: "Ação / Aventura",
   format: "ISO",
-    translation: "OAleex e Niccbilac",
+    translation: {
+    author: "Diogo Amaral",
+    subtitles: "RafaSZ e ZANIT",
+    onlineTexts: "Resdryn"
+  },
 
   cover: "images/ben-10-protector-of-earth.jpg",
 
@@ -2596,8 +2617,7 @@ function openGame(slug, updateHistory = true){
             ["Tamanho",game.size],
             ["Formato",game.format],
             ["Desenvolvedora",game.developer],
-            ["Publicadora",game.publisher],
-            ["Tradução",game.translation || "Não informado"]
+            ["Publicadora",game.publisher]
           ].map(item => `
 
             <div class="spec">
@@ -2613,6 +2633,19 @@ function openGame(slug, updateHistory = true){
             </div>
 
           `).join("")}
+
+          <div class="spec translation-spec">
+            <small>Tradução</small>
+            ${
+              game.translation && typeof game.translation === "object"
+                ? `<div class="translation-lines">
+                    <div><span>Autor:</span> ${game.translation.author || "Não informado"}</div>
+                    <div><span>Legendas Refeitas:</span> ${game.translation.subtitles || "Não informado"}</div>
+                    <div><span>Textos do Online:</span> ${game.translation.onlineTexts || "Não informado"}</div>
+                  </div>`
+                : `<strong>${game.translation || "Não informado"}</strong>`
+            }
+          </div>
 
         </div>
 
