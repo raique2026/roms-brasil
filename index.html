@@ -830,6 +830,77 @@ button,
   }
 }
 
+
+/* ===== PÁGINA DE EMULADORES ===== */
+.emulators-section{
+  padding:38px 0 50px;
+}
+
+.emulators-header{
+  margin-bottom:24px;
+}
+
+.emulators-header h1{
+  margin:0 0 8px;
+  font-size:34px;
+}
+
+.emulators-header p{
+  margin:0;
+  color:#aab3cd;
+  line-height:1.6;
+}
+
+.emulators-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:18px;
+}
+
+.emulator-card{
+  background:#141c32;
+  border:1px solid #27304d;
+  border-radius:16px;
+  padding:20px;
+  transition:transform .2s ease,border-color .2s ease;
+}
+
+.emulator-card:hover{
+  transform:translateY(-4px);
+  border-color:#5d6fa8;
+}
+
+.emulator-icon{
+  width:54px;
+  height:54px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  margin-bottom:14px;
+  background:#1c2643;
+  font-weight:900;
+  font-size:14px;
+}
+
+.emulator-card h3{
+  margin:0 0 8px;
+  font-size:18px;
+}
+
+.emulator-platform{
+  color:#8fd7ff;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.emulator-card p{
+  margin:0;
+  color:#aab3cd;
+  line-height:1.55;
+  font-size:14px;
+}
+
 </style>
 </head>
 
@@ -1075,6 +1146,7 @@ const games = [
 let currentPlatform = "Todos";
 let currentGenre = "Todos";
 let dubbedOnly = false;
+let emulatorMode = false;
 
 let latestExpanded = false;
 const latestInitialCount = 5;
@@ -1462,7 +1534,7 @@ function renderFilters(){
 
     <div class="main-menu-item">
       <button
-        class="main-menu-btn ${currentPlatform === "Todos" && currentGenre === "Todos" && !dubbedOnly ? "active" : ""}"
+        class="main-menu-btn ${currentPlatform === "Todos" && currentGenre === "Todos" && !dubbedOnly && !emulatorMode ? "active" : ""}"
         onclick="goHomeMenu()"
       >
         INÍCIO
@@ -1528,6 +1600,15 @@ function renderFilters(){
       </button>
     </div>
 
+    <div class="main-menu-item">
+      <button
+        class="main-menu-btn ${emulatorMode ? "active" : ""}"
+        onclick="showEmulators()"
+      >
+        EMULADORES
+      </button>
+    </div>
+
   `;
 }
 
@@ -1536,6 +1617,7 @@ function goHomeMenu(){
   currentPlatform = "Todos";
   currentGenre = "Todos";
   dubbedOnly = false;
+  emulatorMode = false;
   q.value = "";
 
   renderFilters();
@@ -1547,6 +1629,7 @@ function setPlatform(platform){
   currentPlatform = platform;
   currentGenre = "Todos";
   dubbedOnly = false;
+  emulatorMode = false;
 
   renderFilters();
   renderHome();
@@ -1557,6 +1640,7 @@ function setGenre(genre){
   currentPlatform = "Todos";
   currentGenre = genre;
   dubbedOnly = false;
+  emulatorMode = false;
 
   renderFilters();
   renderHome();
@@ -1573,12 +1657,88 @@ function showDubbed(){
   currentPlatform = "Todos";
   currentGenre = "Todos";
   dubbedOnly = true;
+  emulatorMode = false;
 
   renderFilters();
   renderHome();
 }
 
+
+function showEmulators(){
+
+  currentPlatform = "Todos";
+  currentGenre = "Todos";
+  dubbedOnly = false;
+  emulatorMode = true;
+
+  renderFilters();
+  renderEmulators();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+function renderEmulators(){
+
+  clearInterval(featuredTimer);
+
+  app.innerHTML = `
+
+    <section class="emulators-section">
+
+      <div class="emulators-header">
+
+        <h1>Emuladores</h1>
+
+        <p>
+          Emuladores organizados por plataforma.
+        </p>
+
+      </div>
+
+      <div class="emulators-grid">
+
+        ${[
+          ["PS1","DuckStation","PlayStation 1","Emulador moderno e leve para jogos de PlayStation 1."],
+          ["PS2","PCSX2","PlayStation 2","Emulador popular para jogos de PlayStation 2 no computador."],
+          ["PSP","PPSSPP","PSP","Emulador conhecido por oferecer boa compatibilidade com jogos de PSP."],
+          ["DC","Flycast","Dreamcast","Emulador voltado para Sega Dreamcast."],
+          ["N64","Mupen64Plus","Nintendo 64","Emulador para jogos de Nintendo 64."],
+          ["SNES","Snes9x","Super Nintendo","Emulador leve para jogos de Super Nintendo."],
+          ["MD","Genesis Plus GX","Mega Drive","Emulador para Mega Drive e Master System."],
+          ["GC","Dolphin","GameCube / Wii","Emulador para Nintendo GameCube e Wii."]
+        ].map(item => `
+
+          <article class="emulator-card">
+
+            <div class="emulator-icon">
+              ${item[0]}
+            </div>
+
+            <h3>${item[1]}</h3>
+
+            <div class="emulator-platform">
+              ${item[2]}
+            </div>
+
+            <p>${item[3]}</p>
+
+          </article>
+
+        `).join("")}
+
+      </div>
+
+    </section>
+
+  `;
+}
+
 function goHome(updateHistory = true){
+
+  emulatorMode = false;
 
   if(updateHistory){
     history.pushState(
@@ -1641,6 +1801,7 @@ function isHomeView(){
     currentPlatform === "Todos" &&
     currentGenre === "Todos" &&
     !dubbedOnly &&
+    !emulatorMode &&
     q.value.trim() === ""
   );
 
@@ -2242,7 +2403,13 @@ window.addEventListener(
 
 q.addEventListener(
   "input",
-  renderHome
+  function(){
+
+    emulatorMode = false;
+    renderFilters();
+    renderHome();
+
+  }
 );
 
 chooseRandomFeaturedGames();
