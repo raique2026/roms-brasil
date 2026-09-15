@@ -1438,6 +1438,34 @@ button,
 .game-info-details p{margin:0;padding:10px 0;border-top:1px solid #202e4c;min-width:0}.game-info-details p.translation{grid-column:1/-1}
 .game-info-details small{display:block;color:#7890c3;font-size:9px;margin-bottom:4px}.game-info-details strong{display:block;color:#fff;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
 @media(max-width:560px){.game-info-heading{align-items:flex-start;flex-direction:column}.game-info-download{width:100%;justify-content:center}.game-info-details{grid-template-columns:1fr}.game-info-details p.translation{grid-column:auto}}
+
+/* ===== RETROACHIEVEMENTS COMPACTO ===== */
+.ra-box.ra-compact{padding:14px 16px;border-radius:16px}
+.ra-compact-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.ra-compact-brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ra-compact .ra-title{font-size:18px}
+.ra-compact .ra-status{padding:5px 9px;font-size:11px}
+.ra-compact .ra-user-box{margin:0;padding:11px 12px;border-radius:12px}
+.ra-compact .ra-user-head{display:grid;grid-template-columns:minmax(180px,.75fr) minmax(360px,1.6fr);gap:12px;align-items:center}
+.ra-compact .ra-user-form{margin:0;display:flex;flex-wrap:nowrap}
+.ra-compact .ra-user-input{min-width:0;padding:8px 10px}
+.ra-compact .ra-user-button,.ra-compact .ra-user-disconnect{padding:8px 11px;font-size:12px;white-space:nowrap}
+.ra-compact .ra-progress-wrap{margin-top:10px}
+.ra-compact .ra-progress-track{height:7px}
+.ra-compact .ra-sync-msg{margin-top:6px;font-size:11px}
+.ra-compact-info{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px}
+.ra-compact-info span{padding:5px 8px;border:1px solid #2b3555;border-radius:999px;background:#151e36;color:#aeb9d5;font-size:11px}
+.ra-compact-info b{color:#fff}
+.ra-badge.ra-badge-compact{margin:10px 0 0;padding:9px 11px;gap:10px;border-radius:12px}
+.ra-badge.ra-badge-compact img{width:42px;height:42px;flex:0 0 42px;border-radius:8px}
+.ra-badge.ra-badge-compact .ra-badge-info small{font-size:10px;margin-bottom:2px}
+.ra-badge.ra-badge-compact .ra-badge-info strong{font-size:12px;line-height:1.25}
+@media(max-width:760px){
+ .ra-compact .ra-user-head{grid-template-columns:1fr}
+ .ra-compact .ra-user-form{flex-wrap:wrap}
+ .ra-compact .ra-user-input{flex-basis:100%}
+ .ra-compact-top{align-items:flex-start}
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -3332,25 +3360,29 @@ function openGame(slug, updateHistory = true){
   }
 
   const retroAchievementsHTML = game.retroAchievements ? `
-    <section class="ra-box">
-
-      <div class="ra-header">
-        <h2 class="ra-title">🏆 RetroAchievements</h2>
-        <span class="ra-status">✓ Suporte RetroAchievements</span>
+    <section class="ra-box ra-compact">
+      <div class="ra-compact-top">
+        <div class="ra-compact-brand">
+          <h2 class="ra-title">🏆 RetroAchievements</h2>
+          <span class="ra-status">✓ Suportado</span>
+        </div>
+        <div class="ra-compact-actions">
+          <button class="ra-user-disconnect" id="raDisconnect" type="button" onclick="disconnectRetroAchievements()" hidden>Desconectar</button>
+        </div>
       </div>
 
       <div class="ra-user-box" id="raUserBox" data-game-id="${game.retroAchievementsGameId || ""}">
         <div class="ra-user-head">
-          <div>
-            <div class="ra-user-title">👤 Seu progresso no RetroAchievements</div>
+          <div class="ra-user-identity">
+            <div class="ra-user-title">👤 <span id="raCompactUserLabel">Seu progresso</span></div>
             <div class="ra-user-sub" id="raUserSubtitle">Informe seu usuário para sincronizar suas conquistas.</div>
           </div>
-          <button class="ra-user-disconnect" id="raDisconnect" type="button" onclick="disconnectRetroAchievements()" hidden>Desconectar</button>
+          <form class="ra-user-form" id="raUserForm" onsubmit="connectRetroAchievements(event)">
+            <input class="ra-user-input" id="raUsername" type="text" maxlength="50" autocomplete="username" placeholder="Usuário do RetroAchievements" aria-label="Usuário do RetroAchievements">
+            <button class="ra-user-button" type="submit">🔄 SINCRONIZAR</button>
+          </form>
         </div>
-        <form class="ra-user-form" id="raUserForm" onsubmit="connectRetroAchievements(event)">
-          <input class="ra-user-input" id="raUsername" type="text" maxlength="50" autocomplete="username" placeholder="Seu usuário do RetroAchievements" aria-label="Usuário do RetroAchievements">
-          <button class="ra-user-button" type="submit">🔄 SINCRONIZAR</button>
-        </form>
+
         <div class="ra-progress-wrap" id="raProgress" hidden>
           <div class="ra-progress-info"><span id="raProgressCount">0 / ${game.achievements ?? 0} conquistas</span><span id="raProgressPercent">0%</span></div>
           <div class="ra-progress-track"><div class="ra-progress-bar" id="raProgressBar"></div></div>
@@ -3358,54 +3390,24 @@ function openGame(slug, updateHistory = true){
         </div>
       </div>
 
-      <div class="ra-stats">
-        <div class="ra-stat">
-          <small>CONQUISTAS</small>
-          <strong>${game.achievements ?? "—"}</strong>
-        </div>
-
-        <div class="ra-stat">
-          <small>PONTOS</small>
-          <strong>${game.achievementPoints ?? "—"}</strong>
-        </div>
-
-        <div class="ra-stat">
-          <small>HASHES SUPORTADOS</small>
-          <strong>${game.supportedHashes ?? "—"}</strong>
-        </div>
+      <div class="ra-compact-info">
+        <span><b>${game.achievements ?? "—"}</b> conquistas</span>
+        <span><b>${game.achievementPoints ?? "—"}</b> pontos</span>
+        <span><b>${game.supportedHashes ?? "—"}</b> hashes</span>
+        ${game.hardcoreSupport ? `<span>🔥 Hardcore</span>` : ""}
+        ${game.recommendedEmulator ? `<span>🎮 ${game.recommendedEmulator}</span>` : ""}
+        <span>🌎 ${game.region}</span>
       </div>
 
       ${game.achievementBadge ? `
-        <div class="ra-badge">
-          <img
-            src="${game.achievementBadge}"
-            alt="Insígnia de conclusão de ${game.title}"
-            onerror="this.parentElement.style.display='none'"
-          >
+        <div class="ra-badge ra-badge-compact">
+          <img src="${game.achievementBadge}" alt="Insígnia de conclusão de ${game.title}" onerror="this.parentElement.style.display='none'">
           <div class="ra-badge-info">
             <small>🏅 INSÍGNIA DE CONCLUSÃO</small>
             <strong>${game.achievementBadgeText || "Complete o jogo para conquistar esta insígnia"}</strong>
           </div>
         </div>
       ` : ""}
-
-      <div class="ra-details">
-        ${game.hardcoreSupport ? `<span class="ra-chip">🔥 Hardcore Mode</span>` : ""}
-        ${game.recommendedEmulator ? `<span class="ra-chip">🎮 ${game.recommendedEmulator}</span>` : ""}
-        <span class="ra-chip">🌎 ${game.region}</span>
-      </div>
-
-      <div class="ra-actions">
-        ${game.retroAchievementsUrl ? `
-          <a class="ra-button"
-             href="${game.retroAchievementsUrl}"
-             target="_blank"
-             rel="noopener">
-            🏆 VER CONQUISTAS
-          </a>
-        ` : ""}
-      </div>
-
     </section>
   ` : "";
 
