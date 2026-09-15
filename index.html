@@ -1337,6 +1337,34 @@ body.light-mode .ra-site-notice{
 }
 body.light-mode .ra-site-notice strong{color:#172033;}
 
+
+/* ===== GUIAS DE CONQUISTAS EM PORTUGUÊS ===== */
+.guide-box{margin-top:18px;padding:20px;border:1px solid #3b4564;border-radius:18px;background:#121a2e}
+.guide-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.guide-header h2{margin:0;font-size:20px}
+.guide-status{font-size:12px;font-weight:800;color:#8fd7ff;background:#17233d;border:1px solid #314366;border-radius:999px;padding:7px 11px}
+.guide-summary{color:#b9c4df;line-height:1.65;margin:0 0 15px}
+.guide-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.guide-meta div{padding:12px;background:#0f1628;border:1px solid #27304d;border-radius:12px}
+.guide-meta small{display:block;color:#8f99b4;font-size:10px;margin-bottom:5px}
+.guide-meta strong{font-size:13px}
+.guide-steps{display:grid;gap:10px;margin:0 0 16px}
+.guide-step{padding:13px 14px;border-left:3px solid #6959f5;background:#0f1628;border-radius:0 12px 12px 0}
+.guide-step strong{display:block;margin-bottom:5px}
+.guide-step p{margin:0;color:#aeb9d1;line-height:1.55;font-size:13px}
+.guide-button{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;border-radius:999px;background:#6959f5;color:#fff;font-size:13px;font-weight:900;cursor:pointer;border:0}
+.guide-full{margin-top:16px;padding-top:16px;border-top:1px solid #27304d}
+.guide-achievement{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #27304d}
+.guide-achievement img{width:54px;height:54px;object-fit:contain;border-radius:10px;flex:0 0 54px}
+.guide-achievement h3{font-size:14px;margin:0 0 4px}
+.guide-achievement p{font-size:13px;color:#aeb9d1;line-height:1.5;margin:0}
+.guide-achievement .guide-points{font-size:11px;color:#8fd7ff;font-weight:800;margin-bottom:4px}
+.guide-empty{color:#8f99b4;font-size:13px}
+body.light-mode .guide-box{background:#fff;border-color:#dce2ee}
+body.light-mode .guide-meta div,body.light-mode .guide-step{background:#f4f6fb;border-color:#dce2ee}
+body.light-mode .guide-summary,body.light-mode .guide-step p,body.light-mode .guide-achievement p{color:#5d677c}
+@media(max-width:700px){.guide-meta{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 
@@ -1815,6 +1843,67 @@ const games = [
   retroHashesUrl: "https://retroachievements.org/game/785/hashes",
   achievementBadge: "images/badges/metroid-fusion.png",
   achievementBadgeText: "Complete o jogo para conquistar esta insígnia",
+
+  // GUIA REAL EM PORTUGUÊS — RetroAchievements Base Set
+  achievementGuide: {
+    available: true,
+    difficulty: "8/10",
+    estimatedTime: "15–25 horas",
+    playthroughs: "2–3 recomendadas",
+    missables: "17",
+    summary: "Guia em português para as 43 conquistas do conjunto base de Metroid Fusion no RetroAchievements. O conjunto soma 732 pontos e mistura progressão, chefes sem dano, desafios de tempo, 100% e uma campanha low%.",
+    steps: [
+      { title: "1. Primeira campanha — história e reconhecimento", text: "Jogue normalmente, desbloqueie as conquistas de progressão e aprenda o mapa e os chefes. Aproveite para tentar os desafios sem dano quando houver um save próximo." },
+      { title: "2. Atenção às perdíveis", text: "O conjunto oficial marca 17 conquistas como perdíveis. Dê atenção especial a Shinespark Legend, Quick Thinking, Under Pressure, Swift Escape e aos desafios de tempo." },
+      { title: "3. 100% e velocidade", text: "Planeje uma rota para Completionist. Depois, quando conhecer bem o jogo, tente Don't Stop Me Now e Space Juggernaut. O domínio oficial costuma exigir bem mais tempo que apenas terminar a história." },
+      { title: "4. Campanha low% — Bare-bones", text: "Faça uma campanha separada sem Energy Tanks e sem expansões de Power Bomb, mantendo a capacidade de Mísseis em 15 ou menos. Esta é uma das conquistas mais exigentes do conjunto." }
+    ],
+    achievements: [
+      { name: "Explosive Chamber", points: 4, description: "Baixe os dados de Mísseis.", guide: "Conquista de progressão. Siga a missão principal até a Data Room indicada pelo computador e faça o download dos Mísseis." },
+      { name: "Vitalit-E", points: 4, description: "Adquira um Energy Tank.", guide: "Pegue qualquer Energy Tank. O primeiro disponível no caminho normal já serve." },
+      { name: "Mighty Morphin'", points: 5, description: "Recupere a habilidade Morph Ball.", guide: "Derrote Arachnus-X e absorva o Core-X para recuperar a Morph Ball." },
+      { name: "Wrecked Arachnus-X", points: 10, description: "Derrote Arachnus-X sem sofrer dano.", guide: "Salve antes da luta. Mantenha distância, evite as bolas de fogo e ataque quando houver abertura. Se sofrer qualquer dano, recarregue o save e tente novamente." },
+      { name: "Focused Shot", points: 5, description: "Recupere a habilidade Charge Beam.", guide: "Derrote o Charge Core-X e absorva o núcleo para recuperar o Charge Beam." },
+      { name: "Wrecked Elephant Bird", points: 25, description: "Derrote o Charge Core-X sem sofrer dano.", guide: "Fique atento aos saltos e projéteis do chefe. Priorize desviar e só ataque quando a trajetória estiver segura." },
+      { name: "L1 Access (Blue)", points: 5, description: "Desbloqueie as fechaduras de Nível 1 (azuis).", guide: "Use a Security Room indicada durante a progressão para liberar as portas azuis." },
+      { name: "Firecracker", points: 4, description: "Baixe os dados de Bombas.", guide: "Chegue à Data Room do Setor 2 e faça o download das Bombas." },
+      { name: "More Kick", points: 5, description: "Recupere High Jump e Jump Ball.", guide: "Derrote Zazabi e absorva o Core-X para receber as duas habilidades." },
+      { name: "Wrecked Zazabi", points: 10, description: "Derrote Zazabi sem sofrer dano.", guide: "Evite ficar diretamente sob o chefe quando ele cair. Acerte-o quando abrir a boca e reinicie a tentativa caso seja atingido." },
+      { name: "Wrecked Serris", points: 25, description: "Derrote Serris sem sofrer dano.", guide: "Memorize a rota de Serris e use as plataformas para evitar contato. Ataque a cabeça quando ele passar por uma posição segura." },
+      { name: "Leg Day Paid Off", points: 5, description: "Recupere o Speed Booster.", guide: "Derrote Serris e absorva o Core-X." },
+      { name: "L2 Access (Green)", points: 5, description: "Desbloqueie as fechaduras de Nível 2 (verdes).", guide: "Acesse a Security Room correspondente e libere as portas verdes." },
+      { name: "Tripled Firepower", points: 5, description: "Baixe os dados de Super Missile.", guide: "Faça o download do upgrade de Super Missile na Data Room indicada pela missão." },
+      { name: "Wrecked B.O.X.", points: 10, description: "Derrote o B.O.X. Security Robot sem sofrer dano.", guide: "Use as plataformas para ficar fora da trajetória do robô e ataque o ponto vulnerável por cima. Se tomar dano, recarregue o save." },
+      { name: "Stay Frosty", points: 5, description: "Recupere o efeito da Varia Suit.", guide: "Derrote o Varia Core-X e absorva-o. A Varia Suit permite suportar temperaturas extremas." },
+      { name: "Frigid Chamber", points: 5, description: "Adicione o efeito de gelo aos Mísseis.", guide: "Faça o download do upgrade Ice Missile quando a missão liberar a Data Room correspondente." },
+      { name: "Open Wide", points: 5, description: "Recupere o Wide Beam.", guide: "Derrote o Wide Beam Core-X e absorva o núcleo." },
+      { name: "Under Pressure", points: 25, description: "Reative a unidade de resfriamento com pelo menos 4 minutos restantes.", guide: "Durante a emergência do superaquecimento, vá direto ao objetivo, evite desvios e reative o sistema antes que o cronômetro fique abaixo de 4:00." },
+      { name: "Wrecked Human Core-X", points: 25, description: "Derrote o Human Core-X sem sofrer dano.", guide: "Concentre-se em manter espaço para desviar dos ataques e use tiros carregados quando estiver seguro. Qualquer dano invalida a tentativa." },
+      { name: "L3 Access (Yellow)", points: 5, description: "Desbloqueie as fechaduras de Nível 3 (amarelas).", guide: "Encontre a Security Room de Nível 3 durante a progressão e libere as portas amarelas." },
+      { name: "Blinding Power", points: 5, description: "Baixe os dados de Power Bomb.", guide: "Faça o download das Power Bombs na Data Room correspondente." },
+      { name: "Wrecked Yakuza", points: 50, description: "Derrote Yakuza sem sofrer dano.", guide: "É um dos desafios mais difíceis do conjunto. Na primeira fase, evite ficar alinhado com as investidas; na segunda, mantenha-se móvel e ataque apenas em janelas seguras. Salve antes da luta." },
+      { name: "Space Ninja", points: 5, description: "Recupere a habilidade Space Jump.", guide: "Derrote Yakuza e absorva o Core-X." },
+      { name: "Wrecked Nettori", points: 25, description: "Derrote Nettori sem sofrer dano.", guide: "Destrua as flores que bloqueiam a arena e controle os saltos entre os projéteis. Use ataques fortes sem se expor ao padrão das plantas." },
+      { name: "Piercing Their Pants", points: 5, description: "Recupere a habilidade Plasma Beam.", guide: "Derrote Nettori e absorva o Core-X." },
+      { name: "Amphibious", points: 5, description: "Recupere o efeito da Gravity Suit.", guide: "Derrote Nightmare e absorva o Core-X. Depois disso, Samus poderá se mover normalmente na água." },
+      { name: "L4 Access (Red)", points: 10, description: "Desbloqueie as fechaduras de Nível 4 (vermelhas).", guide: "Acesse a Security Room de Nível 4 e libere as portas vermelhas." },
+      { name: "Diffusion Missiles", points: 5, description: "Adicione Diffusion aos Mísseis.", guide: "Faça o download dos Diffusion Missiles na Data Room correspondente." },
+      { name: "Shinespark Legend", points: 50, description: "Depois de abrir as portas de Nível 4 e antes de obter Diffusion Missiles, leia a mensagem secreta no Setor 4.", guide: "PERDÍVEL. Faça o caminho secreto de Shinespark no Setor 4 antes de pegar Diffusion Missiles. Salve antes de tentar e pratique a sequência de Speed Booster/Shinespark; obter Diffusion Missiles encerra a janela desta conquista." },
+      { name: "Wave Beam", points: 5, description: "Recupere a habilidade Wave Beam.", guide: "Derrote o Wave Beam Core-X e absorva-o." },
+      { name: "Wrecked Infected B.O.X.", points: 25, description: "Derrote o B.O.X. infectado sem sofrer dano.", guide: "Use o espaço da arena para evitar os ataques e acerte o núcleo quando estiver exposto. Recarregue o save se sofrer dano." },
+      { name: "Quick Thinking", points: 25, description: "Escape do Restricted Laboratory em até 10 segundos.", guide: "PERDÍVEL. Assim que a sequência de fuga começar, siga imediatamente pela rota de saída, sem parar para enfrentar inimigos ou explorar." },
+      { name: "Screw Attack", points: 10, description: "Recupere a habilidade Screw Attack.", guide: "Derrote o Core-X correspondente e absorva-o durante a progressão final." },
+      { name: "Wrecked SA-X", points: 25, description: "Derrote SA-X sem sofrer dano.", guide: "Mantenha distância, use o espaço da arena e ataque nos momentos em que SA-X estiver vulnerável. Evite trocar dano: qualquer acerto recebido invalida a conquista." },
+      { name: "Swift Escape", points: 25, description: "Escape da estação com pelo menos 1 minuto restante.", guide: "PERDÍVEL. Na fuga final, siga direto para a nave e evite desvios. O objetivo é terminar a sequência com 1:00 ou mais no cronômetro." },
+      { name: "Wrecked Omega Metroid", points: 25, description: "Derrote o Omega Metroid sem sofrer dano.", guide: "Na batalha final, mantenha distância dos golpes e ataque somente quando houver abertura. Se for atingido, recarregue o save anterior." },
+      { name: "Mission Complete", points: 25, description: "Complete a missão.", guide: "Finalize o jogo em qualquer tempo permitido pelo conjunto." },
+      { name: "Hasty", points: 10, description: "Complete a missão em menos de 4 horas.", guide: "PERDÍVEL. Faça uma campanha focada na história, evitando coleta desnecessária. O tempo final precisa ser inferior a 4:00." },
+      { name: "Don't Stop Me Now", points: 25, description: "Complete a missão em menos de 2 horas.", guide: "PERDÍVEL. Exige uma rota rápida e conhecimento do mapa. Ignore expansões não essenciais e pratique os setores que mais consomem tempo." },
+      { name: "Completionist", points: 25, description: "Complete a missão com todos os itens coletados.", guide: "Colete 100% dos Energy Tanks, Missile Tanks e Power Bomb Tanks antes de finalizar a missão. Faça uma limpeza do mapa antes da sequência final." },
+      { name: "Space Juggernaut", points: 50, description: "Complete a missão com todos os itens coletados em menos de 2 horas.", guide: "PERDÍVEL. Combine uma rota de 100% com ritmo de speedrun. Planeje a ordem dos itens para reduzir retornos e salve tempo nos chefes e deslocamentos." },
+      { name: "Bare-bones", points: 100, description: "Complete a missão com capacidade de Mísseis de 15 ou menos, sem Energy Tanks e sem expansões de Power Bomb.", guide: "PERDÍVEL. Faça uma campanha low%. Não pegue Energy Tanks nem Power Bomb Tanks e limite sua capacidade de Mísseis a no máximo 15. É recomendável fazer esta conquista em uma campanha separada." }
+    ]
+  },
 
   cover: "images/metroid-fusion.png",
 
@@ -2305,6 +2394,16 @@ function renderFilters(){
       </button>
     </div>
 
+
+    <div class="main-menu-item">
+      <button
+        class="main-menu-btn"
+        onclick="showAchievementGuides()"
+      >
+        GUIAS
+      </button>
+    </div>
+
     <div class="main-menu-item">
       <button
         class="main-menu-btn ${emulatorMode ? "active" : ""}"
@@ -2315,6 +2414,37 @@ function renderFilters(){
     </div>
 
   `;
+}
+
+function showAchievementGuides(){
+  clearInterval(featuredTimer);
+  currentPlatform = "Todos";
+  currentGenre = "Todos";
+  dubbedOnly = false;
+  emulatorMode = false;
+  q.value = "";
+  q.style.display = "";
+  filters.style.display = "flex";
+
+  const guideGames = games.filter(game => game.retroAchievements);
+  app.innerHTML = `
+    <section style="padding:38px 0 50px">
+      <h1 style="margin:0 0 8px">📖 Guias de Conquistas</h1>
+      <p class="desc" style="margin:0 0 24px">Guias em português para jogos com suporte ao RetroAchievements.</p>
+      <div class="grid">
+        ${guideGames.map(game => `
+          <article class="card" onclick="openGame('${game.slug}')">
+            <div class="cover"><img src="${getCover(game)}" alt="${game.title}"></div>
+            <div class="info">
+              <h3>${game.title}</h3>
+              <div class="meta">${game.achievementGuide?.available ? "📖 Guia disponível" : "🕒 Guia em preparação"}</div>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
+  window.scrollTo(0,0);
 }
 
 function goHomeMenu(){
@@ -3112,6 +3242,70 @@ function openGame(slug, updateHistory = true){
     </section>
   ` : "";
 
+  const achievementGuideHTML = game.retroAchievements ? (() => {
+    const guide = game.achievementGuide;
+
+    if(!guide || !guide.available){
+      return `
+        <section class="guide-box">
+          <div class="guide-header">
+            <h2>📖 Guia de Conquistas</h2>
+            <span class="guide-status">Português BR</span>
+          </div>
+          <p class="guide-summary">Este jogo tem suporte ao RetroAchievements, mas o guia em português ainda está sendo preparado pelo RetroHub BR.</p>
+        </section>
+      `;
+    }
+
+    const steps = Array.isArray(guide.steps) ? guide.steps : [];
+    const achievements = Array.isArray(guide.achievements) ? guide.achievements : [];
+
+    return `
+      <section class="guide-box">
+        <div class="guide-header">
+          <h2>📖 Guia de Conquistas</h2>
+          <span class="guide-status">Português BR</span>
+        </div>
+
+        <p class="guide-summary">${guide.summary || "Guia de conquistas em português."}</p>
+
+        <div class="guide-meta">
+          <div><small>DIFICULDADE</small><strong>${guide.difficulty || "A definir"}</strong></div>
+          <div><small>TEMPO ESTIMADO</small><strong>${guide.estimatedTime || "A definir"}</strong></div>
+          <div><small>JOGADAS</small><strong>${guide.playthroughs || "A definir"}</strong></div>
+          <div><small>PERDÍVEIS</small><strong>${guide.missables || "A definir"}</strong></div>
+        </div>
+
+        ${steps.length ? `
+          <div class="guide-steps">
+            ${steps.map(step => `
+              <div class="guide-step">
+                <strong>${step.title}</strong>
+                <p>${step.text}</p>
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        <button class="guide-button" type="button" onclick="toggleAchievementGuide(this)">📖 VER GUIA COMPLETO</button>
+
+        <div class="guide-full" hidden>
+          ${achievements.length ? achievements.map(item => `
+            <article class="guide-achievement">
+              ${item.badge ? `<img src="${item.badge}" alt="${item.name || "Conquista"}">` : ""}
+              <div>
+                <h3>🏆 ${item.name || "Conquista"}</h3>
+                ${item.points ? `<div class="guide-points">${item.points} pontos</div>` : ""}
+                ${item.description ? `<p><strong>Requisito:</strong> ${item.description}</p>` : ""}
+                ${item.guide ? `<p><strong>Como conseguir:</strong> ${item.guide}</p>` : ""}
+              </div>
+            </article>
+          `).join("") : `<p class="guide-empty">As explicações conquista por conquista ainda não foram adicionadas.</p>`}
+        </div>
+      </section>
+    `;
+  })() : "";
+
   const recommendedGames =
     getRandomRecommendations(
       game.slug,
@@ -3196,6 +3390,8 @@ function openGame(slug, updateHistory = true){
 
         ${retroAchievementsHTML}
 
+        ${achievementGuideHTML}
+
         ${screenshotsHTML}
 
         <div class="specs">
@@ -3250,6 +3446,16 @@ function openGame(slug, updateHistory = true){
     behavior:"smooth"
   });
 
+}
+
+function toggleAchievementGuide(button){
+  const box = button.closest(".guide-box");
+  if(!box) return;
+  const full = box.querySelector(".guide-full");
+  if(!full) return;
+  const opening = full.hidden;
+  full.hidden = !opening;
+  button.textContent = opening ? "📕 FECHAR GUIA" : "📖 VER GUIA COMPLETO";
 }
 
 function openScreenshot(slug,index){
