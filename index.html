@@ -1142,6 +1142,28 @@ body.light-mode .theme-toggle-icon{background:#fff}
 
 
 
+
+/* ===== PROGRESSO PESSOAL RETROACHIEVEMENTS ===== */
+.ra-user-box{margin:0 0 16px;padding:14px;border:1px solid #2b3555;border-radius:14px;background:#0f1628}
+.ra-user-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.ra-user-title{font-weight:900;font-size:14px}
+.ra-user-sub{font-size:12px;color:#8f99b4;margin-top:4px}
+.ra-user-form{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.ra-user-input{flex:1;min-width:190px;padding:10px 12px;border-radius:10px;border:1px solid #34405f;background:#0a1020;color:#fff;outline:none}
+.ra-user-input:focus{border-color:#6959f5}
+.ra-user-button,.ra-user-disconnect{border:0;cursor:pointer;padding:10px 14px;border-radius:10px;font-weight:900;color:#fff;background:#6959f5}
+.ra-user-disconnect{background:#1c2643;border:1px solid #34405f}
+.ra-progress-wrap{margin-top:14px}
+.ra-progress-info{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:800;margin-bottom:7px}
+.ra-progress-track{height:10px;background:#202a45;border-radius:999px;overflow:hidden}
+.ra-progress-bar{height:100%;width:0;background:linear-gradient(90deg,#6959f5,#36d98b);transition:width .35s ease}
+.ra-sync-msg{font-size:12px;color:#8f99b4;margin-top:9px}
+.guide-achievement.ra-earned{border:1px solid rgba(54,217,139,.35);background:rgba(54,217,139,.06);border-radius:12px;padding:12px;margin:6px 0}
+.guide-achievement.ra-earned h3{color:#74e6aa}
+.ra-earned-state{display:inline-flex;gap:6px;align-items:center;margin:4px 0 6px;padding:4px 8px;border-radius:999px;background:rgba(54,217,139,.12);color:#74e6aa;font-size:11px;font-weight:900}
+body.light-mode .ra-user-box{background:#f4f6fb;border-color:#dce2ee}
+body.light-mode .ra-user-input{background:#fff;color:#172033;border-color:#d5dcea}
+
 /* ===== RETROACHIEVEMENTS ===== */
 .ra-box{
   margin-top:24px;
@@ -1838,103 +1860,10 @@ const games = [
   hardcoreSupport: true,
   recommendedEmulator: "PCSX2",
   retroAchievementsUrl: "https://retroachievements.org/game/23942",
+  retroAchievementsGameId: 23942,
   retroHashesUrl: "https://retroachievements.org/game/23942/hashes",
   achievementBadge: "images/badges/kung-fu-panda.png",
   achievementBadgeText: "Complete o conjunto de conquistas para conquistar esta insígnia",
-
-  achievementGuide: {
-    available: true,
-    difficulty: "Alta",
-    estimatedTime: "14–20+ horas",
-    playthroughs: "1–2 recomendadas",
-    missables: "10 no conjunto oficial",
-    summary: "Guia completo em português das 77 conquistas do conjunto base de Kung Fu Panda no RetroAchievements. São 685 pontos no total, com progressão, colecionáveis, melhorias, tarefas de fase e 10 desafios perdíveis.",
-    steps: [
-      { title: "1. Campanha no Master", text: "Avance pelas fases no Master para desbloquear as conquistas de conclusão e aprender os mapas, chefes e objetivos." },
-      { title: "2. Dragon Warrior", text: "Depois, repita as fases exigidas no Dragon Warrior. Essa dificuldade também é usada por vários desafios especiais." },
-      { title: "3. Melhorias de Po", text: "Use as moedas para elevar os atributos de Po ao nível 5. Há conquistas específicas para diferentes atributos." },
-      { title: "4. Desafios perdíveis", text: "O conjunto oficial marca 10 conquistas como perdíveis. Nos desafios sem dano, leia a condição antes da tentativa e evite pausar quando isso for proibido." }
-    ],
-    achievements: [
-      { name: "Sonhando com Moedas", officialName: "Dreaming of Coins", points: 3, description: "Colete as duas moedas raras em Sonho de Po.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510603.png" },
-      { name: "Um Sonho Além das Palavras", officialName: "A Dream Beyond Telling", points: 5, description: "Conclua Sonho de Po na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510599.png" },
-      { name: "Sonho de um Guerreiro Dragão", officialName: "Dream Kung Fu Warrior", points: 10, description: "Conclua Po's dream na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510600.png" },
-      { name: "Coração Feliz, Panda Feliz", officialName: "Happy Heart, Happy Panda", points: 3, description: "Eleve o atributo básico Health de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510580.png" },
-      { name: "A Energia Flui por Dentro", officialName: "The Energy Flows Within", points: 3, description: "Eleve o atributo básico Chi de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510581.png" },
-      { name: "Guerreiro Dragão... VELOCIDADE!", officialName: "Dragon Warrior... SPEED!", points: 3, description: "Eleve o atributo básico Fast Attack de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510582.png" },
-      { name: "Força de Mil Sóis", officialName: "Strength of a Thousand Suns", points: 3, description: "Eleve o atributo básico Strong Attack de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510583.png" },
-      { name: "Agilidade Aumentada", officialName: "Increased Agility", points: 3, description: "Eleve o atributo básico Running Attack de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510584.png" },
-      { name: "Torne-se o Coelho", officialName: "Become the Bunny", points: 3, description: "Eleve o atributo básico Jumping Attack de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510585.png" },
-      { name: "Melhoria de Apertar Botões", officialName: "Button Mashing Upgrade", points: 3, description: "Eleve o atributo básico Fast Fast Strong Attack de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510586.png" },
-      { name: "Um Combo que Queima", officialName: "A Combo that Burns", points: 3, description: "Eleve o atributo básico Three Palms of Fury de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510587.png" },
-      { name: "Panda Hadouken!", officialName: "Panda Hadouken!", points: 3, description: "Eleve o atributo básico Charged Attack de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510588.png" },
-      { name: "Habilidades de Garçom da Loja de Macarrão!", officialName: "Noodle Shop Waiter Skills!", points: 3, description: "Eleve o atributo básico Juggle de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510589.png" },
-      { name: "Fúria do Panda", officialName: "Panda Rage", points: 3, description: "Eleve o atributo básico Throw de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510590.png" },
-      { name: "Absorção do Pergaminho do Dragão", officialName: "Dragon Scroll Absorption", points: 3, description: "Eleve o atributo básico Block de Po ao nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510591.png" },
-      { name: "Eles Me Veem Po-ando", officialName: "They See Me Po-in'", points: 5, description: "Melhore a técnica Panda Stumble de Po até o nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510593.png" },
-      { name: "Pandaquake!!!", officialName: "Pandaquake!!!", points: 5, description: "Melhore a técnica Panda Quake de Po até o nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510594.png" },
-      { name: "Barriga de Bolinho Treinada", officialName: "Trained Dumpling Belly", points: 5, description: "Melhore a técnica Panda Quake de Po até o nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510595.png" },
-      { name: "Rolando Pelas Colinas", officialName: "Rollin' Through the Hills", points: 5, description: "Melhore a técnica Panda Fun Ball de Po até o nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510596.png" },
-      { name: "Poderes de Nível do Palácio de Jade", officialName: "Jade Palace Level Powers", points: 5, description: "Melhore a técnica Panda Weapon de Po até o nível 5.", guide: "Use as moedas/pontos de melhoria para evoluir esse atributo ou técnica de Po até o nível 5.", badge: "https://media.retroachievements.org/Badge/510597.png" },
-      { name: "Libertando Aldeões e Moedas!", officialName: "Freeing Villagers and Freeing Coins!", points: 5, description: "Colete as duas moedas ao longo das fases de Torneio do Guerreiro Dragão.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510609.png" },
-      { name: "O Início de um Legado", officialName: "A Legacy's Beginning", points: 5, description: "Conclua as duas partes de Torneio do Guerreiro Dragão na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510612.png" },
-      { name: "Os Cinco Furiosos Ficariam Orgulhosos!", officialName: "The Furious Five Would Be Proud!", points: 10, description: "Conclua as duas partes de Torneio do Guerreiro Dragão na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510611.png" },
-      { name: "Treinamento Básico de Kung Fu", officialName: "Basic Kung Fu Training", points: 5, description: "Conclua Primeiro Dia de Po na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510620.png" },
-      { name: "Treinamento Avançado de Kung Fu", officialName: "Advanced Kung Fu Training", points: 5, description: "Conclua Primeiro Dia de Po na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510619.png" },
-      { name: "Preparativos!", officialName: "Preparations!", points: 5, description: "Conclua Proteja o Palácio na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510627.png" },
-      { name: "Preparação Extra: Estilo Dragão!", officialName: "Extra Preparation: Dragon Style!", points: 10, description: "Conclua Proteja o Palácio na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510626.png" },
-      { name: "Moeda da Invasão!", officialName: "Invasion Coin!", points: 3, description: "Colete a moeda rara em Proteja o Palácio.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510624.png" },
-      { name: "Lágrimas Levadas Embora", officialName: "Tears Swept Away", points: 10, description: "Conclua Lago das Lágrimas na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510630.png" },
-      { name: "Varredura do Guerreiro Dragão: Lago das Lágrimas", officialName: "Dragon Warrior Sweep: Lake of Tears", points: 10, description: "Complete todas as tarefas da fase Lago das Lágrimas na dificuldade Mestre ou superior.", guide: "Confira os objetivos da fase e conclua todos na mesma progressão exigida. Faça a limpeza dos objetivos antes de finalizar a fase.", badge: "https://media.retroachievements.org/Badge/510629.png" },
-      { name: "Moedas da Água", officialName: "Water Coins", points: 5, description: "Colete as duas moedas raras em Lago das Lágrimas.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510628.png" },
-      { name: "Kung Fu à Beira do Lago", officialName: "Lakeside Kung Fu", points: 5, description: "Conclua Lago das Lágrimas na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510631.png" },
-      { name: "Colecionador de Wudang", officialName: "Wudang Collector", points: 5, description: "Colete as duas moedas raras em Templo Wudang.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510668.png" },
-      { name: "Maestria de Wudang", officialName: "Wudang Mastery", points: 10, description: "Conclua Templo Wudang na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510661.png" },
-      { name: "Varredura do Guerreiro Dragão: Templo Wudang", officialName: "Dragon Warrior Sweep: Wudang Temple", points: 10, description: "Complete todas as tarefas da fase Templo Wudang na dificuldade Mestre ou superior.", guide: "Confira os objetivos da fase e conclua todos na mesma progressão exigida. Faça a limpeza dos objetivos antes de finalizar a fase.", badge: "https://media.retroachievements.org/Badge/510665.png" },
-      { name: "Um Novo Templo", officialName: "A New Temple", points: 5, description: "Conclua Templo Wudang na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510657.png" },
-      { name: "Águas Perigosas", officialName: "Dangerous Waters", points: 5, description: "Conclua Águas Traiçoeiras na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510658.png" },
-      { name: "Nadando Contra as Probabilidades", officialName: "Swimming Above Odds", points: 10, description: "Conclua Águas Traiçoeiras na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510662.png" },
-      { name: "Habilidades de Michael Phelps", officialName: "Michael Phelps Skills", points: 3, description: "Colete a moeda rara em Águas Traiçoeiras.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510669.png" },
-      { name: "Assalto do Panda", officialName: "Panda Heist", points: 5, description: "Conclua Resgate de Wudang na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510659.png" },
-      { name: "Resgatador Sério", officialName: "Serious Rescuer", points: 10, description: "Conclua Resgate de Wudang na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510663.png" },
-      { name: "Multitarefa: Coletando e Resgatando", officialName: "Multitasking Collecting & Rescuing", points: 5, description: "Colete as três moedas raras em Resgate de Wudang.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510671.png" },
-      { name: "Varredura do Guerreiro Dragão: Resgate de Wudang", officialName: "Dragon Warrior Sweep: Wudang Rescue", points: 10, description: "Complete todas as tarefas da fase Resgate de Wudang na dificuldade Mestre ou superior.", guide: "Confira os objetivos da fase e conclua todos na mesma progressão exigida. Faça a limpeza dos objetivos antes de finalizar a fase.", badge: "https://media.retroachievements.org/Badge/510666.png" },
-      { name: "A Escuridão de Po", officialName: "Po's Darkness", points: 5, description: "Conclua Lua Uivante na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510660.png" },
-      { name: "Uivando para a Lua", officialName: "Bark at the Moon", points: 10, description: "Conclua Lua Uivante na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510664.png" },
-      { name: "Colecionador Lunar", officialName: "Lunar Collector", points: 5, description: "Colete as duas moedas raras em Lua Uivante.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510672.png" },
-      { name: "Varredura do Guerreiro Dragão: Lua Uivante", officialName: "Dragon Warrior Sweep: Howling Moon", points: 10, description: "Complete todas as tarefas da fase Lua Uivante na dificuldade Mestre ou superior.", guide: "Confira os objetivos da fase e conclua todos na mesma progressão exigida. Faça a limpeza dos objetivos antes de finalizar a fase.", badge: "https://media.retroachievements.org/Badge/510667.png" },
-      { name: "Príncipe Po", officialName: "Prince of Po", points: 5, description: "Conclua Segredo das Areias na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510679.png" },
-      { name: "Areias do Kung Fu", officialName: "Sands of Kung Fu", points: 10, description: "Conclua Segredo das Areias na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510682.png" },
-      { name: "Sapatos Arenosos", officialName: "Sandy Shoes", points: 2, description: "Colete a moeda rara em Segredo das Areias.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510681.png" },
-      { name: "Atrasando o Mal", officialName: "Delaying Evil", points: 5, description: "Conclua O Palácio na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510697.png" },
-      { name: "O Pergaminho do Guerreiro Dragão", officialName: "The Dragon Warrior Scroll", points: 10, description: "Conclua O Palácio na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510704.png" },
-      { name: "Varredura do Guerreiro Dragão: O Palácio", officialName: "Dragon Warrior Sweep: The Palace", points: 10, description: "Complete todas as tarefas de O Palácio na dificuldade Mestre ou superior, derrotando Tai Lung sem deixar nenhum artefato ser destruído!", guide: "Confira os objetivos da fase e conclua todos na mesma progressão exigida. Faça a limpeza dos objetivos antes de finalizar a fase.", badge: "https://media.retroachievements.org/Badge/510680.png" },
-      { name: "Bombeiro Po", officialName: "Fireman Po", points: 5, description: "Conclua O Destino do Guerreiro (Part 1) na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510698.png" },
-      { name: "O Poder do Kung Fu de Po", officialName: "Po's Kung Fu Power", points: 10, description: "Conclua O Destino do Guerreiro (Part 1) na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510705.png" },
-      { name: "Varredura do Guerreiro Dragão: O Destino do Guerreiro (Parte 1)", officialName: "Dragon Warrior Sweep: The Warrior's Destiny (Part 1)", points: 10, description: "Complete todas as tarefas de O Destino do Guerreiro (Part 1) na dificuldade Mestre ou superior.", guide: "Confira os objetivos da fase e conclua todos na mesma progressão exigida. Faça a limpeza dos objetivos antes de finalizar a fase.", badge: "https://media.retroachievements.org/Badge/510701.png" },
-      { name: "Coleção Penúltima", officialName: "Penultimate Collection", points: 5, description: "Colete as duas moedas raras ao longo de O Destino do Guerreiro.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510703.png" },
-      { name: "Arqueiros Aniquilados", officialName: "Archer Annihiliation", points: 5, description: "Conclua O Destino do Guerreiro (Part 2) na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510699.png" },
-      { name: "Destruidor de Navios", officialName: "Shipwrecker", points: 10, description: "Conclua O Destino do Guerreiro (Part 2) na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510706.png" },
-      { name: "Colecionador Supremo de Moedas", officialName: "Ultimate Coin Collector", points: 5, description: "Colete as duas moedas em A Batalha Final.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510709.png" },
-      { name: "Maestria do Kung Fu", officialName: "Kung Fu Mastery", points: 25, description: "Conclua A Batalha Final na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510700.png" },
-      { name: "O Verdadeiro Guerreiro Dragão", officialName: "The Real Dragon Warrior", points: 50, description: "Conclua A Batalha Final na dificuldade Guerreiro Dragão.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510707.png" },
-      { name: "Varredura do Guerreiro Dragão: Sonho de Po", officialName: "Dragon Warrior Sweep: Po's Dream", points: 10, description: "Conclua all levels tasks on Sonho de Po na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Mestre ou superior. É uma conquista de progressão.", badge: "https://media.retroachievements.org/Badge/510601.png" },
-      { name: "Varredura do Guerreiro Dragão: Torneio do Guerreiro Dragão (Parte 2)", officialName: "Dragon Warrior Sweep: Tournament of the Dragon Warrior (Part 2)", points: 10, description: "Conclua all level tasks in Torneio do Guerreiro Dragão (Part 2) na dificuldade Mestre ou superior.", guide: "Conclua a fase na dificuldade Guerreiro Dragão. Aprender a rota no Mestre antes ajuda bastante.", badge: "https://media.retroachievements.org/Badge/510610.png" },
-      { name: "Varredura do Guerreiro Dragão: Primeiro Dia de Po", officialName: "Dragon Warrior Sweep: Po's First Day", points: 10, description: "Complete todas as tarefas da fase Primeiro Dia de Po na dificuldade Mestre ou superior.", guide: "Confira os objetivos da fase e conclua todos na mesma progressão exigida. Faça a limpeza dos objetivos antes de finalizar a fase.", badge: "https://media.retroachievements.org/Badge/510618.png" },
-      { name: "Varredura do Guerreiro Dragão: Proteja o Palácio", officialName: "Dragon Warrior Sweep: Protect the Palace", points: 10, description: "Complete todas as tarefas de Proteja o Palácio na dificuldade Mestre ou superior sem deixar nenhum artefato ser destruído.", guide: "Confira os objetivos da fase e conclua todos na mesma progressão exigida. Faça a limpeza dos objetivos antes de finalizar a fase.", badge: "https://media.retroachievements.org/Badge/510625.png" },
-      { name: "Colecionador Contra o Tempo", officialName: "Timed Collector", points: 3, description: "Colete a moeda rara em Primeiro Dia de Po.", guide: "Explore a fase com atenção e pegue todas as moedas raras exigidas antes de concluí-la. Se faltar alguma, repita a fase pela seleção de níveis.", badge: "https://media.retroachievements.org/Badge/510617.png" },
-      { name: "Líder da Gangue Blackhoof", officialName: "Blackhoof Gang Leader", points: 5, description: "Em Sonho de Po, derrote o líder da Gangue Blackhoof pela primeira vez na dificuldade Guerreiro Dragão sem sofrer dano e sem pausar no menu. (Recarregue para reiniciar)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510731.png", missable: true },
-      { name: "Máquina do Terror", officialName: "Machine of Terror", points: 5, description: "Em Torneio do Guerreiro Dragão (Parte 2), derrote o Juggernaut na dificuldade Guerreiro Dragão sem sofrer dano e sem pausar no menu. (Recarregue para reiniciar)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510732.png", missable: true },
-      { name: "Confronto Final com Blackhoof", officialName: "Blackhoof Final Showdown", points: 5, description: "Em Proteja o Palácio, derrote o líder da Gangue Blackhoof pela segunda vez na dificuldade Guerreiro Dragão sem sofrer dano e sem pausar no menu. (Recarregue para reiniciar)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510730.png", missable: true },
-      { name: "Grandão Veloz", officialName: "Big Fastard", points: 25, description: "Em Templo Wudang, derrote o Grande Gorila na dificuldade Guerreiro Dragão sem sofrer dano e sem pausar no menu. (Recarregue para reiniciar)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510733.png", missable: true },
-      { name: "Wu-Quem?", officialName: "Wu-Who?", points: 25, description: "Em Lua Uivante, derrote as Irmãs Wudang na dificuldade Guerreiro Dragão sem sofrer dano e sem pausar no menu. (Recarregue para reiniciar)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510734.png", missable: true },
-      { name: "Ox-Limpo", officialName: "Ox-iclean", points: 10, description: "Em O Destino do Guerreiro (Parte 1), derrote o General Ox na dificuldade Guerreiro Dragão sem sofrer dano e sem pausar no menu. (Recarregue para reiniciar)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510735.png", missable: true },
-      { name: "General Ox Patético", officialName: "Lame General Ox", points: 10, description: "Em O Destino do Guerreiro (Parte 2), derrote o General Ox novamente na dificuldade Guerreiro Dragão sem atacar, sem sofrer dano e sem pausar no menu. (Recarregue para reiniciar; o golpe final não conta como ataque)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510736.png", missable: true },
-      { name: "O Gatinho Não Sabe Lutar", officialName: "Kitty Cat Can't Fight", points: 25, description: "Em A Batalha Final, derrote Tai Lung na dificuldade Mestre ou superior sem sofrer dano e sem pausar no menu. (O desafio fica ativo quando o ícone de Tai Lung está visível; reinicie a fase desde o começo para resetar)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510737.png", missable: true },
-      { name: "Golpe Wuxi do Dedo Supremo", officialName: "Ultimate WuXi Finger Hold", points: 50, description: "Em A Batalha Final, derrote Tai Lung na dificuldade Guerreiro Dragão ou superior sem sofrer dano e sem pausar no menu. (O desafio fica ativo quando o ícone de Tai Lung está visível; reinicie a fase desde o começo para resetar)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510738.png", missable: true },
-      { name: "Desafio da Arena de Combate de Po", officialName: "Po's Combat Arena Challenge", points: 50, description: "Em Segredo das Areias, feche os oito alçapões na dificuldade Guerreiro Dragão sem sofrer dano e sem pausar no menu. (Reinicie a fase para tentar novamente)", guide: "⚠️ PERDÍVEL. Faça exatamente as condições do requisito. Não pause durante o desafio e, se sofrer dano ou invalidar a tentativa, reinicie/recarregue conforme indicado.", badge: "https://media.retroachievements.org/Badge/510739.png", missable: true }
-    ]
-  },
 
   cover: "images/kung-fu-panda.jpg",
 
@@ -1972,6 +1901,7 @@ const games = [
   hardcoreSupport: true,
   recommendedEmulator: "RetroArch + mGBA",
   retroAchievementsUrl: "https://retroachievements.org/game/785",
+  retroAchievementsGameId: 785,
   retroHashesUrl: "https://retroachievements.org/game/785/hashes",
   achievementBadge: "images/badges/metroid-fusion.png",
   achievementBadgeText: "Complete o jogo para conquistar esta insígnia",
@@ -2049,7 +1979,7 @@ const games = [
     "screenshots/metroid-fusion/screenshot-03.png"
   ],
 
-  download: "https://www.mediafire.com/file/e10lp5v18fgbr54/Metroid_Fusion_%2528PT-BR%2529.gba/file"
+  download: "#"
 },
   
 ];
@@ -2603,6 +2533,8 @@ function setGenre(genre){
 
   renderFilters();
   renderHome();
+
+  setTimeout(() => initRetroAchievementsProgress(game), 0);
 
   window.scrollTo({
     top:0,
@@ -3323,6 +3255,25 @@ function openGame(slug, updateHistory = true){
         <span class="ra-status">✓ Suporte RetroAchievements</span>
       </div>
 
+      <div class="ra-user-box" id="raUserBox" data-game-id="${game.retroAchievementsGameId || ""}">
+        <div class="ra-user-head">
+          <div>
+            <div class="ra-user-title">👤 Seu progresso no RetroAchievements</div>
+            <div class="ra-user-sub" id="raUserSubtitle">Informe seu usuário para sincronizar suas conquistas.</div>
+          </div>
+          <button class="ra-user-disconnect" id="raDisconnect" type="button" onclick="disconnectRetroAchievements()" hidden>Desconectar</button>
+        </div>
+        <form class="ra-user-form" id="raUserForm" onsubmit="connectRetroAchievements(event)">
+          <input class="ra-user-input" id="raUsername" type="text" maxlength="50" autocomplete="username" placeholder="Seu usuário do RetroAchievements" aria-label="Usuário do RetroAchievements">
+          <button class="ra-user-button" type="submit">🔄 SINCRONIZAR</button>
+        </form>
+        <div class="ra-progress-wrap" id="raProgress" hidden>
+          <div class="ra-progress-info"><span id="raProgressCount">0 / ${game.achievements ?? 0} conquistas</span><span id="raProgressPercent">0%</span></div>
+          <div class="ra-progress-track"><div class="ra-progress-bar" id="raProgressBar"></div></div>
+          <div class="ra-sync-msg" id="raSyncMsg"></div>
+        </div>
+      </div>
+
       <div class="ra-stats">
         <div class="ra-stat">
           <small>CONQUISTAS</small>
@@ -3423,13 +3374,14 @@ function openGame(slug, updateHistory = true){
 
         <div class="guide-full" hidden>
           ${achievements.length ? achievements.map(item => `
-            <article class="guide-achievement">
+            <article class="guide-achievement" data-ra-name="${escapeHTML(item.officialName || item.name || "")}">
               ${item.badge ? `<img src="${item.badge}" alt="${item.name || "Conquista"}">` : ""}
               <div>
                 <div class="guide-achievement-title">
                   ${item.missable ? `<img class="guide-missable-icon" src="missable-icon.png" alt="Perdível" title="Conquista perdível">` : ""}
                   <div>
-                    <h3>🏆 ${item.name || "Conquista"}</h3>
+                    <h3><span class="ra-lock-icon">🔒</span> ${item.name || "Conquista"}</h3>
+                    <div class="ra-earned-slot"></div>
                     ${item.officialName ? `<div class="guide-official-name">${item.officialName}</div>` : ""}
                   </div>
                 </div>
@@ -3584,6 +3536,129 @@ function openGame(slug, updateHistory = true){
     behavior:"smooth"
   });
 
+}
+
+function escapeHTML(value){
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function normalizeRAName(value){
+  return String(value || "").trim().toLocaleLowerCase("en-US");
+}
+
+function getCurrentGame(){
+  const match = location.hash.match(/^#game=(.+)$/);
+  if(!match) return null;
+  const slug = decodeURIComponent(match[1]);
+  return games.find(item => item.slug === slug) || null;
+}
+
+function initRetroAchievementsProgress(game){
+  if(!game?.retroAchievements || !game?.retroAchievementsGameId) return;
+  const savedUser = localStorage.getItem("retrohub_ra_user");
+  const input = document.getElementById("raUsername");
+  if(savedUser && input){
+    input.value = savedUser;
+    loadRetroAchievementsProgress(savedUser, game);
+  }
+}
+
+function connectRetroAchievements(event){
+  event?.preventDefault();
+  const input = document.getElementById("raUsername");
+  const user = input?.value.trim();
+  if(!user) return;
+  if(!/^[a-zA-Z0-9_-]{1,50}$/.test(user)){
+    document.getElementById("raUserSubtitle").textContent = "Usuário inválido. Confira o nome usado no RetroAchievements.";
+    return;
+  }
+  localStorage.setItem("retrohub_ra_user", user);
+  const game = getCurrentGame();
+  if(game) loadRetroAchievementsProgress(user, game);
+}
+
+function disconnectRetroAchievements(){
+  localStorage.removeItem("retrohub_ra_user");
+  const input = document.getElementById("raUsername");
+  if(input) input.value = "";
+  const subtitle = document.getElementById("raUserSubtitle");
+  if(subtitle) subtitle.textContent = "Informe seu usuário para sincronizar suas conquistas.";
+  const progress = document.getElementById("raProgress");
+  if(progress) progress.hidden = true;
+  const button = document.getElementById("raDisconnect");
+  if(button) button.hidden = true;
+  document.querySelectorAll(".guide-achievement").forEach(card => {
+    card.classList.remove("ra-earned");
+    const lock = card.querySelector(".ra-lock-icon");
+    if(lock) lock.textContent = "🔒";
+    const slot = card.querySelector(".ra-earned-slot");
+    if(slot) slot.innerHTML = "";
+  });
+}
+
+async function loadRetroAchievementsProgress(user, game){
+  const subtitle = document.getElementById("raUserSubtitle");
+  const progress = document.getElementById("raProgress");
+  const syncMsg = document.getElementById("raSyncMsg");
+  const disconnect = document.getElementById("raDisconnect");
+  if(!subtitle || !progress) return;
+
+  subtitle.textContent = `Sincronizando ${user}...`;
+  progress.hidden = false;
+  if(syncMsg) syncMsg.textContent = "Consultando o RetroAchievements...";
+
+  try{
+    const response = await fetch(`/api/retroachievements?user=${encodeURIComponent(user)}&gameId=${encodeURIComponent(game.retroAchievementsGameId)}`, { cache: "no-store" });
+    const data = await response.json();
+    if(!response.ok || !data || Array.isArray(data)) throw new Error(data?.error || "Não foi possível carregar o progresso.");
+
+    const total = Number(data.NumAchievements ?? game.achievements ?? 0);
+    const earned = Number(data.NumAwardedToUser ?? 0);
+    const hardcore = Number(data.NumAwardedToUserHardcore ?? 0);
+    const percent = total ? Math.round((earned / total) * 100) : 0;
+
+    subtitle.textContent = `Conectado como ${user}`;
+    if(disconnect) disconnect.hidden = false;
+    document.getElementById("raProgressCount").textContent = `${earned} / ${total} conquistas`;
+    document.getElementById("raProgressPercent").textContent = `${percent}%`;
+    document.getElementById("raProgressBar").style.width = `${percent}%`;
+    if(syncMsg) syncMsg.textContent = hardcore ? `🔥 ${hardcore} conquista${hardcore === 1 ? "" : "s"} em Hardcore.` : "Progresso sincronizado com o RetroAchievements.";
+
+    applyRetroAchievementsToGuide(data.Achievements || {});
+  }catch(error){
+    subtitle.textContent = `Não foi possível sincronizar ${user}.`;
+    if(syncMsg) syncMsg.textContent = error.message || "Erro ao consultar o progresso.";
+  }
+}
+
+function applyRetroAchievementsToGuide(achievements){
+  const byName = new Map();
+  Object.values(achievements || {}).forEach(item => {
+    if(item?.Title) byName.set(normalizeRAName(item.Title), item);
+  });
+
+  document.querySelectorAll(".guide-achievement[data-ra-name]").forEach(card => {
+    const item = byName.get(normalizeRAName(card.dataset.raName));
+    if(!item) return;
+
+    const earned = Boolean(item.DateEarned || item.DateEarnedHardcore);
+    const hardcore = Boolean(item.DateEarnedHardcore);
+    const date = item.DateEarnedHardcore || item.DateEarned;
+    const lock = card.querySelector(".ra-lock-icon");
+    const slot = card.querySelector(".ra-earned-slot");
+
+    card.classList.toggle("ra-earned", earned);
+    if(lock) lock.textContent = earned ? "✅" : "🔒";
+    if(slot){
+      slot.innerHTML = earned
+        ? `<span class="ra-earned-state">${hardcore ? "🔥 HARDCORE" : "✅ DESBLOQUEADA"}${date ? ` • ${escapeHTML(date)}` : ""}</span>`
+        : "";
+    }
+  });
 }
 
 function toggleAchievementGuide(button){
