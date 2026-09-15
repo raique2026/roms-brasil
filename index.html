@@ -1466,6 +1466,15 @@ button,
  .ra-compact .ra-user-input{flex-basis:100%}
  .ra-compact-top{align-items:flex-start}
 }
+
+/* ===== PERFIL GAMER PREMIUM ===== */
+.profile-level{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:6px 10px;border:1px solid #3a4770;border-radius:999px;background:rgba(10,16,31,.72);font-size:12px;font-weight:900;color:#dce5ff}.profile-level b{color:#ffd45a}
+.profile-showcase-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.profile-showcase-card{padding:10px;border:1px solid #2c395d;border-radius:14px;background:#0e1629;min-width:0}.profile-showcase-card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}.profile-showcase-card strong{display:block;margin-top:8px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-showcase-card small{display:block;color:#8fa0c5;font-size:10px;margin-top:4px}
+.profile-perfect-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}.profile-perfect-card{position:relative;overflow:hidden;border:1px solid #35436b;border-radius:14px;background:#0d1527;cursor:pointer}.profile-perfect-card img{width:100%;height:150px;object-fit:cover;display:block}.profile-perfect-card div{padding:10px;font-size:12px;font-weight:900}.profile-perfect-card span{position:absolute;top:9px;right:9px;padding:5px 8px;border-radius:999px;background:rgba(8,13,27,.88);color:#ffd45a;font-size:10px;font-weight:900}
+.profile-retrohub-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}.rh-badge{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #2b385a;border-radius:13px;background:#0e1629}.rh-badge.locked{filter:grayscale(1);opacity:.42}.rh-badge-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#18233e;font-size:22px}.rh-badge strong{display:block;font-size:12px}.rh-badge small{display:block;color:#8f99b4;font-size:10px;margin-top:3px}
+.profile-activity{display:grid;gap:8px}.profile-activity-item{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid #263453;border-radius:12px;background:#0e1629}.profile-activity-icon{width:38px;height:38px;border-radius:9px;object-fit:cover;background:#17213a}.profile-activity-item strong{font-size:12px}.profile-activity-item small{display:block;color:#8f99b4;font-size:10px;margin-top:3px}.profile-activity-date{font-size:10px;color:#7f8dab;white-space:nowrap}
+@media(max-width:820px){.profile-showcase-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:560px){.profile-showcase-grid{grid-template-columns:repeat(2,1fr)}.profile-perfect-grid{grid-template-columns:repeat(2,1fr)}.profile-activity-item{grid-template-columns:34px 1fr}.profile-activity-date{grid-column:2}.profile-perfect-card img{height:120px}}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -4245,7 +4254,7 @@ async function renderRetrohubProfilePage(){
   app.innerHTML=`<section class="profile-page">
     <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}><div class="profile-hero-grid">
       <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar">
-      <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1><div class="profile-page-ra">${raUser?`RetroAchievements: ${escapeHTML(raUser)}`:"RetroAchievements não vinculado"}</div><div class="profile-page-email">${escapeHTML(retrohubSession.user.email||"")}</div><div class="profile-online">Online no RetroHub BR</div></div>
+      <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1><div class="profile-page-ra">${raUser?`RetroAchievements: ${escapeHTML(raUser)}`:"RetroAchievements não vinculado"}</div><div class="profile-page-email">${escapeHTML(retrohubSession.user.email||"")}</div><div class="profile-online">Online no RetroHub BR</div><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div></div>
       <div class="profile-hero-actions"><button class="account-secondary" onclick="openAccountPanel()">Editar perfil</button><button class="account-secondary" onclick="goHome(true)">Voltar ao início</button></div>
     </div></div>
     <div id="profileDashboard"><div class="profile-loading">${raUser?"Carregando suas conquistas...":"Vincule seu usuário do RetroAchievements em Editar perfil para sincronizar suas conquistas."}</div></div>
@@ -4266,33 +4275,52 @@ async function loadRetrohubFullProfile(raUser){
     }catch(error){ return {game,error}; }
   }));
   const valid=results.filter(x=>x.data);
-  let total=0,earned=0,hardcore=0,perfect=0;
+  let total=0,earned=0,hardcore=0,perfect=0,points=0;
   const recent=[];
   valid.forEach(({game,data})=>{
     const t=Number(data.NumAchievements??game.achievements??0), e=Number(data.NumAwardedToUser??0), h=Number(data.NumAwardedToUserHardcore??0);
     total+=t; earned+=e; hardcore+=h; if(t>0&&e>=t) perfect++;
-    Object.values(data.Achievements||{}).forEach(a=>{if(a&&(a.DateEarned||a.DateEarnedHardcore)) recent.push({...a,_game:game});});
+    Object.values(data.Achievements||{}).forEach(a=>{if(a&&(a.DateEarned||a.DateEarnedHardcore)){recent.push({...a,_game:game});points+=Number(a.Points||0);}});
   });
   recent.sort((a,b)=>profileDateValue(b)-profileDateValue(a));
-  const recentHTML=recent.slice(0,12).map(a=>`<div class="profile-achievement" title="${escapeHTML(a.Title||"Conquista")}"><img src="${escapeHTML(a.BadgeURL||a.BadgeName?`https://media.retroachievements.org/Badge/${a.BadgeName}.png`:"")}" alt=""><strong>${escapeHTML(a.Title||"Conquista")}</strong><small>${a.DateEarnedHardcore?"🔥 Hardcore • ":""}${escapeHTML(profileDateLabel(a))}</small></div>`).join("");
+  const completion=total?Math.round(earned/total*100):0;
+  const level=Math.max(1,Math.floor(earned/50)+1);
+  const levelName=level>=10?"Lenda":level>=6?"Veterano":level>=3?"Caçador de conquistas":"Novato";
+  const pill=document.getElementById("profileLevelPill"); if(pill) pill.innerHTML=`🎖️ Nível <b>${level}</b> · ${levelName}`;
+
+  const badgeUrl=a=>{const raw=a?.BadgeURL||(a?.BadgeName?`https://media.retroachievements.org/Badge/${a.BadgeName}.png`:"");return raw&&raw.startsWith("/")?`https://media.retroachievements.org${raw}`:raw;};
+  const showcaseHTML=recent.slice(0,6).map(a=>`<div class="profile-showcase-card"><img src="${escapeHTML(badgeUrl(a))}" alt=""><strong>${escapeHTML(a.Title||"Conquista")}</strong><small>${escapeHTML(a._game?.title||"")} · ${Number(a.Points||0)} pts</small></div>`).join("");
+  const recentHTML=recent.slice(0,12).map(a=>`<div class="profile-achievement" title="${escapeHTML(a.Title||"Conquista")}"><img src="${escapeHTML(badgeUrl(a))}" alt=""><strong>${escapeHTML(a.Title||"Conquista")}</strong><small>${a.DateEarnedHardcore?"🔥 Hardcore • ":""}${escapeHTML(profileDateLabel(a))}</small></div>`).join("");
+  const perfectHTML=valid.filter(({game,data})=>{const t=Number(data.NumAchievements??game.achievements??0),e=Number(data.NumAwardedToUser??0);return t>0&&e>=t;}).map(({game,data})=>`<div class="profile-perfect-card" onclick="openGame('${escapeHTML(game.slug)}',true)"><span>🏆 PERFEITO</span><img src="${escapeHTML(game.cover)}" alt=""><div>${escapeHTML(game.title)} · ${Number(data.NumAchievements??game.achievements??0)}/ ${Number(data.NumAchievements??game.achievements??0)}</div></div>`).join("");
+  const rhBadges=[
+    [earned>=1,"🎯","Primeira conquista","Desbloqueie 1 conquista"],
+    [earned>=100,"🏆","100 conquistas","Alcance 100 conquistas"],
+    [earned>=500,"💎","500 conquistas","Alcance 500 conquistas"],
+    [perfect>=1,"⭐","Primeiro 100%","Complete um jogo"],
+    [perfect>=10,"👑","10 jogos perfeitos","Complete 10 jogos"],
+    [points>=1000,"🔥","1.000 pontos","Some 1.000 pontos"],
+    [points>=10000,"🌟","10.000 pontos","Some 10.000 pontos"],
+    [hardcore>=50,"⚡","Hardcore 50","50 conquistas Hardcore"]
+  ];
+  const rhBadgesHTML=rhBadges.map(([ok,icon,title,desc])=>`<div class="rh-badge ${ok?"":"locked"}"><div class="rh-badge-icon">${icon}</div><div><strong>${title}</strong><small>${ok?"Desbloqueada":desc}</small></div></div>`).join("");
+  const activityHTML=recent.slice(0,8).map(a=>`<div class="profile-activity-item"><img class="profile-activity-icon" src="${escapeHTML(badgeUrl(a))}" alt=""><div><strong>🏆 Desbloqueou ${escapeHTML(a.Title||"uma conquista")}</strong><small>${escapeHTML(a._game?.title||"")}${a.DateEarnedHardcore?" · Hardcore":""}</small></div><div class="profile-activity-date">${escapeHTML(profileDateLabel(a))}</div></div>`).join("");
+
   const gamesHTML=valid.map(({game,data})=>{
     const t=Number(data.NumAchievements??game.achievements??0),e=Number(data.NumAwardedToUser??0),h=Number(data.NumAwardedToUserHardcore??0),p=t?Math.round(e/t*100):0;
     const achievements=Object.values(data.Achievements||{});
     const badgesHTML=achievements.map(a=>{
-      const earned=!!(a?.DateEarned||a?.DateEarnedHardcore);
-      const hc=!!a?.DateEarnedHardcore;
-      const badgeRaw=a?.BadgeURL||(a?.BadgeName?`https://media.retroachievements.org/Badge/${a.BadgeName}.png`:"");
-      const badge=badgeRaw&&badgeRaw.startsWith("/")?`https://media.retroachievements.org${badgeRaw}`:badgeRaw;
-      const title=escapeHTML(a?.Title||"Conquista");
-      const desc=escapeHTML(a?.Description||"");
-      const points=Number(a?.Points??0);
-      const earnedDate=profileDateLabel(a);
-      return `<div class="profile-game-badge ${earned?"earned":"locked"} ${hc?"hardcore":""}" data-ach-title="${title}" data-ach-desc="${desc}" data-ach-points="${points}" data-ach-game="${escapeHTML(game.title)}" data-ach-badge="${escapeHTML(badge)}" data-ach-earned="${earned?"1":"0"}" data-ach-hardcore="${hc?"1":"0"}" data-ach-date="${escapeHTML(earnedDate)}"><img src="${escapeHTML(badge)}" alt="${title}" loading="lazy"></div>`;
+      const got=!!(a?.DateEarned||a?.DateEarnedHardcore), hc=!!a?.DateEarnedHardcore, badge=badgeUrl(a);
+      return `<div class="profile-game-badge ${got?"earned":"locked"} ${hc?"hardcore":""}" data-ach-title="${escapeHTML(a?.Title||"Conquista")}" data-ach-desc="${escapeHTML(a?.Description||"")}" data-ach-points="${Number(a?.Points??0)}" data-ach-game="${escapeHTML(game.title)}" data-ach-badge="${escapeHTML(badge)}" data-ach-earned="${got?"1":"0"}" data-ach-hardcore="${hc?"1":"0"}" data-ach-date="${escapeHTML(profileDateLabel(a))}"><img src="${escapeHTML(badge)}" alt="${escapeHTML(a?.Title||"Conquista")}" loading="lazy"></div>`;
     }).join("");
-    return `<div class="profile-game-card"><div class="profile-game-header"><div class="profile-game-row" onclick="openGame('${escapeHTML(game.slug)}',true)"><img class="profile-game-cover" src="${escapeHTML(game.cover)}" alt=""><div><div class="profile-game-title">${escapeHTML(game.title)}</div><div class="profile-game-meta">${e} / ${t} conquistas${h?` • 🔥 ${h} Hardcore`:""}</div><div class="profile-progress-track"><div class="profile-progress-fill" style="width:${p}%"></div></div></div><div class="profile-game-percent">${p}%<small>${e>=t&&t?"🏆 Perfeito":"progresso"}</small></div></div>${badgesHTML?`<button class="profile-game-toggle" type="button" aria-label="Ocultar conquistas" aria-expanded="true" title="Ocultar conquistas" onclick="event.stopPropagation();toggleProfileGameAchievements(this)"><span class="arrow">⌃</span></button>`:""}</div>${badgesHTML?`<div class="profile-game-badges">${badgesHTML}</div>`:""}</div>`;
+    return `<div class="profile-game-card collapsed"><div class="profile-game-header"><div class="profile-game-row" onclick="openGame('${escapeHTML(game.slug)}',true)"><img class="profile-game-cover" src="${escapeHTML(game.cover)}" alt=""><div><div class="profile-game-title">${escapeHTML(game.title)}</div><div class="profile-game-meta">${e} / ${t} conquistas${h?` • 🔥 ${h} Hardcore`:""}</div><div class="profile-progress-track"><div class="profile-progress-fill" style="width:${p}%"></div></div></div><div class="profile-game-percent">${p}%<small>${e>=t&&t?"🏆 Perfeito":"progresso"}</small></div></div>${badgesHTML?`<button class="profile-game-toggle" type="button" aria-label="Mostrar conquistas" aria-expanded="false" title="Mostrar conquistas" onclick="event.stopPropagation();toggleProfileGameAchievements(this)"><span class="arrow">⌃</span></button>`:""}</div>${badgesHTML?`<div class="profile-game-badges">${badgesHTML}</div>`:""}</div>`;
   }).join("");
-  target.innerHTML=`<div class="profile-stats-grid"><div class="profile-stat-card"><small>Conquistas</small><strong>${earned}</strong></div><div class="profile-stat-card"><small>Hardcore</small><strong>${hardcore}</strong></div><div class="profile-stat-card"><small>Jogos perfeitos</small><strong>${perfect}</strong></div><div class="profile-stat-card"><small>Jogos compatíveis</small><strong>${valid.length}</strong></div></div>
-  <div class="profile-section"><div class="profile-section-head"><h2>🏆 Conquistas recentes</h2><span>${earned} de ${total} conquistadas</span></div>${recentHTML?`<div class="profile-recent-grid">${recentHTML}</div>`:`<div class="profile-empty">Nenhuma conquista sincronizada nos jogos disponíveis no RetroHub BR.</div>`}</div>
+
+  target.innerHTML=`
+  <div class="profile-stats-grid"><div class="profile-stat-card"><small>Jogos</small><strong>${valid.length}</strong></div><div class="profile-stat-card"><small>Conquistas</small><strong>${earned}</strong></div><div class="profile-stat-card"><small>Jogos 100%</small><strong>${perfect}</strong></div><div class="profile-stat-card"><small>Conclusão média</small><strong>${completion}%</strong></div></div>
+  <div class="profile-section"><div class="profile-section-head"><h2>💎 Vitrine de conquistas</h2><span>${points.toLocaleString("pt-BR")} pontos conquistados</span></div>${showcaseHTML?`<div class="profile-showcase-grid">${showcaseHTML}</div>`:`<div class="profile-empty">Suas conquistas mais recentes aparecerão aqui.</div>`}</div>
+  <div class="profile-section"><div class="profile-section-head"><h2>🏆 Jogos perfeitos</h2><span>${perfect} concluído${perfect===1?"":"s"} em 100%</span></div>${perfectHTML?`<div class="profile-perfect-grid">${perfectHTML}</div>`:`<div class="profile-empty">Quando você completar um jogo em 100%, ele ganhará destaque aqui.</div>`}</div>
+  <div class="profile-section"><div class="profile-section-head"><h2>🏅 Insígnias RetroHub</h2><span>Desafios do seu perfil</span></div><div class="profile-retrohub-badges">${rhBadgesHTML}</div></div>
+  <div class="profile-section"><div class="profile-section-head"><h2>🕘 Atividade recente</h2><span>Últimas conquistas</span></div>${activityHTML?`<div class="profile-activity">${activityHTML}</div>`:`<div class="profile-empty">Nenhuma atividade recente.</div>`}</div>
   <div class="profile-section"><div class="profile-section-head"><h2>🎮 Meus jogos</h2><span>Progresso no RetroAchievements</span></div><div class="profile-games">${gamesHTML||'<div class="profile-empty">Nenhum jogo compatível encontrado.</div>'}</div></div>`;
   initProfileAchievementTooltips();
 }
