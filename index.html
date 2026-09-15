@@ -1444,6 +1444,15 @@ body.light-mode .account-button{background:#fff;color:#10182a}
 .guide-achievement img{filter:grayscale(1);opacity:.48;transition:filter .25s ease,opacity .25s ease,transform .25s ease}
 .guide-achievement.ra-earned img{filter:none;opacity:1;transform:scale(1.02)}
 
+
+/* ===== PERFIL COMPLETO - ESTILO STEAM / RETROHUB ===== */
+.profile-page{padding:34px 0 60px}.profile-hero{position:relative;overflow:hidden;border:1px solid #2d3a5e;border-radius:22px;background:radial-gradient(circle at 15% 20%,rgba(105,89,245,.34),transparent 34%),linear-gradient(135deg,#151f3a,#0d1426);padding:28px;box-shadow:0 22px 70px rgba(0,0,0,.24)}
+.profile-hero-grid{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center}.profile-page-avatar{width:118px;height:118px;border-radius:18px;object-fit:cover;border:3px solid rgba(255,255,255,.16);background:#202c49}.profile-page-name{font-size:30px;font-weight:900;margin:0 0 5px}.profile-page-ra{color:#8fd7ff;font-weight:800}.profile-page-email{color:#98a6c5;font-size:13px;margin-top:5px}.profile-online{display:inline-flex;align-items:center;gap:7px;margin-top:11px;color:#69e8a4;font-size:13px;font-weight:800}.profile-online:before{content:"";width:8px;height:8px;border-radius:50%;background:#42d98b;box-shadow:0 0 14px #42d98b}.profile-hero-actions{display:flex;flex-direction:column;gap:9px}.profile-hero-actions button{border-radius:10px;cursor:pointer;font-weight:900}
+.profile-stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.profile-stat-card{padding:18px;border-radius:16px;border:1px solid #283658;background:#111a30}.profile-stat-card small{display:block;color:#8f99b4;font-size:11px;font-weight:800;text-transform:uppercase;margin-bottom:7px}.profile-stat-card strong{font-size:26px}.profile-section{margin-top:24px;padding:22px;border:1px solid #283658;border-radius:18px;background:#11182c}.profile-section-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:17px}.profile-section-head h2{margin:0;font-size:21px}.profile-section-head span{color:#8f99b4;font-size:12px}.profile-recent-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.profile-achievement{min-width:0}.profile-achievement img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:1px solid #34415f}.profile-achievement strong{display:block;font-size:12px;line-height:1.3;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-achievement small{display:block;color:#8f99b4;font-size:10px;margin-top:3px}.profile-games{display:grid;gap:12px}.profile-game-row{display:grid;grid-template-columns:84px 1fr auto;gap:16px;align-items:center;padding:12px;border:1px solid #27304d;border-radius:14px;background:#0f1628;cursor:pointer}.profile-game-row:hover{border-color:#5d6fa8}.profile-game-cover{width:84px;height:112px;object-fit:cover;border-radius:9px;background:#090e1c}.profile-game-title{font-weight:900;margin-bottom:8px}.profile-game-meta{font-size:12px;color:#9daccc;margin-bottom:10px}.profile-progress-track{height:9px;background:#202a45;border-radius:999px;overflow:hidden}.profile-progress-fill{height:100%;background:linear-gradient(90deg,#6959f5,#36d98b);border-radius:999px}.profile-game-percent{font-size:24px;font-weight:900;text-align:right}.profile-game-percent small{display:block;font-size:11px;color:#8f99b4;margin-top:4px}.profile-empty{padding:24px;text-align:center;color:#8f99b4}.profile-loading{padding:28px;text-align:center;color:#aeb9d1}
+body.light-mode .profile-hero,body.light-mode .profile-section,body.light-mode .profile-stat-card{background:#fff;border-color:#dce2ee}body.light-mode .profile-game-row{background:#f4f6fb;border-color:#dce2ee}body.light-mode .profile-page-email,body.light-mode .profile-game-meta,body.light-mode .profile-section-head span{color:#647089}
+@media(max-width:820px){.profile-hero-grid{grid-template-columns:auto 1fr}.profile-hero-actions{grid-column:1/-1;flex-direction:row}.profile-stats-grid{grid-template-columns:repeat(2,1fr)}.profile-recent-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.profile-hero-grid{grid-template-columns:1fr;text-align:center}.profile-page-avatar{margin:auto}.profile-hero-actions{justify-content:center}.profile-game-row{grid-template-columns:64px 1fr}.profile-game-cover{width:64px;height:86px}.profile-game-percent{grid-column:2;text-align:left}.profile-recent-grid{grid-template-columns:repeat(2,1fr)}}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1566,6 +1575,8 @@ body.light-mode .account-button{background:#fff;color:#10182a}
           <input id="profileRAInput" maxlength="50" pattern="[A-Za-z0-9_-]+" placeholder="Ex.: raiquesantos">
           <button class="account-primary" type="submit">Salvar perfil</button>
         </form>
+
+        <button class="account-secondary" type="button" onclick="openFullRetrohubProfile()">🏆 Ver meu perfil completo</button>
         <button class="account-danger" onclick="retrohubLogout()">Sair da conta</button>
       </div>
       <div id="profileMessage" class="account-message"></div>
@@ -3897,7 +3908,10 @@ window.addEventListener(
   "popstate",
   function(){
 
-    if(location.hash.startsWith("#game=")){
+    if(location.hash === "#profile" && typeof renderRetrohubProfilePage === "function"){
+      renderRetrohubProfilePage();
+
+    }else if(location.hash.startsWith("#game=")){
 
       const slug = decodeURIComponent(
         location.hash.replace("#game=", "")
@@ -4190,7 +4204,85 @@ retrohubSupabase.auth.onAuthStateChange(async (_event, session) => {
   retrohubSession = data.session;
   if(retrohubSession?.user) await loadRetrohubProfile();
   else refreshRetrohubAccountUI();
+  if(location.hash === "#profile") renderRetrohubProfilePage();
 })();
+
+
+
+/* ===== PERFIL COMPLETO RETROHUB ===== */
+function openFullRetrohubProfile(){
+  if(!retrohubSession?.user) return;
+  closeAccountPanel();
+  history.pushState({page:"profile"},"",location.pathname+"#profile");
+  renderRetrohubProfilePage();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function profileDateValue(item){
+  const raw=item?.DateEarnedHardcore||item?.DateEarned||"";
+  const t=Date.parse(raw); return Number.isFinite(t)?t:0;
+}
+function profileDateLabel(item){
+  const raw=item?.DateEarnedHardcore||item?.DateEarned;
+  if(!raw) return "";
+  const d=new Date(raw); if(Number.isNaN(d.getTime())) return raw;
+  return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
+}
+
+async function renderRetrohubProfilePage(){
+  const app=document.getElementById("app");
+  const q=document.getElementById("q");
+  const filters=document.getElementById("filters");
+  if(q) q.style.display="none";
+  if(filters) filters.style.display="none";
+  if(!retrohubSession?.user){
+    app.innerHTML=`<section class="profile-page"><div class="profile-section profile-empty">Entre na sua conta para visualizar seu perfil.</div></section>`;
+    return;
+  }
+  const username=retrohubProfile?.username||retrohubSession.user.user_metadata?.username||"Perfil";
+  const raUser=retrohubProfile?.retroachievements_username||localStorage.getItem("retrohub_ra_user")||"";
+  const avatar=retrohubProfile?.avatar_url||avatarFallback();
+  app.innerHTML=`<section class="profile-page">
+    <div class="profile-hero"><div class="profile-hero-grid">
+      <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar">
+      <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1><div class="profile-page-ra">${raUser?`RetroAchievements: ${escapeHTML(raUser)}`:"RetroAchievements não vinculado"}</div><div class="profile-page-email">${escapeHTML(retrohubSession.user.email||"")}</div><div class="profile-online">Online no RetroHub BR</div></div>
+      <div class="profile-hero-actions"><button class="account-secondary" onclick="openAccountPanel()">Editar perfil</button><button class="account-secondary" onclick="goHome(true)">Voltar ao início</button></div>
+    </div></div>
+    <div id="profileDashboard"><div class="profile-loading">${raUser?"Carregando suas conquistas...":"Vincule seu usuário do RetroAchievements em Editar perfil para sincronizar suas conquistas."}</div></div>
+  </section>`;
+  if(raUser) await loadRetrohubFullProfile(raUser);
+}
+
+async function loadRetrohubFullProfile(raUser){
+  const target=document.getElementById("profileDashboard");
+  if(!target) return;
+  const compatible=games.filter(g=>g.retroAchievements&&g.retroAchievementsGameId);
+  const results=await Promise.all(compatible.map(async game=>{
+    try{
+      const r=await fetch(`/api/retroachievements?user=${encodeURIComponent(raUser)}&gameId=${encodeURIComponent(game.retroAchievementsGameId)}`,{cache:"no-store"});
+      const data=await r.json();
+      if(!r.ok||!data||Array.isArray(data)) throw new Error(data?.error||"Erro");
+      return {game,data};
+    }catch(error){ return {game,error}; }
+  }));
+  const valid=results.filter(x=>x.data);
+  let total=0,earned=0,hardcore=0,perfect=0;
+  const recent=[];
+  valid.forEach(({game,data})=>{
+    const t=Number(data.NumAchievements??game.achievements??0), e=Number(data.NumAwardedToUser??0), h=Number(data.NumAwardedToUserHardcore??0);
+    total+=t; earned+=e; hardcore+=h; if(t>0&&e>=t) perfect++;
+    Object.values(data.Achievements||{}).forEach(a=>{if(a&&(a.DateEarned||a.DateEarnedHardcore)) recent.push({...a,_game:game});});
+  });
+  recent.sort((a,b)=>profileDateValue(b)-profileDateValue(a));
+  const recentHTML=recent.slice(0,12).map(a=>`<div class="profile-achievement" title="${escapeHTML(a.Title||"Conquista")}"><img src="${escapeHTML(a.BadgeURL||a.BadgeName?`https://media.retroachievements.org/Badge/${a.BadgeName}.png`:"")}" alt=""><strong>${escapeHTML(a.Title||"Conquista")}</strong><small>${a.DateEarnedHardcore?"🔥 Hardcore • ":""}${escapeHTML(profileDateLabel(a))}</small></div>`).join("");
+  const gamesHTML=valid.map(({game,data})=>{
+    const t=Number(data.NumAchievements??game.achievements??0),e=Number(data.NumAwardedToUser??0),h=Number(data.NumAwardedToUserHardcore??0),p=t?Math.round(e/t*100):0;
+    return `<div class="profile-game-row" onclick="openGame('${escapeHTML(game.slug)}',true)"><img class="profile-game-cover" src="${escapeHTML(game.cover)}" alt=""><div><div class="profile-game-title">${escapeHTML(game.title)}</div><div class="profile-game-meta">${e} / ${t} conquistas${h?` • 🔥 ${h} Hardcore`:""}</div><div class="profile-progress-track"><div class="profile-progress-fill" style="width:${p}%"></div></div></div><div class="profile-game-percent">${p}%<small>${e>=t&&t?"🏆 Perfeito":"progresso"}</small></div></div>`;
+  }).join("");
+  target.innerHTML=`<div class="profile-stats-grid"><div class="profile-stat-card"><small>Conquistas</small><strong>${earned}</strong></div><div class="profile-stat-card"><small>Hardcore</small><strong>${hardcore}</strong></div><div class="profile-stat-card"><small>Jogos perfeitos</small><strong>${perfect}</strong></div><div class="profile-stat-card"><small>Jogos compatíveis</small><strong>${valid.length}</strong></div></div>
+  <div class="profile-section"><div class="profile-section-head"><h2>🏆 Conquistas recentes</h2><span>${earned} de ${total} conquistadas</span></div>${recentHTML?`<div class="profile-recent-grid">${recentHTML}</div>`:`<div class="profile-empty">Nenhuma conquista sincronizada nos jogos disponíveis no RetroHub BR.</div>`}</div>
+  <div class="profile-section"><div class="profile-section-head"><h2>🎮 Meus jogos</h2><span>Progresso no RetroAchievements</span></div><div class="profile-games">${gamesHTML||'<div class="profile-empty">Nenhum jogo compatível encontrado.</div>'}</div></div>`;
+}
 
 /* ESC fecha primeiro o modal de conta, sem interferir no retorno do jogo */
 document.addEventListener("keydown", function(e){
