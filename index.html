@@ -1378,6 +1378,9 @@ body.light-mode .ra-site-notice strong{color:#172033;}
 .guide-full{margin-top:16px;padding-top:16px;border-top:1px solid #27304d}
 .guide-achievement{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #27304d}
 .guide-achievement img{width:54px;height:54px;object-fit:contain;border-radius:10px;flex:0 0 54px}
+/* Conquistas bloqueadas ficam em preto e branco; ao desbloquear, a insígnia volta às cores originais. */
+.guide-achievement-badge{filter:grayscale(1);opacity:.48;transition:filter .28s ease,opacity .28s ease,transform .28s ease}
+.guide-achievement.ra-earned .guide-achievement-badge{filter:grayscale(0);opacity:1;transform:scale(1.03)}
 .guide-achievement h3{font-size:14px;margin:0 0 4px}
 .guide-achievement p{font-size:13px;color:#aeb9d1;line-height:1.5;margin:0}
 .guide-achievement .guide-points{font-size:11px;color:#8fd7ff;font-weight:800;margin-bottom:4px}
@@ -3375,7 +3378,7 @@ function openGame(slug, updateHistory = true){
         <div class="guide-full" hidden>
           ${achievements.length ? achievements.map(item => `
             <article class="guide-achievement" data-ra-name="${escapeHTML(item.officialName || item.name || "")}">
-              ${item.badge ? `<img src="${item.badge}" alt="${item.name || "Conquista"}">` : ""}
+              ${item.badge ? `<img class="guide-achievement-badge" src="${item.badge}" alt="${item.name || "Conquista"}">` : ""}
               <div>
                 <div class="guide-achievement-title">
                   ${item.missable ? `<img class="guide-missable-icon" src="missable-icon.png" alt="Perdível" title="Conquista perdível">` : ""}
