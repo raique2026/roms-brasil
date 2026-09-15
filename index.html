@@ -1047,37 +1047,6 @@ button,
 }
 
 
-/* ===== MODO CLARO / ESCURO ===== */
-.theme-toggle{flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;height:44px;padding:5px 6px 5px 14px;border:1px solid #2b3555;border-radius:999px;background:#1c2643;color:#fff;cursor:pointer;font-weight:700}
-.theme-toggle-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:#080d18;font-size:18px}
-body.light-mode{background:#f4f6fb;color:#172033}
-body.light-mode header{background:#fff;border-bottom-color:#dce2ee}
-body.light-mode input{background:#f1f4fa;border-color:#d5dcea;color:#172033}
-body.light-mode input::placeholder{color:#7b8498}
-body.light-mode .main-menu-btn{color:#287eb1}
-body.light-mode .main-menu-btn:hover,body.light-mode .main-menu-btn.active{color:#20b85b}
-body.light-mode .dropdown-menu{background:#fff;border-color:#dce2ee;box-shadow:0 18px 45px rgba(35,48,75,.16)}
-body.light-mode .dropdown-menu button{color:#172033}
-body.light-mode .dropdown-menu button:hover{background:#eef3f8;color:#20a957}
-body.light-mode .card,body.light-mode .latest-card,body.light-mode .spec,body.light-mode .community,body.light-mode .emulator-card,body.light-mode .emulator-detail-image,body.light-mode .pcsx2-bios-box{background:#fff;border-color:#dce2ee}
-body.light-mode .cover,body.light-mode .latest-cover,body.light-mode .emulator-cover{background:#f0f3f8;border-color:#dce2ee}
-body.light-mode .desc,body.light-mode .meta,body.light-mode .latest-meta,body.light-mode .community p,body.light-mode .emulators-header p,body.light-mode .emulator-card p,body.light-mode .emulator-detail-desc,body.light-mode .pcsx2-bios-box p,body.light-mode .pcsx2-bios-list,body.light-mode .emulator-note,body.light-mode .back{color:#5d677c}
-body.light-mode .emulator-platform,body.light-mode .emulator-detail-platform{color:#1683c5}
-body.light-mode .pill,body.light-mode .emulator-bios,body.light-mode .social .x-icon{background:#edf1f8;border-color:#d5dcea;color:#172033}
-body.light-mode .recommended{border-top-color:#dce2ee}
-body.light-mode .recommended-card img{background:#fff;border-color:#dce2ee}
-body.light-mode .latest-expand{color:#5545df}
-body.light-mode .theme-toggle{background:#6847f5;border-color:#6847f5;color:#fff}
-body.light-mode .theme-toggle-icon{background:#fff}
-
-
-/* ===== AJUSTES: PESQUISA COM LUPA + X SEM CÍRCULO ===== */
-.top{
-  display:flex;
-  align-items:center;
-  gap:18px;
-}
-
 .search-wrap{
   position:relative;
   flex:0 1 650px;
@@ -1161,9 +1130,6 @@ body.light-mode .theme-toggle-icon{background:#fff}
 .guide-achievement.ra-earned{border:1px solid rgba(54,217,139,.35);background:rgba(54,217,139,.06);border-radius:12px;padding:12px;margin:6px 0}
 .guide-achievement.ra-earned h3{color:#74e6aa}
 .ra-earned-state{display:inline-flex;gap:6px;align-items:center;margin:4px 0 6px;padding:4px 8px;border-radius:999px;background:rgba(54,217,139,.12);color:#74e6aa;font-size:11px;font-weight:900}
-body.light-mode .ra-user-box{background:#f4f6fb;border-color:#dce2ee}
-body.light-mode .ra-user-input{background:#fff;color:#172033;border-color:#d5dcea}
-
 /* ===== RETROACHIEVEMENTS ===== */
 .ra-box{
   margin-top:24px;
@@ -1264,24 +1230,6 @@ body.light-mode .ra-user-input{background:#fff;color:#172033;border-color:#d5dce
   border:1px solid #34405f;
 }
 
-body.light-mode .ra-box{
-  background:#fff;
-  border-color:#dce2ee;
-}
-
-body.light-mode .ra-stat{
-  background:#f4f6fb;
-  border-color:#dce2ee;
-}
-
-body.light-mode .ra-chip,
-body.light-mode .ra-button.secondary{
-  background:#edf1f8;
-  border-color:#d5dcea;
-  color:#172033;
-}
-
-
 .ra-badge{
   display:flex;
   align-items:center;
@@ -1316,11 +1264,6 @@ body.light-mode .ra-button.secondary{
   line-height:1.4;
 }
 
-body.light-mode .ra-badge{
-  background:#f4f6fb;
-  border-color:#dce2ee;
-}
-
 @media(max-width:620px){
   .ra-badge{
     align-items:flex-start;
@@ -1352,14 +1295,6 @@ body.light-mode .ra-badge{
   line-height:1.55;
 }
 .ra-site-notice strong{color:#fff;}
-body.light-mode .ra-site-notice{
-  background:#f4f7fb;
-  border-color:#d8dfec;
-  color:#526078;
-}
-body.light-mode .ra-site-notice strong{color:#172033;}
-
-
 /* ===== GUIAS DE CONQUISTAS EM PORTUGUÊS ===== */
 .guide-box{margin-top:18px;padding:20px;border:1px solid #3b4564;border-radius:18px;background:#121a2e}
 .guide-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
@@ -1382,9 +1317,6 @@ body.light-mode .ra-site-notice strong{color:#172033;}
 .guide-achievement p{font-size:13px;color:#aeb9d1;line-height:1.5;margin:0}
 .guide-achievement .guide-points{font-size:11px;color:#8fd7ff;font-weight:800;margin-bottom:4px}
 .guide-empty{color:#8f99b4;font-size:13px}
-body.light-mode .guide-box{background:#fff;border-color:#dce2ee}
-body.light-mode .guide-meta div,body.light-mode .guide-step{background:#f4f6fb;border-color:#dce2ee}
-body.light-mode .guide-summary,body.light-mode .guide-step p,body.light-mode .guide-achievement p{color:#5d677c}
 @media(max-width:700px){.guide-meta{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 
@@ -1436,10 +1368,6 @@ body.light-mode .guide-summary,body.light-mode .guide-step p,body.light-mode .gu
 .profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .profile-grid{display:grid;gap:12px}.profile-grid .account-form{padding-top:4px}
 .profile-username{font-size:22px;font-weight:900}
-body.light-mode .account-card{background:#fff;color:#10182a}
-body.light-mode .account-form input{background:#f5f7fb;color:#10182a}
-body.light-mode .account-button{background:#fff;color:#10182a}
-
 /* Conquistas bloqueadas em P&B; conquistadas voltam a ficar coloridas */
 .guide-achievement img{filter:grayscale(1);opacity:.48;transition:filter .25s ease,opacity .25s ease,transform .25s ease}
 .guide-achievement.ra-earned img{filter:none;opacity:1;transform:scale(1.02)}
@@ -1452,7 +1380,6 @@ body.light-mode .account-button{background:#fff;color:#10182a}
 .profile-stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.profile-stat-card{padding:18px;border-radius:16px;border:1px solid #283658;background:#111a30}.profile-stat-card small{display:block;color:#8f99b4;font-size:11px;font-weight:800;text-transform:uppercase;margin-bottom:7px}.profile-stat-card strong{font-size:26px}.profile-section{margin-top:24px;padding:22px;border:1px solid #283658;border-radius:18px;background:#11182c}.profile-section-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:17px}.profile-section-head h2{margin:0;font-size:21px}.profile-section-head span{color:#8f99b4;font-size:12px}.profile-recent-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.profile-achievement{min-width:0}.profile-achievement img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:1px solid #34415f}.profile-achievement strong{display:block;font-size:12px;line-height:1.3;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-achievement small{display:block;color:#8f99b4;font-size:10px;margin-top:3px}.profile-games{display:grid;gap:16px}.profile-game-card{padding:12px;border:1px solid #27304d;border-radius:14px;background:#0f1628}.profile-game-row{display:grid;grid-template-columns:84px 1fr auto;gap:16px;align-items:center;cursor:pointer}.profile-game-card:hover{border-color:#5d6fa8}.profile-game-cover{width:84px;height:112px;object-fit:cover;border-radius:9px;background:#090e1c}.profile-game-title{font-weight:900;margin-bottom:8px}.profile-game-meta{font-size:12px;color:#9daccc;margin-bottom:10px}.profile-progress-track{height:9px;background:#202a45;border-radius:999px;overflow:hidden}.profile-progress-fill{height:100%;background:linear-gradient(90deg,#6959f5,#36d98b);border-radius:999px}.profile-game-percent{font-size:24px;font-weight:900;text-align:right}.profile-game-percent small{display:block;font-size:11px;color:#8f99b4;margin-top:4px}.profile-game-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,52px));gap:7px;margin-top:14px;padding-top:14px;border-top:1px solid #27304d}.profile-game-badge{width:52px;height:52px;position:relative}.profile-game-badge img{width:52px;height:52px;display:block;object-fit:cover;border-radius:5px;border:2px solid #44506d;transition:.18s}.profile-game-badge.locked img{filter:grayscale(1) brightness(.42);opacity:.7}.profile-game-badge.earned img{filter:none;opacity:1;border-color:#7b8eb8}.profile-game-badge.hardcore img{box-shadow:0 0 0 2px #f1c44b}.profile-game-badge:hover img{transform:scale(1.08)}
 .profile-game-badge-tooltip{position:fixed;z-index:99999;width:min(440px,calc(100vw - 24px));display:none;grid-template-columns:78px 1fr;gap:14px;padding:14px;background:#242424;border:1px solid #3a3a3a;border-radius:5px;box-shadow:0 12px 34px rgba(0,0,0,.48);color:#d7d7d7;pointer-events:none}.profile-game-badge-tooltip.show{display:grid}.profile-game-badge-tooltip img{width:78px;height:78px;object-fit:cover;border:2px solid #777;border-radius:4px}.profile-game-badge-tooltip.locked img{filter:grayscale(1) brightness(.58)}.profile-game-badge-tooltip-title{font-size:20px;line-height:1.08;font-weight:900;color:#d8d8d8;margin:0 0 9px}.profile-game-badge-tooltip-desc{font-size:14px;line-height:1.42;color:#c9c9c9;margin-bottom:12px}.profile-game-badge-tooltip-meta{font-size:14px;line-height:1.4;color:#d5d5d5}.profile-game-badge-tooltip-game{font-style:italic;color:#bdbdbd}.profile-game-badge-tooltip-state{margin-top:5px;font-size:12px;color:#8f99b4}.profile-game-badge-tooltip.earned .profile-game-badge-tooltip-state{color:#53e3a6}.profile-game-badge-tooltip.hardcore .profile-game-badge-tooltip-state{color:#f1c44b}@media(max-width:600px){.profile-game-badge-tooltip{grid-template-columns:60px 1fr;padding:11px;gap:11px}.profile-game-badge-tooltip img{width:60px;height:60px}.profile-game-badge-tooltip-title{font-size:16px}.profile-game-badge-tooltip-desc,.profile-game-badge-tooltip-meta{font-size:12px}}.profile-empty{padding:24px;text-align:center;color:#8f99b4}.profile-loading{padding:28px;text-align:center;color:#aeb9d1}
 .profile-game-header{display:grid;grid-template-columns:1fr 44px;gap:10px;align-items:stretch}.profile-game-toggle{width:44px;min-height:44px;align-self:center;border:1px solid #303a59;border-radius:7px;background:#101728;color:#f3c900;font-size:24px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.18s}.profile-game-toggle:hover{background:#18223a;border-color:#59688f}.profile-game-toggle .arrow{display:block;transition:transform .2s}.profile-game-card.collapsed .profile-game-toggle .arrow{transform:rotate(180deg)}.profile-game-card.collapsed .profile-game-badges{display:none}@media(max-width:560px){.profile-game-header{grid-template-columns:1fr 40px}.profile-game-toggle{width:40px}}
-body.light-mode .profile-hero,body.light-mode .profile-section,body.light-mode .profile-stat-card{background:#fff;border-color:#dce2ee}body.light-mode .profile-game-row{background:#f4f6fb;border-color:#dce2ee}body.light-mode .profile-page-email,body.light-mode .profile-game-meta,body.light-mode .profile-section-head span{color:#647089}
 @media(max-width:820px){.profile-hero-grid{grid-template-columns:auto 1fr}.profile-hero-actions{grid-column:1/-1;flex-direction:row}.profile-stats-grid{grid-template-columns:repeat(2,1fr)}.profile-recent-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.profile-hero-grid{grid-template-columns:1fr;text-align:center}.profile-page-avatar{margin:auto}.profile-hero-actions{justify-content:center}.profile-game-row{grid-template-columns:64px 1fr}.profile-game-cover{width:64px;height:86px}.profile-game-percent{grid-column:2;text-align:left}.profile-recent-grid{grid-template-columns:repeat(2,1fr)}}
 
@@ -1473,13 +1400,51 @@ body.light-mode .profile-hero,body.light-mode .profile-section,body.light-mode .
 @media(max-width:900px){.game-hero{grid-template-columns:120px 1fr}.game-hero-cover{width:120px}.game-hero-progress{grid-column:1/-1}.game-overview-grid{grid-template-columns:1fr}.game-tabs{overflow-x:auto}.game-tab{white-space:nowrap}}
 @media(max-width:560px){.game-page{padding:14px 10px 36px}.game-hero{grid-template-columns:86px 1fr;gap:14px;padding:14px}.game-hero-cover{width:86px}.game-hero-main h1{font-size:23px}.game-hero-main .desc{display:none}.game-achievement-panel .guide-full{grid-template-columns:1fr}}
 
+
+/* ===== RETROHUB: GAME PAGE PREMIUM V2 ===== */
+.game-hero{position:relative;overflow:hidden;background:linear-gradient(100deg,rgba(6,11,24,.97),rgba(11,20,42,.90) 58%,rgba(17,28,55,.78)),var(--game-hero-bg);background-size:cover;background-position:center}
+.game-hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 45%,rgba(4,8,18,.55))}.game-hero>*{position:relative;z-index:1}
+.game-hero-progress.perfect{border-color:#e8c34d;box-shadow:0 0 30px rgba(232,195,77,.15)}.game-perfect-label{display:none;margin-top:10px;padding:7px 9px;border:1px solid #806d28;border-radius:8px;color:#f5d75f;font-size:11px;font-weight:900;text-align:center}.game-hero-progress.perfect .game-perfect-label{display:block}
+.game-content-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px;align-items:start}.game-content-main{min-width:0}.game-sidebar{position:sticky;top:72px;display:grid;gap:12px}.game-side-card{background:#0c152b;border:1px solid #27385e;border-radius:16px;padding:16px}.game-side-card h3{margin:0 0 13px;font-size:14px}.game-side-big{font-size:28px;font-weight:900}.game-side-muted{font-size:11px;color:#8297c5;margin-top:3px}.game-side-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #202e4e;font-size:12px}.game-side-row:last-child{border:0}.game-side-row span{color:#91a2c8}.game-side-row strong{text-align:right}.game-last-achievement{display:grid;grid-template-columns:54px 1fr;gap:10px;align-items:center}.game-last-achievement img{width:54px;height:54px;object-fit:cover;border-radius:8px}.game-last-achievement strong{font-size:12px}.game-last-achievement small{display:block;color:#8297c5;margin-top:4px;font-size:10px}
+.game-achievement-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 12px;padding:10px;background:#0b1428;border:1px solid #263657;border-radius:12px}.game-filter{border:1px solid #344568;background:#101b34;color:#aebddd;border-radius:8px;padding:8px 11px;font-size:11px;font-weight:900;cursor:pointer}.game-filter.active,.game-filter:hover{background:#294171;color:#fff}.game-ach-search{margin-left:auto;min-width:190px;border:1px solid #344568;background:#081123;color:#fff;border-radius:8px;padding:9px 11px;outline:none}.game-achievement-panel .guide-achievement{cursor:pointer;transition:.18s}.game-achievement-panel .guide-achievement:hover{transform:translateY(-2px);border-color:#536da8;background:#101d38}.game-achievement-panel .guide-achievement.hidden-by-filter{display:none!important}.game-achievement-panel .guide-achievement.is-hardcore{border-color:#6d5d28}.game-achievement-panel .guide-achievement.is-hardcore:after{content:"HARDCORE";position:absolute;right:8px;top:8px;color:#f1c44b;font-size:8px;font-weight:900}.game-achievement-panel .guide-achievement{position:relative}.game-achievement-panel .guide-achievement.expanded{grid-column:span 2;border-color:#6b80bd}.game-achievement-panel .guide-achievement.expanded p{font-size:13px}.game-achievement-panel .guide-achievement.expanded .guide-official-name{color:#9db2e8}
+.game-guide-callout{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.game-guide-callout>div{background:#0c152b;border:1px solid #27385e;border-radius:12px;padding:13px}.game-guide-callout small{display:block;color:#8297c5;font-size:9px;font-weight:900;margin-bottom:5px}.game-guide-callout strong{font-size:13px}
+@media(max-width:980px){.game-content-layout{grid-template-columns:1fr}.game-sidebar{position:static;grid-template-columns:repeat(2,1fr)}.game-achievement-panel .guide-achievement.expanded{grid-column:auto}}
+@media(max-width:620px){.game-sidebar{grid-template-columns:1fr}.game-guide-callout{grid-template-columns:repeat(2,1fr)}.game-ach-search{width:100%;margin-left:0}}
+
+
+/* GUIA COMPACTO RETROHUB */
+.guide-box{padding:22px 24px;background:linear-gradient(135deg,#111a30 0%,#0d1528 100%);border-color:#2d3b61}
+.guide-header{margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #273451}
+.guide-intro h3{margin:0 0 8px;font-size:18px;color:#fff}
+.guide-intro p{margin:0;max-width:850px;color:#aeb9d1;line-height:1.6;font-size:14px}
+.guide-meta-inline{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin:18px 0;color:#8f99b4;font-size:13px}
+.guide-meta-inline span{display:inline-flex;align-items:center;gap:5px}
+.guide-meta-inline strong{color:#fff}
+.guide-button-main{border-radius:10px;padding:11px 17px}
+.guide-full .guide-steps{margin-top:0;margin-bottom:18px}
+@media(max-width:700px){.guide-box{padding:18px}.guide-meta-inline{gap:12px 18px}.guide-meta-inline span{width:calc(50% - 9px)}}
+
+
+.achievement-summary-compact{margin:0 0 22px;padding:0 2px;color:#fff}.achievement-summary-compact h2{margin:0 0 8px;font-size:20px;font-weight:800}.achievement-summary-compact p{margin:0 0 14px;max-width:900px;color:#b9c9ef;line-height:1.65;font-size:14px}.achievement-summary-stats{display:flex;flex-wrap:wrap;gap:22px;color:#9fb4e8;font-size:14px}.achievement-summary-stats strong{color:#fff}.achievement-summary-stats span{white-space:nowrap}
+
+/* ===== FICHA TÉCNICA COMPACTA ===== */
+.game-info-compact{padding:16px 18px!important;align-self:start}
+.game-info-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:13px;border-bottom:1px solid #253455}
+.game-info-heading>div{display:grid;gap:3px}.game-info-heading small{font-size:9px;letter-spacing:.12em;color:#7890c3;font-weight:900}.game-info-heading strong{font-size:16px;color:#fff}
+.game-info-download{margin:0!important;white-space:nowrap;padding:10px 14px!important;font-size:12px!important}
+.game-info-chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.game-info-chips span{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #2a3a60;border-radius:999px;background:#111b32;color:#e7edff;font-size:11px;font-weight:800}
+.game-info-chips b{font-size:13px}.game-info-details{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;padding-top:4px}
+.game-info-details p{margin:0;padding:10px 0;border-top:1px solid #202e4c;min-width:0}.game-info-details p.translation{grid-column:1/-1}
+.game-info-details small{display:block;color:#7890c3;font-size:9px;margin-bottom:4px}.game-info-details strong{display:block;color:#fff;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+@media(max-width:560px){.game-info-heading{align-items:flex-start;flex-direction:column}.game-info-download{width:100%;justify-content:center}.game-info-details{grid-template-columns:1fr}.game-info-details p.translation{grid-column:auto}}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 </head>
 
-<body>
+<body class="dark-mode">
 
 <header>
 <nav>
@@ -1502,15 +1467,7 @@ body.light-mode .profile-hero,body.light-mode .profile-section,body.light-mode .
       </svg>
     </span>
   </div>
-
-
-  <button id="themeToggle" class="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Alternar modo claro e escuro">
-    <span id="themeText">Claro</span>
-    <span id="themeIcon" class="theme-toggle-icon">🌙</span>
-  </button>
-
-
-  <button id="accountButton" class="account-button" type="button" onclick="handleAccountButton()">
+<button id="accountButton" class="account-button" type="button" onclick="handleAccountButton()">
     <span id="accountAvatarMini" class="account-avatar-mini">👤</span>
     <span id="accountButtonText">Entrar</span>
   </button>
@@ -1640,25 +1597,6 @@ body.light-mode .profile-hero,body.light-mode .profile-section,body.light-mode .
 
 <script>
 
-/* ===== CONTROLE DO MODO CLARO / ESCURO ===== */
-function applyTheme(theme){
-  const isLight=theme==="light";
-  document.body.classList.toggle("light-mode",isLight);
-  const text=document.getElementById("themeText");
-  const icon=document.getElementById("themeIcon");
-  if(text) text.textContent=isLight?"Escuro":"Claro";
-  if(icon) icon.textContent=isLight?"☀️":"🌙";
-  localStorage.setItem("RETROHUB BRTheme",isLight?"light":"dark");
-}
-function toggleTheme(){
-  applyTheme(document.body.classList.contains("light-mode")?"dark":"light");
-}
-applyTheme(localStorage.getItem("RETROHUB BRTheme")||"dark");
-
-
-
-
-
 /* =========================================================
    JOGOS DO SITE
    EDITE SOMENTE ESTA ÁREA
@@ -1671,7 +1609,7 @@ const games = [
     title: "Need for Speed: Most Wanted - Black Edition",
     platform: "PS2",
     year: "2005",
-    language: "Portugues",
+    language: "Português",
     region: "NTSC-U/C",
     size: "2.85 GB",
     developer: "EA Canada",
@@ -1700,7 +1638,7 @@ const games = [
   title: "Midnight Club 3: DUB Edition Remix",
   platform: "PS2",
   year: "2005",
-  language: "Portugues",
+  language: "Português",
   region: "NTSC-U/C",
   size: "7.95 GB",
   developer: "Rockstar San Diego",
@@ -2031,14 +1969,14 @@ const games = [
   title: "Metroid Fusion",
   platform: "Game Boy Advance",
   year: "2002",
-  language: "Portugues",
+  language: "Português",
   region: "NTSC-U",
   size: "8 MB",
   developer: "Nintendo R&D1",
   publisher: "Nintendo",
   genre: "Ação / Aventura",
   format: "ROM",
-  translation: "Tradu-Rons - PO.B.R.E - Trans-Cemter",
+  translation: "Tradu-Roms - PO.B.R.E - Trans-Center",
 
   retroAchievements: true,
   achievements: 43,
@@ -2067,49 +2005,49 @@ const games = [
       { title: "4. Campanha low% — Bare-bones", text: "Faça uma campanha separada sem Energy Tanks e sem expansões de Power Bomb, mantendo a capacidade de Mísseis em 15 ou menos. Esta é uma das conquistas mais exigentes do conjunto." }
     ],
     achievements: [
-      { name: "Wrecked Arachnus-X", officialName: "Wrecked Arachnus-X", points: 10, description: "Derrote Arachnus-X sem sofrer dano.", guide: "Salve antes da luta. Mantenha distÃ¢ncia, evite as bolas de fogo e ataque quando houver abertura. Se sofrer qualquer dano, recarregue o save e tente novamente.", badge: "https://media.retroachievements.org/Badge/183563.png", missable: true },
-      { name: "Vitalit-E", officialName: "Vitalit-E", points: 4, description: "Adquira um Energy Tank.", guide: "Pegue qualquer Energy Tank. O primeiro disponÃ­vel no caminho normal jÃ¡ serve.", badge: "https://media.retroachievements.org/Badge/183593.png" },
+      { name: "Wrecked Arachnus-X", officialName: "Wrecked Arachnus-X", points: 10, description: "Derrote Arachnus-X sem sofrer dano.", guide: "Salve antes da luta. Mantenha distância, evite as bolas de fogo e ataque quando houver abertura. Se sofrer qualquer dano, recarregue o save e tente novamente.", badge: "https://media.retroachievements.org/Badge/183563.png", missable: true },
+      { name: "Vitalit-E", officialName: "Vitalit-E", points: 4, description: "Adquira um Energy Tank.", guide: "Pegue qualquer Energy Tank. O primeiro disponível no caminho normal já serve.", badge: "https://media.retroachievements.org/Badge/183593.png" },
       { name: "Mighty Morphin'", officialName: "Mighty Morphin'", points: 5, description: "Recupere a habilidade Morph Ball.", guide: "Derrote Arachnus-X e absorva o Core-X para recuperar a Morph Ball.", badge: "https://media.retroachievements.org/Badge/183579.png" },
-      { name: "Explosive Chamber", officialName: "Explosive Chamber", points: 4, description: "Baixe os dados de MÃ­sseis.", guide: "Conquista de progressÃ£o. Siga a missÃ£o principal atÃ© a Data Room indicada pelo computador e faÃ§a o download dos MÃ­sseis.", badge: "https://media.retroachievements.org/Badge/183569.png" },
-      { name: "L1 Access (Blue)", officialName: "L1 Access (Blue)", points: 5, description: "Desbloqueie as fechaduras de NÃ­vel 1 (azuis).", guide: "Use a Security Room indicada durante a progressÃ£o para liberar as portas azuis.", badge: "https://media.retroachievements.org/Badge/183574.png" },
-      { name: "L2 Access (Green)", officialName: "L2 Access (Green)", points: 5, description: "Desbloqueie as fechaduras de NÃ­vel 2 (verdes).", guide: "Acesse a Security Room correspondente e libere as portas verdes.", badge: "https://media.retroachievements.org/Badge/183575.png" },
-      { name: "L3 Access (Yellow)", officialName: "L3 Access (Yellow)", points: 5, description: "Desbloqueie as fechaduras de NÃ­vel 3 (amarelas).", guide: "Encontre a Security Room de NÃ­vel 3 durante a progressÃ£o e libere as portas amarelas.", badge: "https://media.retroachievements.org/Badge/183576.png" },
-      { name: "L4 Access (Red)", officialName: "L4 Access (Red)", points: 10, description: "Desbloqueie as fechaduras de NÃ­vel 4 (vermelhas).", guide: "Acesse a Security Room de NÃ­vel 4 e libere as portas vermelhas.", badge: "https://media.retroachievements.org/Badge/183577.png" },
-      { name: "Wrecked Elephant Bird", officialName: "Wrecked Elephant Bird", points: 25, description: "Derrote o Charge Core-X sem sofrer dano.", guide: "Fique atento aos saltos e projÃ©teis do chefe. Priorize desviar e sÃ³ ataque quando a trajetÃ³ria estiver segura.", badge: "https://media.retroachievements.org/Badge/183596.png", missable: true },
-      { name: "Focused Shot", officialName: "Focused Shot", points: 5, description: "Recupere a habilidade Charge Beam.", guide: "Derrote o Charge Core-X e absorva o nÃºcleo para recuperar o Charge Beam.", badge: "https://media.retroachievements.org/Badge/183571.png" },
-      { name: "Firecracker", officialName: "Firecracker", points: 4, description: "Baixe os dados de Bombas.", guide: "Chegue Ã  Data Room do Setor 2 e faÃ§a o download das Bombas.", badge: "https://media.retroachievements.org/Badge/183570.png" },
+      { name: "Explosive Chamber", officialName: "Explosive Chamber", points: 4, description: "Baixe os dados de Mísseis.", guide: "Conquista de progressão. Siga a missão principal até a Data Room indicada pelo computador e faça o download dos Mísseis.", badge: "https://media.retroachievements.org/Badge/183569.png" },
+      { name: "L1 Access (Blue)", officialName: "L1 Access (Blue)", points: 5, description: "Desbloqueie as fechaduras de Nível 1 (azuis).", guide: "Use a Security Room indicada durante a progressão para liberar as portas azuis.", badge: "https://media.retroachievements.org/Badge/183574.png" },
+      { name: "L2 Access (Green)", officialName: "L2 Access (Green)", points: 5, description: "Desbloqueie as fechaduras de Nível 2 (verdes).", guide: "Acesse a Security Room correspondente e libere as portas verdes.", badge: "https://media.retroachievements.org/Badge/183575.png" },
+      { name: "L3 Access (Yellow)", officialName: "L3 Access (Yellow)", points: 5, description: "Desbloqueie as fechaduras de Nível 3 (amarelas).", guide: "Encontre a Security Room de Nível 3 durante a progressão e libere as portas amarelas.", badge: "https://media.retroachievements.org/Badge/183576.png" },
+      { name: "L4 Access (Red)", officialName: "L4 Access (Red)", points: 10, description: "Desbloqueie as fechaduras de Nível 4 (vermelhas).", guide: "Acesse a Security Room de Nível 4 e libere as portas vermelhas.", badge: "https://media.retroachievements.org/Badge/183577.png" },
+      { name: "Wrecked Elephant Bird", officialName: "Wrecked Elephant Bird", points: 25, description: "Derrote o Charge Core-X sem sofrer dano.", guide: "Fique atento aos saltos e projéteis do chefe. Priorize desviar e só ataque quando a trajetória estiver segura.", badge: "https://media.retroachievements.org/Badge/183596.png", missable: true },
+      { name: "Focused Shot", officialName: "Focused Shot", points: 5, description: "Recupere a habilidade Charge Beam.", guide: "Derrote o Charge Core-X e absorva o núcleo para recuperar o Charge Beam.", badge: "https://media.retroachievements.org/Badge/183571.png" },
+      { name: "Firecracker", officialName: "Firecracker", points: 4, description: "Baixe os dados de Bombas.", guide: "Chegue à Data Room do Setor 2 e faça o download das Bombas.", badge: "https://media.retroachievements.org/Badge/183570.png" },
       { name: "Wrecked Zazabi", officialName: "Wrecked Zazabi", points: 10, description: "Derrote Zazabi sem sofrer dano.", guide: "Evite ficar diretamente sob o chefe quando ele cair. Acerte-o quando abrir a boca e reinicie a tentativa caso seja atingido.", badge: "https://media.retroachievements.org/Badge/183604.png", missable: true },
       { name: "More Kick", officialName: "More Kick", points: 5, description: "Recupere High Jump e Jump Ball.", guide: "Derrote Zazabi e absorva o Core-X para receber as duas habilidades.", badge: "https://media.retroachievements.org/Badge/183581.png" },
-      { name: "Wrecked Serris", officialName: "Wrecked Serris", points: 25, description: "Derrote Serris sem sofrer dano.", guide: "Memorize a rota de Serris e use as plataformas para evitar contato. Ataque a cabeÃ§a quando ele passar por uma posiÃ§Ã£o segura.", badge: "https://media.retroachievements.org/Badge/183602.png", missable: true },
+      { name: "Wrecked Serris", officialName: "Wrecked Serris", points: 25, description: "Derrote Serris sem sofrer dano.", guide: "Memorize a rota de Serris e use as plataformas para evitar contato. Ataque a cabeça quando ele passar por uma posição segura.", badge: "https://media.retroachievements.org/Badge/183602.png", missable: true },
       { name: "Leg Day Paid Off", officialName: "Leg Day Paid Off", points: 5, description: "Recupere o Speed Booster.", guide: "Derrote Serris e absorva o Core-X.", badge: "https://media.retroachievements.org/Badge/183578.png" },
-      { name: "Tripled Firepower", officialName: "Tripled Firepower", points: 5, description: "Baixe os dados de Super Missile.", guide: "FaÃ§a o download do upgrade de Super Missile na Data Room indicada pela missÃ£o.", badge: "https://media.retroachievements.org/Badge/183591.png" },
-      { name: "Wrecked B.O.X.", officialName: "Wrecked B.O.X.", points: 10, description: "Derrote o B.O.X. Security Robot sem sofrer dano.", guide: "Use as plataformas para ficar fora da trajetÃ³ria do robÃ´ e ataque o ponto vulnerÃ¡vel por cima. Se tomar dano, recarregue o save.", badge: "https://media.retroachievements.org/Badge/183595.png", missable: true },
+      { name: "Tripled Firepower", officialName: "Tripled Firepower", points: 5, description: "Baixe os dados de Super Missile.", guide: "Faça o download do upgrade de Super Missile na Data Room indicada pela missão.", badge: "https://media.retroachievements.org/Badge/183591.png" },
+      { name: "Wrecked B.O.X.", officialName: "Wrecked B.O.X.", points: 10, description: "Derrote o B.O.X. Security Robot sem sofrer dano.", guide: "Use as plataformas para ficar fora da trajetória do robô e ataque o ponto vulnerável por cima. Se tomar dano, recarregue o save.", badge: "https://media.retroachievements.org/Badge/183595.png", missable: true },
       { name: "Stay Frosty", officialName: "Stay Frosty", points: 5, description: "Recupere o efeito da Varia Suit.", guide: "Derrote o Varia Core-X e absorva-o. A Varia Suit permite suportar temperaturas extremas.", badge: "https://media.retroachievements.org/Badge/183589.png" },
-      { name: "Frigid Chamber", officialName: "Frigid Chamber", points: 5, description: "Adicione o efeito de gelo aos MÃ­sseis.", guide: "FaÃ§a o download do upgrade Ice Missile quando a missÃ£o liberar a Data Room correspondente.", badge: "https://media.retroachievements.org/Badge/183572.png" },
-      { name: "Open Wide", officialName: "Open Wide", points: 5, description: "Recupere o Wide Beam.", guide: "Derrote o Wide Beam Core-X e absorva o nÃºcleo.", badge: "https://media.retroachievements.org/Badge/183582.png" },
-      { name: "Under Pressure", officialName: "Under Pressure", points: 25, description: "Reative a unidade de resfriamento com pelo menos 4 minutos restantes.", guide: "Durante a emergÃªncia do superaquecimento, vÃ¡ direto ao objetivo, evite desvios e reative o sistema antes que o cronÃ´metro fique abaixo de 4:00.", badge: "https://media.retroachievements.org/Badge/183592.png", missable: true },
-      { name: "Wrecked Human Core-X", officialName: "Wrecked Human Core-X", points: 25, description: "Derrote o Human Core-X sem sofrer dano.", guide: "Concentre-se em manter espaÃ§o para desviar dos ataques e use tiros carregados quando estiver seguro. Qualquer dano invalida a tentativa.", badge: "https://media.retroachievements.org/Badge/183597.png", missable: true },
-      { name: "Blinding Power", officialName: "Blinding Power", points: 5, description: "Baixe os dados de Power Bomb.", guide: "FaÃ§a o download das Power Bombs na Data Room correspondente.", badge: "https://media.retroachievements.org/Badge/183565.png" },
-      { name: "Wrecked Yakuza", officialName: "Wrecked Yakuza", points: 50, description: "Derrote Yakuza sem sofrer dano.", guide: "Ã um dos desafios mais difÃ­ceis do conjunto. Na primeira fase, evite ficar alinhado com as investidas; na segunda, mantenha-se mÃ³vel e ataque apenas em janelas seguras. Salve antes da luta.", badge: "https://media.retroachievements.org/Badge/183603.png", missable: true },
+      { name: "Frigid Chamber", officialName: "Frigid Chamber", points: 5, description: "Adicione o efeito de gelo aos Mísseis.", guide: "Faça o download do upgrade Ice Missile quando a missão liberar a Data Room correspondente.", badge: "https://media.retroachievements.org/Badge/183572.png" },
+      { name: "Open Wide", officialName: "Open Wide", points: 5, description: "Recupere o Wide Beam.", guide: "Derrote o Wide Beam Core-X e absorva o núcleo.", badge: "https://media.retroachievements.org/Badge/183582.png" },
+      { name: "Under Pressure", officialName: "Under Pressure", points: 25, description: "Reative a unidade de resfriamento com pelo menos 4 minutos restantes.", guide: "Durante a emergência do superaquecimento, vá direto ao objetivo, evite desvios e reative o sistema antes que o cronômetro fique abaixo de 4:00.", badge: "https://media.retroachievements.org/Badge/183592.png", missable: true },
+      { name: "Wrecked Human Core-X", officialName: "Wrecked Human Core-X", points: 25, description: "Derrote o Human Core-X sem sofrer dano.", guide: "Concentre-se em manter espaço para desviar dos ataques e use tiros carregados quando estiver seguro. Qualquer dano invalida a tentativa.", badge: "https://media.retroachievements.org/Badge/183597.png", missable: true },
+      { name: "Blinding Power", officialName: "Blinding Power", points: 5, description: "Baixe os dados de Power Bomb.", guide: "Faça o download das Power Bombs na Data Room correspondente.", badge: "https://media.retroachievements.org/Badge/183565.png" },
+      { name: "Wrecked Yakuza", officialName: "Wrecked Yakuza", points: 50, description: "Derrote Yakuza sem sofrer dano.", guide: "É um dos desafios mais difíceis do conjunto. Na primeira fase, evite ficar alinhado com as investidas; na segunda, mantenha-se móvel e ataque apenas em janelas seguras. Salve antes da luta.", badge: "https://media.retroachievements.org/Badge/183603.png", missable: true },
       { name: "Space Ninja", officialName: "Space Ninja", points: 5, description: "Recupere a habilidade Space Jump.", guide: "Derrote Yakuza e absorva o Core-X.", badge: "https://media.retroachievements.org/Badge/183588.png" },
-      { name: "Wrecked Nettori", officialName: "Wrecked Nettori", points: 25, description: "Derrote Nettori sem sofrer dano.", guide: "Destrua as flores que bloqueiam a arena e controle os saltos entre os projÃ©teis. Use ataques fortes sem se expor ao padrÃ£o das plantas.", badge: "https://media.retroachievements.org/Badge/183599.png", missable: true },
+      { name: "Wrecked Nettori", officialName: "Wrecked Nettori", points: 25, description: "Derrote Nettori sem sofrer dano.", guide: "Destrua as flores que bloqueiam a arena e controle os saltos entre os projéteis. Use ataques fortes sem se expor ao padrão das plantas.", badge: "https://media.retroachievements.org/Badge/183599.png", missable: true },
       { name: "Piercing Their Pants", officialName: "Piercing Their Pants", points: 5, description: "Recupere a habilidade Plasma Beam.", guide: "Derrote Nettori e absorva o Core-X.", badge: "https://media.retroachievements.org/Badge/183583.png" },
-      { name: "Amphibious", officialName: "Amphibious", points: 5, description: "Recupere o efeito da Gravity Suit.", guide: "Derrote Nightmare e absorva o Core-X. Depois disso, Samus poderÃ¡ se mover normalmente na Ã¡gua.", badge: "https://media.retroachievements.org/Badge/185189.png" },
-      { name: "Diffusion Missiles", officialName: "Diffusion Missiles", points: 5, description: "Adicione Diffusion aos MÃ­sseis.", guide: "FaÃ§a o download dos Diffusion Missiles na Data Room correspondente.", badge: "https://media.retroachievements.org/Badge/183567.png" },
-      { name: "Shinespark Legend", officialName: "Shinespark Legend", points: 50, description: "Depois de abrir as portas de NÃ­vel 4 e antes de obter Diffusion Missiles, leia a mensagem secreta no Setor 4.", guide: "PERDÃVEL. FaÃ§a o caminho secreto de Shinespark no Setor 4 antes de pegar Diffusion Missiles. Salve antes de tentar e pratique a sequÃªncia de Speed Booster/Shinespark; obter Diffusion Missiles encerra a janela desta conquista.", badge: "https://media.retroachievements.org/Badge/183586.png", missable: true },
+      { name: "Amphibious", officialName: "Amphibious", points: 5, description: "Recupere o efeito da Gravity Suit.", guide: "Derrote Nightmare e absorva o Core-X. Depois disso, Samus poderá se mover normalmente na água.", badge: "https://media.retroachievements.org/Badge/185189.png" },
+      { name: "Diffusion Missiles", officialName: "Diffusion Missiles", points: 5, description: "Adicione Diffusion aos Mísseis.", guide: "Faça o download dos Diffusion Missiles na Data Room correspondente.", badge: "https://media.retroachievements.org/Badge/183567.png" },
+      { name: "Shinespark Legend", officialName: "Shinespark Legend", points: 50, description: "Depois de abrir as portas de Nível 4 e antes de obter Diffusion Missiles, leia a mensagem secreta no Setor 4.", guide: "PERDÍVEL. Faça o caminho secreto de Shinespark no Setor 4 antes de pegar Diffusion Missiles. Salve antes de tentar e pratique a sequência de Speed Booster/Shinespark; obter Diffusion Missiles encerra a janela desta conquista.", badge: "https://media.retroachievements.org/Badge/183586.png", missable: true },
       { name: "Wave Beam", officialName: "Wave Beam", points: 5, description: "Recupere a habilidade Wave Beam.", guide: "Derrote o Wave Beam Core-X e absorva-o.", badge: "https://media.retroachievements.org/Badge/183594.png" },
-      { name: "Wrecked Infected B.O.X.", officialName: "Wrecked Infected B.O.X.", points: 25, description: "Derrote o B.O.X. infectado sem sofrer dano.", guide: "Use o espaÃ§o da arena para evitar os ataques e acerte o nÃºcleo quando estiver exposto. Recarregue o save se sofrer dano.", badge: "https://media.retroachievements.org/Badge/183598.png", missable: true },
-      { name: "Quick Thinking", officialName: "Quick Thinking", points: 25, description: "Escape do Restricted Laboratory em atÃ© 10 segundos.", guide: "PERDÃVEL. Assim que a sequÃªncia de fuga comeÃ§ar, siga imediatamente pela rota de saÃ­da, sem parar para enfrentar inimigos ou explorar.", badge: "https://media.retroachievements.org/Badge/183584.png", missable: true },
-      { name: "Screw Attack", officialName: "Screw Attack", points: 10, description: "Recupere a habilidade Screw Attack.", guide: "Derrote o Core-X correspondente e absorva-o durante a progressÃ£o final.", badge: "https://media.retroachievements.org/Badge/183585.png" },
-      { name: "Wrecked SA-X", officialName: "Wrecked SA-X", points: 25, description: "Derrote SA-X sem sofrer dano.", guide: "Mantenha distÃ¢ncia, use o espaÃ§o da arena e ataque nos momentos em que SA-X estiver vulnerÃ¡vel. Evite trocar dano: qualquer acerto recebido invalida a conquista.", badge: "https://media.retroachievements.org/Badge/183601.png", missable: true },
-      { name: "Swift Escape", officialName: "Swift Escape", points: 25, description: "Escape da estaÃ§Ã£o com pelo menos 1 minuto restante.", guide: "PERDÃVEL. Na fuga final, siga direto para a nave e evite desvios. O objetivo Ã© terminar a sequÃªncia com 1:00 ou mais no cronÃ´metro.", badge: "https://media.retroachievements.org/Badge/183590.png" },
-      { name: "Wrecked Omega Metroid", officialName: "Wrecked Omega Metroid", points: 25, description: "Derrote o Omega Metroid sem sofrer dano.", guide: "Na batalha final, mantenha distÃ¢ncia dos golpes e ataque somente quando houver abertura. Se for atingido, recarregue o save anterior.", badge: "https://media.retroachievements.org/Badge/183600.png" },
-      { name: "Mission Complete", officialName: "Mission Complete", points: 25, description: "Complete a missÃ£o.", guide: "Finalize o jogo em qualquer tempo permitido pelo conjunto.", badge: "https://media.retroachievements.org/Badge/183580.png" },
-      { name: "Hasty", officialName: "Hasty", points: 10, description: "Complete a missÃ£o em menos de 4 horas.", guide: "PERDÃVEL. FaÃ§a uma campanha focada na histÃ³ria, evitando coleta desnecessÃ¡ria. O tempo final precisa ser inferior a 4:00.", badge: "https://media.retroachievements.org/Badge/183573.png", missable: true },
-      { name: "Don't Stop Me Now", officialName: "Don't Stop Me Now", points: 25, description: "Complete a missÃ£o em menos de 2 horas.", guide: "PERDÃVEL. Exige uma rota rÃ¡pida e conhecimento do mapa. Ignore expansÃµes nÃ£o essenciais e pratique os setores que mais consomem tempo.", badge: "https://media.retroachievements.org/Badge/183568.png", missable: true },
-      { name: "Completionist", officialName: "Completionist", points: 25, description: "Complete a missÃ£o com todos os itens coletados.", guide: "Colete 100% dos Energy Tanks, Missile Tanks e Power Bomb Tanks antes de finalizar a missÃ£o. FaÃ§a uma limpeza do mapa antes da sequÃªncia final.", badge: "https://media.retroachievements.org/Badge/183566.png" },
-      { name: "Space Juggernaut", officialName: "Space Juggernaut", points: 50, description: "Complete a missÃ£o com todos os itens coletados em menos de 2 horas.", guide: "PERDÃVEL. Combine uma rota de 100% com ritmo de speedrun. Planeje a ordem dos itens para reduzir retornos e salve tempo nos chefes e deslocamentos.", badge: "https://media.retroachievements.org/Badge/183587.png", missable: true },
-      { name: "Bare-bones", officialName: "Bare-Bones", points: 100, description: "Complete a missÃ£o com capacidade de MÃ­sseis de 15 ou menos, sem Energy Tanks e sem expansÃµes de Power Bomb.", guide: "PERDÃVEL. FaÃ§a uma campanha low%. NÃ£o pegue Energy Tanks nem Power Bomb Tanks e limite sua capacidade de MÃ­sseis a no mÃ¡ximo 15. Ã recomendÃ¡vel fazer esta conquista em uma campanha separada.", badge: "https://media.retroachievements.org/Badge/183564.png", missable: true }
+      { name: "Wrecked Infected B.O.X.", officialName: "Wrecked Infected B.O.X.", points: 25, description: "Derrote o B.O.X. infectado sem sofrer dano.", guide: "Use o espaço da arena para evitar os ataques e acerte o núcleo quando estiver exposto. Recarregue o save se sofrer dano.", badge: "https://media.retroachievements.org/Badge/183598.png", missable: true },
+      { name: "Quick Thinking", officialName: "Quick Thinking", points: 25, description: "Escape do Restricted Laboratory em até 10 segundos.", guide: "PERDÍVEL. Assim que a sequência de fuga começar, siga imediatamente pela rota de saída, sem parar para enfrentar inimigos ou explorar.", badge: "https://media.retroachievements.org/Badge/183584.png", missable: true },
+      { name: "Screw Attack", officialName: "Screw Attack", points: 10, description: "Recupere a habilidade Screw Attack.", guide: "Derrote o Core-X correspondente e absorva-o durante a progressão final.", badge: "https://media.retroachievements.org/Badge/183585.png" },
+      { name: "Wrecked SA-X", officialName: "Wrecked SA-X", points: 25, description: "Derrote SA-X sem sofrer dano.", guide: "Mantenha distância, use o espaço da arena e ataque nos momentos em que SA-X estiver vulnerável. Evite trocar dano: qualquer acerto recebido invalida a conquista.", badge: "https://media.retroachievements.org/Badge/183601.png", missable: true },
+      { name: "Swift Escape", officialName: "Swift Escape", points: 25, description: "Escape da estação com pelo menos 1 minuto restante.", guide: "PERDÍVEL. Na fuga final, siga direto para a nave e evite desvios. O objetivo é terminar a sequência com 1:00 ou mais no cronômetro.", badge: "https://media.retroachievements.org/Badge/183590.png" },
+      { name: "Wrecked Omega Metroid", officialName: "Wrecked Omega Metroid", points: 25, description: "Derrote o Omega Metroid sem sofrer dano.", guide: "Na batalha final, mantenha distância dos golpes e ataque somente quando houver abertura. Se for atingido, recarregue o save anterior.", badge: "https://media.retroachievements.org/Badge/183600.png" },
+      { name: "Mission Complete", officialName: "Mission Complete", points: 25, description: "Complete a missão.", guide: "Finalize o jogo em qualquer tempo permitido pelo conjunto.", badge: "https://media.retroachievements.org/Badge/183580.png" },
+      { name: "Hasty", officialName: "Hasty", points: 10, description: "Complete a missão em menos de 4 horas.", guide: "PERDÍVEL. Faça uma campanha focada na história, evitando coleta desnecessária. O tempo final precisa ser inferior a 4:00.", badge: "https://media.retroachievements.org/Badge/183573.png", missable: true },
+      { name: "Don't Stop Me Now", officialName: "Don't Stop Me Now", points: 25, description: "Complete a missão em menos de 2 horas.", guide: "PERDÍVEL. Exige uma rota rápida e conhecimento do mapa. Ignore expansões não essenciais e pratique os setores que mais consomem tempo.", badge: "https://media.retroachievements.org/Badge/183568.png", missable: true },
+      { name: "Completionist", officialName: "Completionist", points: 25, description: "Complete a missão com todos os itens coletados.", guide: "Colete 100% dos Energy Tanks, Missile Tanks e Power Bomb Tanks antes de finalizar a missão. Faça uma limpeza do mapa antes da sequência final.", badge: "https://media.retroachievements.org/Badge/183566.png" },
+      { name: "Space Juggernaut", officialName: "Space Juggernaut", points: 50, description: "Complete a missão com todos os itens coletados em menos de 2 horas.", guide: "PERDÍVEL. Combine uma rota de 100% com ritmo de speedrun. Planeje a ordem dos itens para reduzir retornos e salve tempo nos chefes e deslocamentos.", badge: "https://media.retroachievements.org/Badge/183587.png", missable: true },
+      { name: "Bare-bones", officialName: "Bare-Bones", points: 100, description: "Complete a missão com capacidade de Mísseis de 15 ou menos, sem Energy Tanks e sem expansões de Power Bomb.", guide: "PERDÍVEL. Faça uma campanha low%. Não pegue Energy Tanks nem Power Bomb Tanks e limite sua capacidade de Mísseis a no máximo 15. É recomendável fazer esta conquista em uma campanha separada.", badge: "https://media.retroachievements.org/Badge/183564.png", missable: true }
     ]
   },
 
@@ -2680,7 +2618,7 @@ function setGenre(genre){
   renderFilters();
   renderHome();
 
-  setTimeout(() => initRetroAchievementsProgress(game), 0);
+  setTimeout(() => { initRetroAchievementsProgress(game); initGameAchievementCards(); }, 0);
 
   window.scrollTo({
     top:0,
@@ -3473,72 +3411,41 @@ function openGame(slug, updateHistory = true){
 
   const achievementGuideHTML = game.retroAchievements ? (() => {
     const guide = game.achievementGuide;
-
-    if(!guide || !guide.available){
-      return `
-        <section class="guide-box">
-          <div class="guide-header">
-            <h2>📖 Guia de Conquistas</h2>
-            <span class="guide-status">Português BR</span>
-          </div>
-          <p class="guide-summary">Este jogo tem suporte ao RetroAchievements, mas o guia em português ainda está sendo preparado pelo RetroHub BR.</p>
-        </section>
-      `;
-    }
-
-    const steps = Array.isArray(guide.steps) ? guide.steps : [];
-    const achievements = Array.isArray(guide.achievements) ? guide.achievements : [];
+    const achievements = Array.isArray(guide?.achievements) ? guide.achievements : [];
 
     return `
-      <section class="guide-box">
-        <div class="guide-header">
-          <h2>📖 Guia de Conquistas</h2>
-          <span class="guide-status">Português BR</span>
-        </div>
-
-        <p class="guide-summary">${guide.summary || "Guia de conquistas em português."}</p>
-
-        <div class="guide-meta">
-          <div><small>DIFICULDADE</small><strong>${guide.difficulty || "A definir"}</strong></div>
-          <div><small>TEMPO ESTIMADO</small><strong>${guide.estimatedTime || "A definir"}</strong></div>
-          <div><small>JOGADAS</small><strong>${guide.playthroughs || "A definir"}</strong></div>
-          <div><small>PERDÍVEIS</small><strong>${guide.missables || "A definir"}</strong></div>
-        </div>
-
-        ${steps.length ? `
-          <div class="guide-steps">
-            ${steps.map(step => `
-              <div class="guide-step">
-                <strong>${step.title}</strong>
-                <p>${step.text}</p>
-              </div>
-            `).join("")}
+      ${guide ? `
+        <div class="achievement-summary-compact">
+          <h2>${game.title} — Roteiro para 100%</h2>
+          ${guide.summary ? `<p>${guide.summary}</p>` : ""}
+          <div class="achievement-summary-stats">
+            ${guide.difficulty ? `<span>⚔ <strong>${guide.difficulty}</strong></span>` : ""}
+            ${guide.estimatedTime ? `<span>⏱ <strong>${guide.estimatedTime}</strong></span>` : ""}
+            ${guide.playthroughs ? `<span>🎮 <strong>${guide.playthroughs}</strong></span>` : ""}
+            ${guide.missables ? `<span>⚠ <strong>${guide.missables}</strong> perdíveis</span>` : ""}
           </div>
-        ` : ""}
-
-        <button class="guide-button" type="button" onclick="toggleAchievementGuide(this)">📖 VER GUIA COMPLETO</button>
-
-        <div class="guide-full" hidden>
-          ${achievements.length ? achievements.map(item => `
-            <article class="guide-achievement" data-ra-name="${escapeHTML(item.officialName || item.name || "")}">
-              ${item.badge ? `<img src="${item.badge}" alt="${item.name || "Conquista"}">` : ""}
-              <div>
-                <div class="guide-achievement-title">
-                  ${item.missable ? `<img class="guide-missable-icon" src="missable-icon.png" alt="Perdível" title="Conquista perdível">` : ""}
-                  <div>
-                    <h3><span class="ra-lock-icon">🔒</span> ${item.name || "Conquista"}</h3>
-                    <div class="ra-earned-slot"></div>
-                    ${item.officialName ? `<div class="guide-official-name">${item.officialName}</div>` : ""}
-                  </div>
-                </div>
-                ${item.points ? `<div class="guide-points">${item.points} pontos</div>` : ""}
-                ${item.description ? `<p><strong>Requisito:</strong> ${item.description}</p>` : ""}
-                ${item.guide ? `<p><strong>Como conseguir:</strong> ${item.guide}</p>` : ""}
-              </div>
-            </article>
-          `).join("") : `<p class="guide-empty">As explicações conquista por conquista ainda não foram adicionadas.</p>`}
         </div>
-      </section>
+      ` : ""}
+      <div class="guide-full achievements-list-only">
+        ${achievements.length ? achievements.map(item => `
+          <article class="guide-achievement" data-ra-name="${escapeHTML(item.officialName || item.name || "")}">
+            ${item.badge ? `<img src="${item.badge}" alt="${item.name || "Conquista"}">` : ""}
+            <div>
+              <div class="guide-achievement-title">
+                ${item.missable ? `<img class="guide-missable-icon" src="missable-icon.png" alt="Perdível" title="Conquista perdível">` : ""}
+                <div>
+                  <h3><span class="ra-lock-icon">🔒</span> ${item.name || "Conquista"}</h3>
+                  <div class="ra-earned-slot"></div>
+                  ${item.officialName ? `<div class="guide-official-name">${item.officialName}</div>` : ""}
+                </div>
+              </div>
+              ${item.points ? `<div class="guide-points">${item.points} pontos</div>` : ""}
+              ${item.description ? `<p><strong>Requisito:</strong> ${item.description}</p>` : ""}
+              ${item.guide ? `<p><strong>Como conseguir:</strong> ${item.guide}</p>` : ""}
+            </div>
+          </article>
+        `).join("") : `<p class="guide-empty">As conquistas deste jogo ainda não foram adicionadas.</p>`}
+      </div>
     `;
   })() : "";
 
@@ -3587,7 +3494,7 @@ function openGame(slug, updateHistory = true){
 
   app.innerHTML = `
     <main class="game-page">
-      <section class="game-hero">
+      <section class="game-hero" style="--game-hero-bg:url('${game.screenshots?.[0] || getCover(game)}')">
         <img class="game-hero-cover" src="${getCover(game)}" alt="${game.title}">
         <div class="game-hero-main">
           <h1>${game.title}</h1>
@@ -3603,14 +3510,13 @@ function openGame(slug, updateHistory = true){
           <div class="game-progress-number" id="gameHeroProgressCount">0 / ${game.achievements ?? 0}</div>
           <div class="game-progress-label">conquistas desbloqueadas</div>
           <div class="game-progress-track"><div class="game-progress-fill" id="gameHeroProgressBar"></div></div>
-          <div class="game-progress-percent" id="gameHeroProgressPercent">0%</div>
+          <div class="game-progress-percent" id="gameHeroProgressPercent">0%</div><div class="game-perfect-label">🏆 JOGO PERFEITO</div>
         </aside>
       </section>
 
       <nav class="game-tabs" aria-label="Seções do jogo">
         <button class="game-tab active" onclick="goGameSection('gameOverview',this)">Visão geral</button>
         ${game.retroAchievements ? `<button class="game-tab" onclick="goGameSection('gameAchievements',this)">Conquistas</button>` : ""}
-        ${game.retroAchievements ? `<button class="game-tab" onclick="goGameSection('gameGuide',this)">Guia</button>` : ""}
         <button class="game-tab" onclick="goGameSection('gameScreens',this)">Screenshots</button>
       </nav>
 
@@ -3625,24 +3531,23 @@ function openGame(slug, updateHistory = true){
         ${achievementGuideHTML}
       </section>` : ""}
 
-      ${game.retroAchievements ? `
-      <section class="game-section" id="gameGuide">
-        <div class="game-section-title"><h2>📖 Guia</h2><span>Português BR</span></div>
-        <div class="game-info-card">
-          <p class="desc">Use a seção de conquistas acima para acompanhar cada objetivo. As conquistas bloqueadas aparecem em preto e branco e ficam coloridas quando forem sincronizadas como conquistadas.</p>
-          ${game.retroAchievementsUrl ? `<a class="ra-button" href="${game.retroAchievementsUrl}" target="_blank" rel="noopener">🏆 Abrir no RetroAchievements</a>` : ""}
-        </div>
-      </section>` : ""}
-
       <section class="game-section" id="gameScreens">
         <div class="game-section-title"><h2>🖼️ Screenshots</h2><span>${game.screenshots?.length || 0} imagens</span></div>
         <div class="game-overview-grid">
           <div class="game-shots-card">${screenshotsHTML}</div>
-          <div class="game-info-card">
-            <div class="specs">
-              ${[["Plataforma",game.platform],["Ano",game.year],["Idioma",game.language],["Região",game.region],["Tamanho",game.size],["Formato",game.format],["Desenvolvedora",game.developer],["Publicadora",game.publisher],["Tradução",game.translation || "Não informado"]].map(item => `<div class="spec"><small>${item[0]}</small><strong>${item[1]}</strong></div>`).join("")}
+          <div class="game-info-card game-info-compact">
+            <div class="game-info-heading">
+              <div><small>FICHA TÉCNICA</small><strong>Informações do jogo</strong></div>
+              <a class="download game-info-download" href="${game.download}" target="_blank" rel="noopener">⬇ DOWNLOAD</a>
             </div>
-            <a class="download" href="${game.download}" target="_blank" rel="noopener">⬇ DOWNLOAD</a>
+            <div class="game-info-chips">
+              ${[["🎮",game.platform],["📅",game.year],["🌐",game.language],["🌎",game.region],["💾",game.size],["📦",game.format]].map(item => `<span><b>${item[0]}</b>${item[1]}</span>`).join("")}
+            </div>
+            <div class="game-info-details">
+              <p><small>Desenvolvedora</small><strong>${game.developer}</strong></p>
+              <p><small>Publicadora</small><strong>${game.publisher}</strong></p>
+              <p class="translation"><small>Tradução</small><strong>${game.translation || "Não informado"}</strong></p>
+            </div>
           </div>
         </div>
       </section>
@@ -3686,6 +3591,22 @@ function getCurrentGame(){
   const slug = decodeURIComponent(match[1]);
   return games.find(item => item.slug === slug) || null;
 }
+
+
+let currentGameAchievementFilter="all", currentGameAchievementSearch="";
+function applyGameAchievementFilters(){
+  document.querySelectorAll("#gameAchievements .guide-achievement").forEach(card=>{
+    const title=(card.dataset.raName||card.textContent||"").toLowerCase();
+    const earned=card.classList.contains("ra-earned");
+    const hardcore=card.classList.contains("is-hardcore");
+    const matchFilter=currentGameAchievementFilter==="all"||(currentGameAchievementFilter==="earned"&&earned)||(currentGameAchievementFilter==="locked"&&!earned)||(currentGameAchievementFilter==="hardcore"&&hardcore);
+    const matchSearch=!currentGameAchievementSearch||title.includes(currentGameAchievementSearch);
+    card.classList.toggle("hidden-by-filter",!(matchFilter&&matchSearch));
+  });
+}
+function filterGameAchievements(filter,button){currentGameAchievementFilter=filter;document.querySelectorAll(".game-filter").forEach(b=>b.classList.toggle("active",b===button));applyGameAchievementFilters()}
+function searchGameAchievements(value){currentGameAchievementSearch=(value||"").trim().toLowerCase();applyGameAchievementFilters()}
+function initGameAchievementCards(){document.querySelectorAll("#gameAchievements .guide-achievement").forEach(card=>card.addEventListener("click",()=>card.classList.toggle("expanded")))}
 
 function initRetroAchievementsProgress(game){
   if(!game?.retroAchievements || !game?.retroAchievementsGameId) return;
@@ -3762,6 +3683,7 @@ async function loadRetroAchievementsProgress(user, game){
     if(heroCount) heroCount.textContent=`${earned} / ${total}`;
     if(heroPercent) heroPercent.textContent=`${percent}%`;
     if(heroBar) heroBar.style.width=`${percent}%`;
+    const heroBox=document.querySelector(".game-hero-progress"); if(heroBox) heroBox.classList.toggle("perfect",total>0 && earned===total);
     if(syncMsg) syncMsg.textContent = hardcore ? `🔥 ${hardcore} conquista${hardcore === 1 ? "" : "s"} em Hardcore.` : "Progresso sincronizado com o RetroAchievements.";
 
     applyRetroAchievementsToGuide(data.Achievements || {});
@@ -3788,6 +3710,7 @@ function applyRetroAchievementsToGuide(achievements){
     const slot = card.querySelector(".ra-earned-slot");
 
     card.classList.toggle("ra-earned", earned);
+    card.classList.toggle("is-hardcore", hardcore);
     if(lock) lock.textContent = earned ? "✅" : "🔒";
     if(slot){
       slot.innerHTML = earned
@@ -3795,6 +3718,7 @@ function applyRetroAchievementsToGuide(achievements){
         : "";
     }
   });
+  applyGameAchievementFilters();
 }
 
 function toggleAchievementGuide(button){
