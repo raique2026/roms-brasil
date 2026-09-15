@@ -1378,9 +1378,6 @@ body.light-mode .ra-site-notice strong{color:#172033;}
 .guide-full{margin-top:16px;padding-top:16px;border-top:1px solid #27304d}
 .guide-achievement{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #27304d}
 .guide-achievement img{width:54px;height:54px;object-fit:contain;border-radius:10px;flex:0 0 54px}
-/* Conquistas bloqueadas ficam em preto e branco; ao desbloquear, a insígnia volta às cores originais. */
-.guide-achievement-badge{filter:grayscale(1);opacity:.48;transition:filter .28s ease,opacity .28s ease,transform .28s ease}
-.guide-achievement.ra-earned .guide-achievement-badge{filter:grayscale(0);opacity:1;transform:scale(1.03)}
 .guide-achievement h3{font-size:14px;margin:0 0 4px}
 .guide-achievement p{font-size:13px;color:#aeb9d1;line-height:1.5;margin:0}
 .guide-achievement .guide-points{font-size:11px;color:#8fd7ff;font-weight:800;margin-bottom:4px}
@@ -1415,7 +1412,42 @@ body.light-mode .guide-summary,body.light-mode .guide-step p,body.light-mode .gu
   color:#8f99b4;
   font-weight:700;
 }
+
+/* ===== RETROHUB BR - CONTAS / PERFIL ===== */
+.account-button{display:flex;align-items:center;gap:8px;border:1px solid #2c3858;background:#151f38;color:#fff;border-radius:999px;padding:7px 12px;font-weight:800;cursor:pointer}
+.account-avatar-mini{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#222d49;overflow:hidden}
+.account-avatar-mini img{width:100%;height:100%;object-fit:cover}
+.account-modal{position:fixed;inset:0;z-index:9999;background:rgba(2,6,16,.72);display:grid;place-items:center;padding:20px}
+.account-modal[hidden]{display:none}
+.account-card{width:min(520px,100%);max-height:90vh;overflow:auto;background:#111a30;border:1px solid #34415f;border-radius:18px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.account-card h2{margin:0 0 6px}.account-muted{color:#9daccc;font-size:13px;line-height:1.5}
+.account-close{float:right;border:0;background:transparent;color:#cbd5ea;font-size:24px;cursor:pointer}
+.account-tabs{display:flex;gap:8px;margin:18px 0}
+.account-tabs button{flex:1;border:1px solid #34415f;background:#17213b;color:#cbd5ea;border-radius:10px;padding:10px;font-weight:800;cursor:pointer}
+.account-tabs button.active{background:#6b5cff;color:#fff;border-color:#6b5cff}
+.account-form{display:grid;gap:11px}.account-form[hidden]{display:none}
+.account-form label{font-size:12px;color:#aeb9d1;font-weight:800}
+.account-form input{width:100%;box-sizing:border-box;border:1px solid #34415f;background:#0c1428;color:#fff;border-radius:10px;padding:12px}
+.account-primary,.account-secondary,.account-danger{border:0;border-radius:10px;padding:11px 14px;font-weight:900;cursor:pointer}
+.account-primary{background:#6b5cff;color:#fff}.account-secondary{background:#202c49;color:#fff}.account-danger{background:#3a1c29;color:#ff9bb5}
+.account-message{min-height:20px;margin-top:10px;font-size:13px;color:#9daccc}
+.profile-head{display:flex;align-items:center;gap:16px;margin:12px 0 18px}
+.profile-avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#202c49;border:2px solid #425174}
+.profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.profile-grid{display:grid;gap:12px}.profile-grid .account-form{padding-top:4px}
+.profile-username{font-size:22px;font-weight:900}
+body.light-mode .account-card{background:#fff;color:#10182a}
+body.light-mode .account-form input{background:#f5f7fb;color:#10182a}
+body.light-mode .account-button{background:#fff;color:#10182a}
+
+/* Conquistas bloqueadas em P&B; conquistadas voltam a ficar coloridas */
+.guide-achievement img{filter:grayscale(1);opacity:.48;transition:filter .25s ease,opacity .25s ease,transform .25s ease}
+.guide-achievement.ra-earned img{filter:none;opacity:1;transform:scale(1.02)}
+
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 
 <body>
@@ -1448,6 +1480,12 @@ body.light-mode .guide-summary,body.light-mode .guide-step p,body.light-mode .gu
     <span id="themeIcon" class="theme-toggle-icon">🌙</span>
   </button>
 
+
+  <button id="accountButton" class="account-button" type="button" onclick="openAccountPanel()">
+    <span id="accountAvatarMini" class="account-avatar-mini">👤</span>
+    <span id="accountButtonText">Entrar</span>
+  </button>
+
   <div class="social" id="socialX">
     <a
       class="x-icon"
@@ -1468,6 +1506,73 @@ body.light-mode .guide-summary,body.light-mode .guide-step p,body.light-mode .gu
 
 </nav>
 </header>
+
+<div id="accountModal" class="account-modal" hidden onclick="if(event.target===this) closeAccountPanel()">
+  <div class="account-card">
+    <button class="account-close" onclick="closeAccountPanel()" aria-label="Fechar">×</button>
+
+    <div id="authView">
+      <h2>Conta RetroHub BR</h2>
+      <p class="account-muted">Crie sua conta para ter um perfil próprio e salvar sua vinculação com o RetroAchievements.</p>
+
+      <div class="account-tabs">
+        <button id="loginTab" class="active" onclick="showAuthTab('login')">Entrar</button>
+        <button id="signupTab" onclick="showAuthTab('signup')">Criar conta</button>
+      </div>
+
+      <form id="loginForm" class="account-form" onsubmit="retrohubLogin(event)">
+        <label>E-mail</label>
+        <input id="loginEmail" type="email" autocomplete="email" required placeholder="seu@email.com">
+        <label>Senha</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="Sua senha">
+        <button class="account-primary" type="submit">Entrar</button>
+      </form>
+
+      <form id="signupForm" class="account-form" hidden onsubmit="retrohubSignup(event)">
+        <label>Nome de usuário</label>
+        <input id="signupUsername" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" placeholder="Ex.: raiquesantos">
+        <label>E-mail</label>
+        <input id="signupEmail" type="email" autocomplete="email" required placeholder="seu@email.com">
+        <label>Senha</label>
+        <input id="signupPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="Mínimo de 6 caracteres">
+        <label>Confirmar senha</label>
+        <input id="signupPassword2" type="password" autocomplete="new-password" required minlength="6" placeholder="Repita a senha">
+        <button class="account-primary" type="submit">Criar minha conta</button>
+      </form>
+      <div id="authMessage" class="account-message"></div>
+    </div>
+
+    <div id="profileView" hidden>
+      <h2>PERFIL</h2>
+      <div class="profile-head">
+        <img id="profileAvatar" class="profile-avatar" alt="Foto de perfil">
+        <div>
+          <div id="profileUsername" class="profile-username">@usuário</div>
+          <div id="profileEmail" class="account-muted"></div>
+          <div class="profile-actions">
+            <label class="account-secondary" style="cursor:pointer">
+              Alterar foto
+              <input id="avatarInput" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="uploadRetrohubAvatar(event)">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-grid">
+        <form class="account-form" onsubmit="saveRetrohubProfile(event)">
+          <label>Nome de usuário</label>
+          <input id="profileUsernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" required>
+          <label>Usuário do RetroAchievements</label>
+          <input id="profileRAInput" maxlength="50" pattern="[A-Za-z0-9_-]+" placeholder="Ex.: raiquesantos">
+          <button class="account-primary" type="submit">Salvar perfil</button>
+        </form>
+        <button class="account-danger" onclick="retrohubLogout()">Sair da conta</button>
+      </div>
+      <div id="profileMessage" class="account-message"></div>
+    </div>
+  </div>
+</div>
+
 
 <div class="ra-site-notice">
   🏆 <strong>Suporte a conquistas:</strong>
@@ -3378,7 +3483,7 @@ function openGame(slug, updateHistory = true){
         <div class="guide-full" hidden>
           ${achievements.length ? achievements.map(item => `
             <article class="guide-achievement" data-ra-name="${escapeHTML(item.officialName || item.name || "")}">
-              ${item.badge ? `<img class="guide-achievement-badge" src="${item.badge}" alt="${item.name || "Conquista"}">` : ""}
+              ${item.badge ? `<img src="${item.badge}" alt="${item.name || "Conquista"}">` : ""}
               <div>
                 <div class="guide-achievement-title">
                   ${item.missable ? `<img class="guide-missable-icon" src="missable-icon.png" alt="Perdível" title="Conquista perdível">` : ""}
@@ -3915,6 +4020,188 @@ if(retroHubLogo){
   });
 }
 
+</script>
+
+
+<script>
+/* ===== RETROHUB BR - SUPABASE AUTH ===== */
+const RETROHUB_SUPABASE_URL = "https://cybhsinaymvmgfwrhhvt.supabase.co";
+const RETROHUB_SUPABASE_KEY = "sb_publishable_rlT-HHY5MTNgeBcNfLp01A_DCICFJzd";
+const retrohubSupabase = window.supabase.createClient(RETROHUB_SUPABASE_URL, RETROHUB_SUPABASE_KEY);
+let retrohubSession = null;
+let retrohubProfile = null;
+
+function openAccountPanel(){
+  document.getElementById("accountModal").hidden = false;
+  refreshRetrohubAccountUI();
+}
+function closeAccountPanel(){ document.getElementById("accountModal").hidden = true; }
+
+function showAuthTab(tab){
+  const login = tab === "login";
+  document.getElementById("loginForm").hidden = !login;
+  document.getElementById("signupForm").hidden = login;
+  document.getElementById("loginTab").classList.toggle("active", login);
+  document.getElementById("signupTab").classList.toggle("active", !login);
+  document.getElementById("authMessage").textContent = "";
+}
+
+function setAccountMessage(id, text, ok=false){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = text || "";
+  el.style.color = ok ? "#65e6a6" : "#ff9bb5";
+}
+
+async function retrohubSignup(event){
+  event.preventDefault();
+  const username = document.getElementById("signupUsername").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+  const password2 = document.getElementById("signupPassword2").value;
+  if(password !== password2) return setAccountMessage("authMessage","As senhas não são iguais.");
+  if(!/^[A-Za-z0-9_]{3,24}$/.test(username)) return setAccountMessage("authMessage","Use 3 a 24 caracteres: letras, números ou _.");
+
+  setAccountMessage("authMessage","Criando conta...", true);
+  const { data, error } = await retrohubSupabase.auth.signUp({
+    email, password, options:{ data:{ username } }
+  });
+  if(error) return setAccountMessage("authMessage", error.message);
+  if(data.session){
+    setAccountMessage("authMessage","Conta criada com sucesso!", true);
+    await loadRetrohubProfile();
+  }else{
+    setAccountMessage("authMessage","Conta criada. Confira seu e-mail para confirmar o cadastro.", true);
+  }
+}
+
+async function retrohubLogin(event){
+  event.preventDefault();
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  setAccountMessage("authMessage","Entrando...", true);
+  const { error } = await retrohubSupabase.auth.signInWithPassword({ email, password });
+  if(error) return setAccountMessage("authMessage","E-mail ou senha incorretos.");
+  setAccountMessage("authMessage","Login realizado!", true);
+}
+
+async function retrohubLogout(){
+  await retrohubSupabase.auth.signOut();
+  retrohubProfile = null;
+  closeAccountPanel();
+}
+
+async function loadRetrohubProfile(){
+  if(!retrohubSession?.user) return;
+  const { data, error } = await retrohubSupabase
+    .from("profiles").select("*").eq("id", retrohubSession.user.id).single();
+  if(!error) retrohubProfile = data;
+  refreshRetrohubAccountUI();
+}
+
+function avatarFallback(){
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><rect width="100%" height="100%" fill="#202c49"/><text x="50%" y="56%" text-anchor="middle" font-size="82">👤</text></svg>'
+  );
+}
+
+function refreshRetrohubAccountUI(){
+  const logged = !!retrohubSession?.user;
+  document.getElementById("authView").hidden = logged;
+  document.getElementById("profileView").hidden = !logged;
+  const btnText = document.getElementById("accountButtonText");
+  const mini = document.getElementById("accountAvatarMini");
+
+  if(!logged){
+    btnText.textContent = "Entrar";
+    mini.innerHTML = "👤";
+    return;
+  }
+
+  const username = retrohubProfile?.username || retrohubSession.user.user_metadata?.username || "Perfil";
+  btnText.textContent = "Perfil";
+  document.getElementById("profileUsername").textContent = "@" + username;
+  document.getElementById("profileEmail").textContent = retrohubSession.user.email || "";
+  document.getElementById("profileUsernameInput").value = username;
+  document.getElementById("profileRAInput").value = retrohubProfile?.retroachievements_username || "";
+  const avatar = retrohubProfile?.avatar_url || avatarFallback();
+  document.getElementById("profileAvatar").src = avatar;
+  mini.innerHTML = `<img src="${avatar}" alt="">`;
+
+  if(retrohubProfile?.retroachievements_username){
+    localStorage.setItem("retrohub_ra_user", retrohubProfile.retroachievements_username);
+  }
+}
+
+async function saveRetrohubProfile(event){
+  event.preventDefault();
+  if(!retrohubSession?.user) return;
+  const username = document.getElementById("profileUsernameInput").value.trim();
+  const ra = document.getElementById("profileRAInput").value.trim();
+  if(!/^[A-Za-z0-9_]{3,24}$/.test(username)) return setAccountMessage("profileMessage","Nome de usuário inválido.");
+  if(ra && !/^[A-Za-z0-9_-]{1,50}$/.test(ra)) return setAccountMessage("profileMessage","Usuário do RetroAchievements inválido.");
+
+  const { data, error } = await retrohubSupabase.from("profiles")
+    .update({username, retroachievements_username: ra || null})
+    .eq("id", retrohubSession.user.id).select().single();
+
+  if(error){
+    const msg = error.code === "23505" ? "Esse nome de usuário já está em uso." : error.message;
+    return setAccountMessage("profileMessage", msg);
+  }
+  retrohubProfile = data;
+  if(ra) localStorage.setItem("retrohub_ra_user", ra); else localStorage.removeItem("retrohub_ra_user");
+  setAccountMessage("profileMessage","Perfil salvo com sucesso!", true);
+  refreshRetrohubAccountUI();
+  const game = typeof getCurrentGame === "function" ? getCurrentGame() : null;
+  if(game && ra && typeof loadRetroAchievementsProgress === "function") loadRetroAchievementsProgress(ra, game);
+}
+
+async function uploadRetrohubAvatar(event){
+  const file = event.target.files?.[0];
+  if(!file || !retrohubSession?.user) return;
+  if(file.size > 5 * 1024 * 1024) return setAccountMessage("profileMessage","A imagem deve ter no máximo 5 MB.");
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG ou WebP.");
+
+  setAccountMessage("profileMessage","Enviando foto...", true);
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `${retrohubSession.user.id}/avatar.${ext}`;
+  const { error: uploadError } = await retrohubSupabase.storage.from("avatars").upload(path, file, {upsert:true, contentType:file.type});
+  if(uploadError) return setAccountMessage("profileMessage", uploadError.message);
+
+  const { data: publicData } = retrohubSupabase.storage.from("avatars").getPublicUrl(path);
+  const avatar_url = publicData.publicUrl + "?v=" + Date.now();
+  const { data, error } = await retrohubSupabase.from("profiles")
+    .update({avatar_url}).eq("id",retrohubSession.user.id).select().single();
+  if(error) return setAccountMessage("profileMessage", error.message);
+  retrohubProfile = data;
+  setAccountMessage("profileMessage","Foto atualizada!", true);
+  refreshRetrohubAccountUI();
+}
+
+retrohubSupabase.auth.onAuthStateChange(async (_event, session) => {
+  retrohubSession = session;
+  if(session?.user) await loadRetrohubProfile();
+  else { retrohubProfile = null; refreshRetrohubAccountUI(); }
+});
+
+(async function initRetrohubAuth(){
+  const { data } = await retrohubSupabase.auth.getSession();
+  retrohubSession = data.session;
+  if(retrohubSession?.user) await loadRetrohubProfile();
+  else refreshRetrohubAccountUI();
+})();
+
+/* ESC fecha primeiro o modal de conta, sem interferir no retorno do jogo */
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){
+    const modal = document.getElementById("accountModal");
+    if(modal && !modal.hidden){
+      e.stopImmediatePropagation();
+      closeAccountPanel();
+    }
+  }
+}, true);
 </script>
 
 </body>
