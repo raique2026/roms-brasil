@@ -1490,7 +1490,7 @@ body.light-mode .profile-hero,body.light-mode .profile-section,body.light-mode .
   </button>
 
 
-  <button id="accountButton" class="account-button" type="button" onclick="openAccountPanel()">
+  <button id="accountButton" class="account-button" type="button" onclick="handleAccountButton()">
     <span id="accountAvatarMini" class="account-avatar-mini">👤</span>
     <span id="accountButtonText">Entrar</span>
   </button>
@@ -1576,7 +1576,6 @@ body.light-mode .profile-hero,body.light-mode .profile-section,body.light-mode .
           <button class="account-primary" type="submit">Salvar perfil</button>
         </form>
 
-        <button class="account-secondary" type="button" onclick="openFullRetrohubProfile()">🏆 Ver meu perfil completo</button>
         <button class="account-danger" onclick="retrohubLogout()">Sair da conta</button>
       </div>
       <div id="profileMessage" class="account-message"></div>
@@ -4044,6 +4043,16 @@ const RETROHUB_SUPABASE_KEY = "sb_publishable_rlT-HHY5MTNgeBcNfLp01A_DCICFJzd";
 const retrohubSupabase = window.supabase.createClient(RETROHUB_SUPABASE_URL, RETROHUB_SUPABASE_KEY);
 let retrohubSession = null;
 let retrohubProfile = null;
+
+function handleAccountButton(){
+  // Se estiver logado, o botão Perfil abre direto o perfil completo.
+  // Se não estiver logado, abre a tela de Entrar/Criar conta.
+  if(retrohubSession?.user){
+    openFullRetrohubProfile();
+  }else{
+    openAccountPanel();
+  }
+}
 
 function openAccountPanel(){
   document.getElementById("accountModal").hidden = false;
