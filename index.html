@@ -1347,7 +1347,7 @@ body.light-mode .ra-site-notice strong{color:#172033;}
 
 <div class="top" id="topBar">
 
-  <div class="logo" id="homeLogo" role="button" tabindex="0" onclick="goHome()" title="Voltar ao início">
+  <div class="logo" onclick="goHome()">
     RETRO<span>HUB</span> <b>BR</b>
   </div>
 
@@ -2318,15 +2318,7 @@ function renderFilters(){
 }
 
 function goHomeMenu(){
-
-  currentPlatform = "Todos";
-  currentGenre = "Todos";
-  dubbedOnly = false;
-  emulatorMode = false;
-  q.value = "";
-
-  renderFilters();
-  renderHome();
+  goHome(true);
 }
 
 function setPlatform(platform){
@@ -2657,10 +2649,15 @@ function openEmulator(slug, updateHistory = true){
 
 function goHome(updateHistory = true){
 
-  stopGameMusic();
-  emulatorMode = false;
+  clearInterval(featuredTimer);
 
-  // Remove qualquer rota de jogo/emulador da URL.
+  currentPlatform = "Todos";
+  currentGenre = "Todos";
+  dubbedOnly = false;
+  emulatorMode = false;
+  latestExpanded = false;
+  q.value = "";
+
   if(updateHistory){
     history.replaceState(
       { page: "home" },
@@ -2672,16 +2669,16 @@ function goHome(updateHistory = true){
   q.style.display = "";
   filters.style.display = "flex";
 
-  document.getElementById("socialX").style.display = "";
-  document.getElementById("topBar").style.justifyContent = "";
+  const socialX = document.getElementById("socialX");
+  const topBar = document.getElementById("topBar");
+
+  if(socialX) socialX.style.display = "";
+  if(topBar) topBar.style.justifyContent = "";
 
   renderFilters();
   renderHome();
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo(0, 0);
 }
 
 
@@ -3332,9 +3329,10 @@ document.addEventListener(
   "keydown",
   function(event){
 
-    const viewer = document.getElementById("imageViewer");
+    const viewer =
+      document.getElementById("imageViewer");
 
-    if(viewer && viewer.classList.contains("active")){
+    if(viewer.classList.contains("active")){
 
       if(event.key === "Escape"){
         closeScreenshot();
@@ -3352,34 +3350,21 @@ document.addEventListener(
     }
 
     if(event.key === "Escape"){
-
-      const isGameOrEmulatorPage =
+      const internalPage =
         location.hash.startsWith("#game=") ||
         location.hash.startsWith("#emulator=") ||
         location.hash === "#emulators" ||
-        q.style.display === "none";
+        q.style.display === "none" ||
+        filters.style.display === "none";
 
-      if(isGameOrEmulatorPage){
+      if(internalPage){
         event.preventDefault();
-        event.stopPropagation();
-        goHome();
+        goHome(true);
       }
     }
 
-  },
-  true
+  }
 );
-
-const homeLogo = document.getElementById("homeLogo");
-
-if(homeLogo){
-  homeLogo.addEventListener("keydown", function(event){
-    if(event.key === "Enter" || event.key === " "){
-      event.preventDefault();
-      goHome();
-    }
-  });
-}
 
 window.addEventListener(
   "popstate",
@@ -3498,7 +3483,17 @@ if(location.hash.startsWith("#game=")){
   };
 </script>
 
-<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/insights/script.js">
+// RETORNO UNIVERSAL: reforço do clique na logo.
+const retroHubLogo = document.querySelector(".logo");
+if(retroHubLogo){
+  retroHubLogo.addEventListener("click", function(event){
+    event.preventDefault();
+    goHome(true);
+  });
+}
+
+</script>
 
 </body>
 </html>
