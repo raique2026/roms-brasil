@@ -1259,6 +1259,58 @@ body.light-mode .ra-button.secondary{
   color:#172033;
 }
 
+
+.ra-badge{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px;
+  margin:0 0 16px;
+  border-radius:14px;
+  background:#0f1628;
+  border:1px solid #27304d;
+}
+
+.ra-badge img{
+  width:72px;
+  height:72px;
+  object-fit:contain;
+  flex:0 0 72px;
+  border-radius:12px;
+}
+
+.ra-badge-info small{
+  display:block;
+  color:#8f99b4;
+  font-size:11px;
+  font-weight:800;
+  margin-bottom:5px;
+  text-transform:uppercase;
+}
+
+.ra-badge-info strong{
+  display:block;
+  font-size:14px;
+  line-height:1.4;
+}
+
+body.light-mode .ra-badge{
+  background:#f4f6fb;
+  border-color:#dce2ee;
+}
+
+@media(max-width:620px){
+  .ra-badge{
+    align-items:flex-start;
+  }
+
+  .ra-badge img{
+    width:60px;
+    height:60px;
+    flex-basis:60px;
+  }
+}
+
 @media(max-width:620px){
   .ra-stats{
     grid-template-columns:1fr;
@@ -1733,6 +1785,8 @@ const games = [
   recommendedEmulator: "RetroArch + mGBA",
   retroAchievementsUrl: "https://retroachievements.org/game/785",
   retroHashesUrl: "https://retroachievements.org/game/785/hashes",
+  achievementBadge: "images/badges/metroid-fusion.png",
+  achievementBadgeText: "Complete o jogo para conquistar esta insígnia",
 
   cover: "images/metroid-fusion.png",
 
@@ -2999,6 +3053,20 @@ function openGame(slug, updateHistory = true){
         </div>
       </div>
 
+      ${game.achievementBadge ? `
+        <div class="ra-badge">
+          <img
+            src="${game.achievementBadge}"
+            alt="Insígnia de conclusão de ${game.title}"
+            onerror="this.parentElement.style.display='none'"
+          >
+          <div class="ra-badge-info">
+            <small>🏅 INSÍGNIA DE CONCLUSÃO</small>
+            <strong>${game.achievementBadgeText || "Complete o jogo para conquistar esta insígnia"}</strong>
+          </div>
+        </div>
+      ` : ""}
+
       <div class="ra-details">
         ${game.hardcoreSupport ? `<span class="ra-chip">🔥 Hardcore Mode</span>` : ""}
         ${game.recommendedEmulator ? `<span class="ra-chip">🎮 ${game.recommendedEmulator}</span>` : ""}
@@ -3103,6 +3171,8 @@ function openGame(slug, updateHistory = true){
 
         ${retroAchievementsHTML}
 
+        ${screenshotsHTML}
+
         <div class="specs">
 
           ${[
@@ -3141,8 +3211,6 @@ function openGame(slug, updateHistory = true){
         >
           ⬇ DOWNLOAD
         </a>
-
-        ${screenshotsHTML}
 
       </div>
 
