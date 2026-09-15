@@ -1447,6 +1447,7 @@ body.light-mode .account-button{background:#fff;color:#10182a}
 
 /* ===== PERFIL COMPLETO - ESTILO STEAM / RETROHUB ===== */
 .profile-page{padding:34px 0 60px}.profile-hero{position:relative;overflow:hidden;border:1px solid #2d3a5e;border-radius:22px;background:radial-gradient(circle at 15% 20%,rgba(105,89,245,.34),transparent 34%),linear-gradient(135deg,#151f3a,#0d1426);padding:28px;box-shadow:0 22px 70px rgba(0,0,0,.24)}
+.profile-hero.has-wallpaper{background-image:linear-gradient(rgba(8,13,27,.68),rgba(8,13,27,.82)),var(--profile-wallpaper);background-size:cover;background-position:center}.wallpaper-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.wallpaper-preview{height:120px;border-radius:12px;border:1px solid #34415f;background:#0d1426 center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#8f99b4;font-size:12px;overflow:hidden}
 .profile-hero-grid{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center}.profile-page-avatar{width:118px;height:118px;border-radius:18px;object-fit:cover;border:3px solid rgba(255,255,255,.16);background:#202c49}.profile-page-name{font-size:30px;font-weight:900;margin:0 0 5px}.profile-page-ra{color:#8fd7ff;font-weight:800}.profile-page-email{color:#98a6c5;font-size:13px;margin-top:5px}.profile-online{display:inline-flex;align-items:center;gap:7px;margin-top:11px;color:#69e8a4;font-size:13px;font-weight:800}.profile-online:before{content:"";width:8px;height:8px;border-radius:50%;background:#42d98b;box-shadow:0 0 14px #42d98b}.profile-hero-actions{display:flex;flex-direction:column;gap:9px}.profile-hero-actions button{border-radius:10px;cursor:pointer;font-weight:900}
 .profile-stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.profile-stat-card{padding:18px;border-radius:16px;border:1px solid #283658;background:#111a30}.profile-stat-card small{display:block;color:#8f99b4;font-size:11px;font-weight:800;text-transform:uppercase;margin-bottom:7px}.profile-stat-card strong{font-size:26px}.profile-section{margin-top:24px;padding:22px;border:1px solid #283658;border-radius:18px;background:#11182c}.profile-section-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:17px}.profile-section-head h2{margin:0;font-size:21px}.profile-section-head span{color:#8f99b4;font-size:12px}.profile-recent-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.profile-achievement{min-width:0}.profile-achievement img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:1px solid #34415f}.profile-achievement strong{display:block;font-size:12px;line-height:1.3;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-achievement small{display:block;color:#8f99b4;font-size:10px;margin-top:3px}.profile-games{display:grid;gap:16px}.profile-game-card{padding:12px;border:1px solid #27304d;border-radius:14px;background:#0f1628}.profile-game-row{display:grid;grid-template-columns:84px 1fr auto;gap:16px;align-items:center;cursor:pointer}.profile-game-card:hover{border-color:#5d6fa8}.profile-game-cover{width:84px;height:112px;object-fit:cover;border-radius:9px;background:#090e1c}.profile-game-title{font-weight:900;margin-bottom:8px}.profile-game-meta{font-size:12px;color:#9daccc;margin-bottom:10px}.profile-progress-track{height:9px;background:#202a45;border-radius:999px;overflow:hidden}.profile-progress-fill{height:100%;background:linear-gradient(90deg,#6959f5,#36d98b);border-radius:999px}.profile-game-percent{font-size:24px;font-weight:900;text-align:right}.profile-game-percent small{display:block;font-size:11px;color:#8f99b4;margin-top:4px}.profile-game-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,52px));gap:7px;margin-top:14px;padding-top:14px;border-top:1px solid #27304d}.profile-game-badge{width:52px;height:52px;position:relative}.profile-game-badge img{width:52px;height:52px;display:block;object-fit:cover;border-radius:5px;border:2px solid #44506d;transition:.18s}.profile-game-badge.locked img{filter:grayscale(1) brightness(.42);opacity:.7}.profile-game-badge.earned img{filter:none;opacity:1;border-color:#7b8eb8}.profile-game-badge.hardcore img{box-shadow:0 0 0 2px #f1c44b}.profile-game-badge:hover img{transform:scale(1.08)}.profile-empty{padding:24px;text-align:center;color:#8f99b4}.profile-loading{padding:28px;text-align:center;color:#aeb9d1}
 .profile-game-header{display:grid;grid-template-columns:1fr 44px;gap:10px;align-items:stretch}.profile-game-toggle{width:44px;min-height:44px;align-self:center;border:1px solid #303a59;border-radius:7px;background:#101728;color:#f3c900;font-size:24px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.18s}.profile-game-toggle:hover{background:#18223a;border-color:#59688f}.profile-game-toggle .arrow{display:block;transition:transform .2s}.profile-game-card.collapsed .profile-game-toggle .arrow{transform:rotate(180deg)}.profile-game-card.collapsed .profile-game-badges{display:none}@media(max-width:560px){.profile-game-header{grid-template-columns:1fr 40px}.profile-game-toggle{width:40px}}
@@ -1569,6 +1570,14 @@ body.light-mode .profile-hero,body.light-mode .profile-section,body.light-mode .
       </div>
 
       <div class="profile-grid">
+        <div>
+          <label style="display:block;margin-bottom:8px;font-weight:800">Papel de parede do perfil</label>
+          <div id="wallpaperPreview" class="wallpaper-preview">Nenhum papel de parede</div>
+          <div class="wallpaper-actions">
+            <label class="account-secondary" style="cursor:pointer">Alterar papel de parede<input id="wallpaperInput" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="uploadRetrohubWallpaper(event)"></label>
+            <button class="account-secondary" type="button" onclick="removeRetrohubWallpaper()">Remover papel de parede</button>
+          </div>
+        </div>
         <form class="account-form" onsubmit="saveRetrohubProfile(event)">
           <label>Nome de usuário</label>
           <input id="profileUsernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" required>
@@ -4151,6 +4160,12 @@ function refreshRetrohubAccountUI(){
   const avatar = retrohubProfile?.avatar_url || avatarFallback();
   document.getElementById("profileAvatar").src = avatar;
   mini.innerHTML = `<img src="${avatar}" alt="">`;
+  const wallpaperPreview=document.getElementById("wallpaperPreview");
+  if(wallpaperPreview){
+    const wallpaper=retrohubProfile?.wallpaper_url||"";
+    wallpaperPreview.style.backgroundImage=wallpaper?`linear-gradient(rgba(8,13,27,.28),rgba(8,13,27,.28)),url("${wallpaper.replace(/"/g,"%22")}")`:"none";
+    wallpaperPreview.textContent=wallpaper?"":"Nenhum papel de parede";
+  }
 
   if(retrohubProfile?.retroachievements_username){
     localStorage.setItem("retrohub_ra_user", retrohubProfile.retroachievements_username);
@@ -4201,6 +4216,36 @@ async function uploadRetrohubAvatar(event){
   retrohubProfile = data;
   setAccountMessage("profileMessage","Foto atualizada!", true);
   refreshRetrohubAccountUI();
+}
+
+async function uploadRetrohubWallpaper(event){
+  const file=event.target.files?.[0];
+  if(!file||!retrohubSession?.user) return;
+  if(file.size>8*1024*1024) return setAccountMessage("profileMessage","O papel de parede deve ter no máximo 8 MB.");
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG ou WebP.");
+  setAccountMessage("profileMessage","Enviando papel de parede...",true);
+  const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+  const path=`${retrohubSession.user.id}/wallpaper.${ext}`;
+  const {error:uploadError}=await retrohubSupabase.storage.from("avatars").upload(path,file,{upsert:true,contentType:file.type});
+  if(uploadError) return setAccountMessage("profileMessage",uploadError.message);
+  const {data:publicData}=retrohubSupabase.storage.from("avatars").getPublicUrl(path);
+  const wallpaper_url=publicData.publicUrl+"?v="+Date.now();
+  const {data,error}=await retrohubSupabase.from("profiles").update({wallpaper_url}).eq("id",retrohubSession.user.id).select().single();
+  if(error) return setAccountMessage("profileMessage",error.message);
+  retrohubProfile=data;
+  setAccountMessage("profileMessage","Papel de parede atualizado!",true);
+  refreshRetrohubAccountUI();
+  if(location.hash==="#profile") renderRetrohubProfilePage();
+}
+
+async function removeRetrohubWallpaper(){
+  if(!retrohubSession?.user) return;
+  const {data,error}=await retrohubSupabase.from("profiles").update({wallpaper_url:null}).eq("id",retrohubSession.user.id).select().single();
+  if(error) return setAccountMessage("profileMessage",error.message);
+  retrohubProfile=data;
+  setAccountMessage("profileMessage","Papel de parede removido!",true);
+  refreshRetrohubAccountUI();
+  if(location.hash==="#profile") renderRetrohubProfilePage();
 }
 
 retrohubSupabase.auth.onAuthStateChange(async (_event, session) => {
@@ -4261,8 +4306,10 @@ async function renderRetrohubProfilePage(){
   const username=retrohubProfile?.username||retrohubSession.user.user_metadata?.username||"Perfil";
   const raUser=retrohubProfile?.retroachievements_username||localStorage.getItem("retrohub_ra_user")||"";
   const avatar=retrohubProfile?.avatar_url||avatarFallback();
+  const wallpaper=retrohubProfile?.wallpaper_url||"";
+  const wallpaperStyle=wallpaper?` style="--profile-wallpaper:url('${escapeHTML(wallpaper).replace(/'/g,"%27")}')"`:"";
   app.innerHTML=`<section class="profile-page">
-    <div class="profile-hero"><div class="profile-hero-grid">
+    <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}><div class="profile-hero-grid">
       <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar">
       <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1><div class="profile-page-ra">${raUser?`RetroAchievements: ${escapeHTML(raUser)}`:"RetroAchievements não vinculado"}</div><div class="profile-page-email">${escapeHTML(retrohubSession.user.email||"")}</div><div class="profile-online">Online no RetroHub BR</div></div>
       <div class="profile-hero-actions"><button class="account-secondary" onclick="openAccountPanel()">Editar perfil</button><button class="account-secondary" onclick="goHome(true)">Voltar ao início</button></div>
