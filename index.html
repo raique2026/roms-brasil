@@ -1141,45 +1141,128 @@ body.light-mode .theme-toggle-icon{background:#fff}
 }
 
 
-/* ===== MÚSICA / SOM AMBIENTE DA PÁGINA DO JOGO ===== */
-.music-player{
+
+/* ===== RETROACHIEVEMENTS ===== */
+.ra-box{
+  margin-top:24px;
+  padding:20px;
+  border:1px solid #3b4564;
+  border-radius:18px;
+  background:linear-gradient(135deg,#151f3a,#11182c);
+}
+
+.ra-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+
+.ra-title{
   display:flex;
   align-items:center;
   gap:10px;
-  flex-wrap:wrap;
-  margin-top:14px;
+  margin:0;
+  font-size:20px;
 }
-.music-toggle{
+
+.ra-status{
+  padding:7px 11px;
+  border-radius:999px;
+  background:rgba(41,195,106,.13);
+  border:1px solid rgba(41,195,106,.38);
+  color:#6ee7a0;
+  font-size:12px;
+  font-weight:800;
+}
+
+.ra-stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.ra-stat{
+  padding:14px;
+  border-radius:14px;
+  background:#0f1628;
+  border:1px solid #27304d;
+}
+
+.ra-stat small{
+  display:block;
+  color:#8f99b4;
+  margin-bottom:5px;
+  font-size:11px;
+}
+
+.ra-stat strong{
+  font-size:18px;
+}
+
+.ra-details{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:0 0 16px;
+}
+
+.ra-chip{
+  padding:7px 10px;
+  border-radius:999px;
+  background:#1c2643;
+  border:1px solid #2b3555;
+  color:#cbd4ea;
+  font-size:12px;
+}
+
+.ra-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.ra-button{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
-  padding:11px 18px;
+  padding:10px 15px;
   border-radius:999px;
-  border:1px solid #2b3555;
-  background:#151f3a;
+  background:#6959f5;
   color:#fff;
-  font-weight:700;
-  cursor:pointer;
+  font-size:13px;
+  font-weight:900;
 }
-.music-toggle:hover{
-  border-color:#6959f5;
+
+.ra-button.secondary{
   background:#1c2643;
+  border:1px solid #34405f;
 }
-.music-volume{
-  width:120px;
-  max-width:120px;
-  flex:0 0 120px;
-  accent-color:#6959f5;
+
+body.light-mode .ra-box{
+  background:#fff;
+  border-color:#dce2ee;
 }
-.music-label{
-  color:#aab3cd;
-  font-size:12px;
+
+body.light-mode .ra-stat{
+  background:#f4f6fb;
+  border-color:#dce2ee;
 }
-body.light-mode .music-toggle{
+
+body.light-mode .ra-chip,
+body.light-mode .ra-button.secondary{
   background:#edf1f8;
   border-color:#d5dcea;
   color:#172033;
+}
+
+@media(max-width:620px){
+  .ra-stats{
+    grid-template-columns:1fr;
+  }
 }
 
 </style>
@@ -1274,71 +1357,6 @@ applyTheme(localStorage.getItem("romsBrasilTheme")||"dark");
 
 
 
-/* ===== CONTROLE DE MÚSICA DOS JOGOS ===== */
-let gameAudio = null;
-let currentMusicGame = null;
-let gameMusicVolume = 0.015;
-
-function stopGameMusic(){
-  if(gameAudio){
-    gameAudio.pause();
-    gameAudio.currentTime = 0;
-    gameAudio = null;
-  }
-  currentMusicGame = null;
-}
-
-function playGameMusic(game){
-  stopGameMusic();
-
-  if(!game || !game.music){
-    return;
-  }
-
-  currentMusicGame = game.slug;
-  gameAudio = new Audio(game.music);
-  gameAudio.volume = gameMusicVolume;
-  gameAudio.loop = true;
-  gameAudio.preload = "auto";
-
-  gameAudio.play()
-    .then(updateMusicButton)
-    .catch(() => {
-      updateMusicButton();
-    });
-}
-
-function toggleGameMusic(){
-  if(!gameAudio){
-    return;
-  }
-
-  if(gameAudio.paused){
-    gameAudio.play().catch(() => {});
-  }else{
-    gameAudio.pause();
-  }
-
-  updateMusicButton();
-}
-
-function setGameMusicVolume(value){
-  gameMusicVolume = Number(value);
-  if(gameAudio){
-    gameAudio.volume = gameMusicVolume;
-  }
-}
-
-function updateMusicButton(){
-  const button = document.getElementById("musicToggle");
-  if(!button || !gameAudio){
-    return;
-  }
-
-  button.innerHTML = gameAudio.paused
-    ? "▶ Música"
-    : "⏸ Música";
-}
 
 /* =========================================================
    JOGOS DO SITE
@@ -1511,9 +1529,6 @@ const games = [
   description: "Resident Evil 4 acompanha Leon S. Kennedy em uma missão para resgatar a filha do presidente dos Estados Unidos em uma misteriosa região rural da Europa.",
 
   banner: "banners/resident-evil-4.jpg",
-
-  music: "music/resident-evil-4.mp3",
-
   screenshots: [
     "screenshots/resident-evil-4/screenshot-01.png",
     "screenshots/resident-evil-4/screenshot-02.png",
@@ -1572,10 +1587,6 @@ const games = [
   banner: "banners/devil-may-cry-2.jpg",
 
   description: "Devil May Cry 2 é um jogo de ação lançado para PlayStation 2 em 2003. A história acompanha Dante em uma nova aventura repleta de demônios, combates rápidos, armas de fogo e espadas.",
-
-  music: "music/devil-may-cry-2.mp3",
-
-
   screenshots: [
     "screenshots/devil-may-cry-2/screenshot-01.png",
     "screenshots/devil-may-cry-2/screenshot-02.png",
@@ -1713,6 +1724,15 @@ const games = [
   genre: "Ação / Aventura",
   format: "ROM",
   translation: "Tradu-Rons - PO.B.R.E - Trans-Cemter",
+
+  retroAchievements: true,
+  achievements: 43,
+  achievementPoints: 732,
+  supportedHashes: 6,
+  hardcoreSupport: true,
+  recommendedEmulator: "RetroArch + mGBA",
+  retroAchievementsUrl: "https://retroachievements.org/game/785",
+  retroHashesUrl: "https://retroachievements.org/game/785/hashes",
 
   cover: "images/metroid-fusion.png",
 
@@ -2879,9 +2899,6 @@ function openGame(slug, updateHistory = true){
   const game = games.find(
     item => item.slug === slug
   );
-
-  playGameMusic(game);
-
   if(!game){
 
     history.replaceState(
@@ -2956,6 +2973,51 @@ function openGame(slug, updateHistory = true){
     `;
 
   }
+
+  const retroAchievementsHTML = game.retroAchievements ? `
+    <section class="ra-box">
+
+      <div class="ra-header">
+        <h2 class="ra-title">🏆 RetroAchievements</h2>
+        <span class="ra-status">✓ Compatível</span>
+      </div>
+
+      <div class="ra-stats">
+        <div class="ra-stat">
+          <small>CONQUISTAS</small>
+          <strong>${game.achievements ?? "—"}</strong>
+        </div>
+
+        <div class="ra-stat">
+          <small>PONTOS</small>
+          <strong>${game.achievementPoints ?? "—"}</strong>
+        </div>
+
+        <div class="ra-stat">
+          <small>HASHES SUPORTADOS</small>
+          <strong>${game.supportedHashes ?? "—"}</strong>
+        </div>
+      </div>
+
+      <div class="ra-details">
+        ${game.hardcoreSupport ? `<span class="ra-chip">🔥 Hardcore Mode</span>` : ""}
+        ${game.recommendedEmulator ? `<span class="ra-chip">🎮 ${game.recommendedEmulator}</span>` : ""}
+        <span class="ra-chip">🌎 ${game.region}</span>
+      </div>
+
+      <div class="ra-actions">
+        ${game.retroAchievementsUrl ? `
+          <a class="ra-button"
+             href="${game.retroAchievementsUrl}"
+             target="_blank"
+             rel="noopener">
+            🏆 VER CONQUISTAS
+          </a>
+        ` : ""}
+      </div>
+
+    </section>
+  ` : "";
 
   const recommendedGames =
     getRandomRecommendations(
@@ -3039,6 +3101,8 @@ function openGame(slug, updateHistory = true){
           ${game.description}
         </p>
 
+        ${retroAchievementsHTML}
+
         <div class="specs">
 
           ${[
@@ -3077,32 +3141,6 @@ function openGame(slug, updateHistory = true){
         >
           ⬇ DOWNLOAD
         </a>
-
-        ${game.music ? `
-          <div class="music-player">
-            <button
-              id="musicToggle"
-              class="music-toggle"
-              type="button"
-              onclick="toggleGameMusic()"
-            >
-              ⏸ Música
-            </button>
-
-            <span class="music-label">Som ambiente</span>
-
-            <input
-              class="music-volume"
-              type="range"
-              min="0"
-              max="0.08"
-              step="0.005"
-              value="0.015"
-              aria-label="Volume da música"
-              oninput="setGameMusicVolume(this.value)"
-            >
-          </div>
-        ` : ""}
 
         ${screenshotsHTML}
 
