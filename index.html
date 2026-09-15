@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- ROMS BRASIL BUILD: BLACK-FIRST-2026-09-14 -->
+<!-- RETROHUB BR BUILD: BLACK-FIRST-2026-09-14 -->
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ROMS BRASIL</title>
+<title>RetroHub BR | Jogos retrô e conquistas</title>
 
 <style>
 *{box-sizing:border-box}
@@ -1317,6 +1317,26 @@ body.light-mode .ra-badge{
   }
 }
 
+
+.ra-site-notice{
+  max-width:1200px;
+  margin:18px auto 0;
+  padding:12px 16px;
+  border:1px solid #2d3a5e;
+  border-radius:12px;
+  background:#111a30;
+  color:#b9c4df;
+  font-size:13px;
+  line-height:1.55;
+}
+.ra-site-notice strong{color:#fff;}
+body.light-mode .ra-site-notice{
+  background:#f4f7fb;
+  border-color:#d8dfec;
+  color:#526078;
+}
+body.light-mode .ra-site-notice strong{color:#172033;}
+
 </style>
 </head>
 
@@ -1328,7 +1348,7 @@ body.light-mode .ra-badge{
 <div class="top" id="topBar">
 
   <div class="logo" onclick="goHome()">
-    ROMS <b>BRASIL</b>
+    RETRO<span>HUB</span> <b>BR</b>
   </div>
 
   <div class="search-wrap">
@@ -1357,7 +1377,7 @@ body.light-mode .ra-badge{
       target="_blank"
       rel="noopener"
       title="Siga no X"
-      aria-label="Siga ROMS BRASIL no X"
+      aria-label="Siga RETROHUB BR no X"
     ><img src="images/icons8-twitterx-96.png" alt="X"></a>
   </div>
 
@@ -1370,6 +1390,14 @@ body.light-mode .ra-badge{
 
 </nav>
 </header>
+
+<div class="ra-site-notice">
+  🏆 <strong>Suporte a conquistas:</strong>
+  os jogos identificados como compatíveis podem oferecer conquistas através do
+  RetroAchievements. O RetroHub BR é um projeto independente e não é afiliado,
+  patrocinado ou administrado pelo RetroAchievements.
+</div>
+
 
 <main id="app"></main>
 
@@ -1399,12 +1427,12 @@ function applyTheme(theme){
   const icon=document.getElementById("themeIcon");
   if(text) text.textContent=isLight?"Escuro":"Claro";
   if(icon) icon.textContent=isLight?"☀️":"🌙";
-  localStorage.setItem("romsBrasilTheme",isLight?"light":"dark");
+  localStorage.setItem("RETROHUB BRTheme",isLight?"light":"dark");
 }
 function toggleTheme(){
   applyTheme(document.body.classList.contains("light-mode")?"dark":"light");
 }
-applyTheme(localStorage.getItem("romsBrasilTheme")||"dark");
+applyTheme(localStorage.getItem("RETROHUB BRTheme")||"dark");
 
 
 
@@ -1760,7 +1788,7 @@ const games = [
     "screenshots/kung-fu-panda/screenshot-03.png"
   ],
 
-  download: "https://www.mediafire.com/file/qd1mhoeiq6e5l0a/Kung_Fu_Panda_%2528USA%2529_%255BPS2%255D_-_ROMS_BRASIL.iso/file"
+  download: "https://www.mediafire.com/file/qd1mhoeiq6e5l0a/Kung_Fu_Panda_%2528USA%2529_%255BPS2%255D_-_RETROHUB BR.iso/file"
 },
 
   {
@@ -2224,7 +2252,7 @@ function renderFilters(){
         class="main-menu-btn ${currentPlatform !== "Todos" ? "active" : ""}"
         type="button"
       >
-        ROMS EM PORTUGUÊS
+        JOGOS
         <span class="menu-chevron">⌄</span>
       </button>
 
@@ -3033,7 +3061,7 @@ function openGame(slug, updateHistory = true){
 
       <div class="ra-header">
         <h2 class="ra-title">🏆 RetroAchievements</h2>
-        <span class="ra-status">✓ Compatível</span>
+        <span class="ra-status">✓ Suporte RetroAchievements</span>
       </div>
 
       <div class="ra-stats">
