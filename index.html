@@ -4386,7 +4386,6 @@ async function loadRetrohubFullProfile(raUser){
   const badgeClass=r=>r==="Lendária"?"legendary":r==="Épica"?"epic":r==="Rara"?"rare":"common";
   const renderRhBadge=([ok,icon,title,desc,cat,rarity])=>`<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${icon}</div><div><strong>${title}</strong><small>${ok?"✓ Desbloqueada":desc}</small></div></div>`;
   const rhBadgesHTML=rhBadges.slice(0,10).map(renderRhBadge).join("");
-  renderProfileFeatured(valid,recent,rhBadges,badgeUrl);
   const activityHTML=recent.slice(0,8).map(a=>`<div class="profile-activity-item"><img class="profile-activity-icon" src="${escapeHTML(badgeUrl(a))}" alt=""><div><strong>🏆 Desbloqueou ${escapeHTML(a.Title||"uma conquista")}</strong><small>${escapeHTML(a._game?.title||"")}${a.DateEarnedHardcore?" · Hardcore":""}</small></div><div class="profile-activity-date">${escapeHTML(profileDateLabel(a))}</div></div>`).join("");
 
   const gamesHTML=valid.map(({game,data})=>{
@@ -4407,6 +4406,10 @@ async function loadRetrohubFullProfile(raUser){
   <div class="profile-section"><div class="profile-section-head"><h2>🏅 Insígnias RetroHub</h2><span>${rhBadges.filter(b=>b[0]).length} de ${rhBadges.length} desbloqueadas</span></div><div class="profile-retrohub-badges">${rhBadgesHTML}</div><div class="rh-badges-actions"><button class="rh-badges-more" onclick="openRetrohubBadgesPage()">Ver todas as insígnias →</button></div></div>
   <div class="profile-section"><div class="profile-section-head"><h2>🕘 Atividade recente</h2><span>Últimas conquistas</span></div>${activityHTML?`<div class="profile-activity">${activityHTML}</div>`:`<div class="profile-empty">Nenhuma atividade recente.</div>`}</div>
   <div class="profile-section"><div class="profile-section-head"><h2>🎮 Meus jogos</h2><span>Progresso no RetroAchievements</span></div><div class="profile-games">${gamesHTML||'<div class="profile-empty">Nenhum jogo compatível encontrado.</div>'}</div></div>`;
+  // Renderiza os destaques somente depois que #profileFeaturedArea existe no DOM.
+  // Antes esta função era chamada antes do target.innerHTML, por isso a escolha
+  // (ex.: Metroid Fusion) era salva, mas não aparecia visualmente no perfil.
+  renderProfileFeatured(valid,recent,rhBadges,badgeUrl);
   initProfileAchievementTooltips();
 }
 
