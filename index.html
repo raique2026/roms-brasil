@@ -3328,44 +3328,44 @@ function openGame(slug, updateHistory = true){
       <div class="ra-stats">
         <div class="ra-stat">
           <small>CONQUISTAS</small>
-          <strong>${game.achievements ?? "—"}</strong>
+          <strong>${game.retroAchievements?.achievements ?? game.achievements ?? "—"}</strong>
         </div>
 
         <div class="ra-stat">
           <small>PONTOS</small>
-          <strong>${game.achievementPoints ?? "—"}</strong>
+          <strong>${game.retroAchievements?.points ?? game.achievementPoints ?? "—"}</strong>
         </div>
 
         <div class="ra-stat">
           <small>HASHES SUPORTADOS</small>
-          <strong>${game.supportedHashes ?? "—"}</strong>
+          <strong>${game.retroAchievements?.hashes ?? game.supportedHashes ?? "—"}</strong>
         </div>
       </div>
 
-      ${game.achievementBadge ? `
+      ${(game.retroAchievements?.completionBadge || game.achievementBadge) ? `
         <div class="ra-badge">
           <img
-            src="${game.achievementBadge}"
+            src="${game.retroAchievements?.completionBadge || game.achievementBadge}"
             alt="Insígnia de conclusão de ${game.title}"
             onerror="this.parentElement.style.display='none'"
           >
           <div class="ra-badge-info">
             <small>🏅 INSÍGNIA DE CONCLUSÃO</small>
-            <strong>${game.achievementBadgeText || "Complete o jogo para conquistar esta insígnia"}</strong>
+            <strong>${game.retroAchievements?.completionText || game.achievementBadgeText || "Complete o jogo para conquistar esta insígnia"}</strong>
           </div>
         </div>
       ` : ""}
 
       <div class="ra-details">
-        ${game.hardcoreSupport ? `<span class="ra-chip">🔥 Hardcore Mode</span>` : ""}
-        ${game.recommendedEmulator ? `<span class="ra-chip">🎮 ${game.recommendedEmulator}</span>` : ""}
-        <span class="ra-chip">🌎 ${game.region}</span>
+        ${(game.retroAchievements?.mode || game.hardcoreSupport) ? `<span class="ra-chip">🔥 ${game.retroAchievements?.mode || "Hardcore Mode"}</span>` : ""}
+        ${(game.retroAchievements?.emulator || game.recommendedEmulator) ? `<span class="ra-chip">🎮 ${game.retroAchievements?.emulator || game.recommendedEmulator}</span>` : ""}
+        <span class="ra-chip">🌎 ${game.retroAchievements?.region || game.region}</span>
       </div>
 
       <div class="ra-actions">
-        ${game.retroAchievementsUrl ? `
+        ${(game.retroAchievements?.url || game.retroAchievementsUrl) ? `
           <a class="ra-button"
-             href="${game.retroAchievementsUrl}"
+             href="${game.retroAchievements?.url || game.retroAchievementsUrl}"
              target="_blank"
              rel="noopener">
             🏆 VER CONQUISTAS
