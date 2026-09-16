@@ -2013,6 +2013,26 @@ const games = [
   format: "ISO",
     translation: "Não informado",
 
+
+  retroAchievements: true,
+  achievements: 113,
+  achievementPoints: 615,
+  supportedHashes: 2,
+  hardcoreSupport: true,
+  recommendedEmulator: "PCSX2",
+  retroAchievementsUrl: "https://retroachievements.org/game/3114",
+  retroAchievementsGameId: 3114,
+  retroHashesUrl: "https://retroachievements.org/game/3114/hashes",
+  achievementBadge: "images/badges/need-for-speed-underground.png",
+  achievementBadgeText: "Complete o jogo para conquistar esta insígnia",
+  achievementGuide: {
+    summary: "Guia em português para as 113 conquistas de Need for Speed: Underground no RetroAchievements, incluindo eventos perdíveis.",
+    difficulty: "Média / Alta",
+    estimatedTime: "25–35 horas",
+    playthroughs: "1–2 recomendadas",
+    missables: 23,
+    achievements: []
+  },
   cover: "images/need-for-speed-underground.jpg",
 
   description: "Need for Speed: Underground leva o jogador ao mundo das corridas de rua, com personalização de veículos, diversos eventos e uma campanha ambientada na cultura tuning.",
@@ -2041,6 +2061,25 @@ const games = [
   format: "ISO",
     translation: "Não informado",
 
+
+  retroAchievements: true,
+  achievements: 73,
+  achievementPoints: 500,
+  supportedHashes: 1,
+  hardcoreSupport: true,
+  recommendedEmulator: "PCSX2",
+  retroAchievementsUrl: "https://retroachievements.org/game/9371",
+  retroAchievementsGameId: 9371,
+  retroHashesUrl: "https://retroachievements.org/game/9371/hashes",
+  achievementBadge: "images/badges/ben-10-protector-of-earth.png",
+  achievementBadgeText: "Complete o jogo para conquistar esta insígnia",
+  achievementGuide: {
+    summary: "Guia em português para as 73 conquistas de Ben 10: Protector of Earth no RetroAchievements.",
+    difficulty: "Média",
+    estimatedTime: "8–12 horas",
+    playthroughs: "1–2 recomendadas",
+    achievements: []
+  },
   cover: "images/ben-10-protector-of-earth.jpg",
 
   description: "Ben 10: Protector of Earth é um jogo de ação e aventura baseado na série Ben 10. Ben utiliza o Omnitrix para se transformar em diferentes alienígenas e enfrentar inimigos durante sua jornada.",
@@ -2055,34 +2094,6 @@ const games = [
 
   download: "#"
 },
-  {
-  slug: "tarzan-lord-of-the-jungle",
-  title: "Tarzan: Lord of the Jungle",
-  platform: "Game Boy",
-  year: "1994",
-  language: "Inglês",
-  region: "NTSC-U",
-  size: "Edite o tamanho",
-  developer: "Eurocom",
-  publisher: "GameTek",
-  genre: "Ação / Plataforma",
-  format: "ROM",
-  translation: "Não informado",
-
-  cover: "images/tarzan-lord-of-the-jungle.jpg",
-
-  banner: "banners/tarzan-lord-of-the-jungle.jpg",
-
-  description: "Tarzan: Lord of the Jungle é um jogo de ação e plataforma lançado para Game Boy em 1994. Controle Tarzan em diferentes missões pela selva, enfrentando inimigos, evitando obstáculos e utilizando armas como facas, lanças e flechas para proteger seus amigos e a floresta.",
-
-  screenshots: [
-    "screenshots/tarzan-lord-of-the-jungle/screenshot-01.png",
-    "screenshots/tarzan-lord-of-the-jungle/screenshot-02.png",
-    "screenshots/tarzan-lord-of-the-jungle/screenshot-03.png"
-  ],
-
-  download: "#"
- },
   {
   slug: "kung-fu-panda",
   title: "Kung Fu Panda",
@@ -3731,7 +3742,11 @@ function openGame(slug, updateHistory = true){
     ${recommendationsHTML}
   `;
 
-  setTimeout(() => initRetroAchievementsProgress(game), 0);
+  setTimeout(() => {
+    initRetroAchievementsProgress(game);
+    initGameAchievementCards();
+    loadNfsAchievementCatalog(game);
+  }, 0);
 
   window.scrollTo({
     top:0,
@@ -3874,6 +3889,16 @@ function translateRetroAchievementDescription(text){
   if(!t) return "";
 
   const rules = [
+    [/^Finish (.+)\.?$/i, "Conclua $1."],
+    [/^Collect all (.+) in (.+)\.?$/i, "Colete todos os $1 em $2."],
+    [/^Collect (.+)\.?$/i, "Colete $1."],
+    [/^Win your first (.+)\.?$/i, "Vença sua primeira $1."],
+    [/^Win the (.+) tournament in Underground mode on hard difficulty\.?$/i, "Vença o torneio $1 no modo Underground na dificuldade Difícil."],
+    [/^Win the (.+) tournament in Underground mode\.?$/i, "Vença o torneio $1 no modo Underground."],
+    [/^Win (.+) in Underground mode\.?$/i, "Vença $1 no modo Underground."],
+    [/^Win (.+)\.?$/i, "Vença $1."],
+    [/^Reach (.+)\.?$/i, "Alcance $1."],
+    [/^Get featured in (.+) by (.+)\.?$/i, "Apareça em $1 ao $2."],
     [/^Clear (.+) on Master difficulty or higher\.?$/i, "Conclua $1 na dificuldade Master ou superior."],
     [/^Clear (.+) on Dragon Warrior difficulty or higher\.?$/i, "Conclua $1 na dificuldade Dragon Warrior ou superior."],
     [/^Clear (.+) on Dragon Warrior difficulty\.?$/i, "Conclua $1 na dificuldade Dragon Warrior."],
@@ -4035,14 +4060,13 @@ function buildNfsAchievementGuide(title, description){
 }
 
 async function loadNfsAchievementCatalog(game){
-  if(!game || game.slug !== "need-for-speed-most-wanted-black-edition") return;
-  const guide = game.achievementGuide;
-  if(!guide) return;
+  if(!game || !game.retroAchievements || !game.retroAchievementsGameId) return;
+  const guide = game.achievementGuide || (game.achievementGuide = { achievements: [] });
 
   const container = document.querySelector(".guide-full.achievements-list-only");
   if(!container) return;
 
-  container.innerHTML = '<p class="guide-empty">Carregando as 131 conquistas e o guia...</p>';
+  container.innerHTML = `<p class="guide-empty">Carregando as ${game.achievements || ""} conquistas e o guia...</p>`;
 
   try{
     // A rota do próprio RetroHub já é usada para sincronizar o RetroAchievements.
@@ -4056,7 +4080,7 @@ async function loadNfsAchievementCatalog(game){
 
     const count = Object.values(achievements).filter(a=>a && a.Title).length;
     const summary = document.querySelector(".achievement-summary-compact h2");
-    if(summary) summary.textContent = `${game.title} — Roteiro para 100% • ${count || 131} conquistas`;
+    if(summary) summary.textContent = `${game.title} — Roteiro para 100% • ${count || game.achievements || 0} conquistas`;
   }catch(err){
     container.innerHTML = '<p class="guide-empty">Não foi possível carregar o catálogo de conquistas agora. Tente recarregar a página.</p>';
   }
