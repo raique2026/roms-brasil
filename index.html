@@ -4107,9 +4107,25 @@ async function retrohubLogin(event){
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
   setAccountMessage("authMessage","Entrando...", true);
-  const { error } = await retrohubSupabase.auth.signInWithPassword({ email, password });
-  if(error) return setAccountMessage("authMessage","E-mail ou senha incorretos.");
+
+  const { data, error } = await retrohubSupabase.auth.signInWithPassword({ email, password });
+  if(error){
+    return setAccountMessage("authMessage", "Não foi possível entrar. Verifique o e-mail, a senha e se o e-mail foi confirmado.");
+  }
+
+  // Atualiza a sessão imediatamente, sem depender apenas do evento assíncrono do Supabase.
+  retrohubSession = data.session;
+  if(!retrohubSession?.user){
+    return setAccountMessage("authMessage", "Login realizado, mas a sessão não foi criada. Tente novamente.");
+  }
+
+  await loadRetrohubProfile();
+  refreshRetrohubAccountUI();
   setAccountMessage("authMessage","Login realizado!", true);
+
+  // Fecha a janela de autenticação e leva direto para o perfil completo.
+  closeAccountPanel();
+  openFullRetrohubProfile();
 }
 
 async function retrohubLogout(){
@@ -4186,6 +4202,7 @@ async function saveRetrohubProfile(event){
   if(ra) localStorage.setItem("retrohub_ra_user", ra); else localStorage.removeItem("retrohub_ra_user");
   setAccountMessage("profileMessage","Perfil salvo com sucesso!", true);
   refreshRetrohubAccountUI();
+  if(location.hash === "#profile" && typeof renderRetrohubProfilePage === "function") renderRetrohubProfilePage();
   const game = typeof getCurrentGame === "function" ? getCurrentGame() : null;
   if(game && ra && typeof loadRetroAchievementsProgress === "function") loadRetroAchievementsProgress(ra, game);
 }
