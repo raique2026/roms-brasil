@@ -1517,6 +1517,177 @@ button,
 .profile-editor-fields.profile-editor-fields-single{grid-template-columns:1fr}
 .profile-editor-fields.profile-editor-fields-single label{max-width:none}
 .guide-badge-placeholder{width:64px;height:64px;border-radius:8px;background:#111a30;border:1px solid #27385e}
+
+/* ===== RETROHUB BR — PERFIL PREMIUM COMPACTO V3 ===== */
+.profile-page{max-width:1320px;margin:0 auto;padding:24px 22px 60px}
+.profile-hero{min-height:205px;border-radius:20px}
+.profile-hero-grid{padding:24px 28px;gap:20px}
+.profile-page-avatar{width:112px;height:112px;border-radius:20px}
+.profile-page-name{font-size:29px}
+.profile-level-wrap{max-width:390px}
+
+.profile-stats-strip{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:8px;
+  margin:14px 0 0;
+}
+.profile-stat-inline{
+  min-height:58px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  border:1px solid #263556;
+  border-radius:12px;
+  background:#0d1629;
+  color:#8fa0c5;
+  font-size:11px;
+  text-align:center;
+}
+.profile-stat-inline strong{color:#fff;font-size:17px}
+
+.profile-featured-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr .85fr;
+  gap:12px;
+  margin-top:14px;
+}
+.profile-featured-card{min-height:118px}
+
+.profile-section{
+  margin-top:16px;
+  padding:17px 18px;
+  border-radius:16px;
+}
+.profile-section-head{margin-bottom:12px}
+.profile-section-head h2{font-size:18px}
+.profile-section-head span{font-size:11px}
+
+/* Vitrine: agora é uma faixa compacta e não um mural gigante */
+.profile-showcase-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+}
+.profile-showcase-card{
+  display:grid;
+  grid-template-columns:64px minmax(0,1fr);
+  grid-template-rows:auto auto;
+  column-gap:10px;
+  align-items:center;
+  padding:8px;
+  min-height:82px;
+  border-radius:11px;
+  background:#0b1426;
+  transition:.18s ease;
+}
+.profile-showcase-card:hover{
+  transform:translateY(-2px);
+  border-color:#536da8;
+  background:#101b32;
+}
+.profile-showcase-card img{
+  grid-row:1/3;
+  width:64px;
+  height:64px;
+  aspect-ratio:auto;
+  object-fit:cover;
+  border-radius:9px;
+}
+.profile-showcase-card strong{
+  margin:0;
+  font-size:11px;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.profile-showcase-card small{
+  margin:3px 0 0;
+  font-size:9px;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.profile-showcase-more{
+  margin-left:auto;
+  border:1px solid #344568;
+  background:#111d35;
+  color:#cbd7f3;
+  padding:7px 10px;
+  border-radius:9px;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+/* Jogos perfeitos mais compactos */
+.profile-perfect-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px}
+.profile-perfect-card img{height:118px}
+.profile-perfect-card div{padding:8px;font-size:10px}
+.profile-perfect-card span{font-size:8px;padding:4px 6px}
+
+/* Insígnias e atividade ocupam menos altura */
+.profile-retrohub-badges{grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:8px}
+.rh-badge{padding:9px 10px;min-height:62px}
+.rh-badge-icon{width:36px;height:36px;border-radius:10px;font-size:18px}
+.profile-activity{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.profile-activity-item{grid-template-columns:34px minmax(0,1fr) auto;padding:8px 10px}
+.profile-activity-icon{width:34px;height:34px}
+.profile-activity-item strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Meus jogos: progresso ganha prioridade; conquistas continuam recolhíveis */
+.profile-games{gap:10px}
+.profile-game-card{padding:10px;border-radius:12px}
+.profile-game-row{grid-template-columns:62px 1fr auto;gap:12px}
+.profile-game-cover{width:62px;height:82px}
+.profile-game-title{font-size:13px;margin-bottom:5px}
+.profile-game-meta{font-size:10px;margin-bottom:7px}
+.profile-game-percent{font-size:20px}
+.profile-game-badges{grid-template-columns:repeat(auto-fill,44px);gap:6px;margin-top:10px;padding-top:10px}
+.profile-game-badge,.profile-game-badge img{width:44px;height:44px}
+
+@media(max-width:980px){
+  .profile-stats-strip{grid-template-columns:repeat(3,1fr)}
+  .profile-featured-grid{grid-template-columns:1fr 1fr}
+  .profile-showcase-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+  .profile-page{padding:14px 10px 40px}
+  .profile-hero-grid{padding:20px}
+  .profile-activity{grid-template-columns:1fr}
+  .profile-showcase-grid{grid-template-columns:1fr}
+  .profile-featured-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .profile-stats-strip{grid-template-columns:repeat(2,1fr)}
+  .profile-showcase-card{grid-template-columns:54px minmax(0,1fr);min-height:70px}
+  .profile-showcase-card img{width:54px;height:54px}
+}
+
+
+.rh-badge-info{min-width:0;flex:1}
+.rh-progress{height:5px;background:#202a3f;border-radius:999px;margin-top:7px;overflow:hidden}
+.rh-progress i{display:block;height:100%;background:linear-gradient(90deg,#6657ff,#38dba0);border-radius:999px}
+.rh-badge em{display:block;margin-top:4px;color:#7f91b7;font-size:9px;font-style:normal;font-weight:800}
+
+
+.rh-badge.secret{border-color:#4d3b73;background:linear-gradient(135deg,#111425,#191329)}
+.rh-badge.secret:not(.locked){border-color:#9d72ff;box-shadow:0 0 22px rgba(132,86,255,.18)}
+.rh-badge.secret .rh-badge-icon{background:#201735}
+.rh-badge.secret:not(.locked) .rh-badge-icon{filter:none}
+.rh-badge.secret .rh-badge-rarity{color:#b995ff}
+.badges-page-grid .rh-badge{min-height:86px}
+.badges-page-grid .rh-progress{max-width:190px}
+
+
+.rh-badge[data-badge-category="ps2"]{border-color:#243d76;background:linear-gradient(135deg,#0d1528,#101b35)}
+.rh-badge[data-badge-category="ps2"]:not(.locked){box-shadow:0 0 0 1px rgba(73,119,255,.22),0 8px 24px rgba(0,0,0,.18)}
+.rh-badge[data-badge-category="ps2"] .rh-badge-icon{background:#13264d}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -4815,35 +4986,136 @@ async function loadRetrohubFullProfile(raUser){
   const xpFill=document.getElementById("profileXpFill"); if(xpFill) xpFill.style.width=`${Math.min(100,Math.round(xpCurrent/xpPerLevel*100))}%`;
 
   const badgeUrl=a=>{const raw=a?.BadgeURL||(a?.BadgeName?`https://media.retroachievements.org/Badge/${a.BadgeName}.png`:"");return raw&&raw.startsWith("/")?`https://media.retroachievements.org${raw}`:raw;};
-  const showcaseHTML=recent.slice(0,6).map(a=>`<div class="profile-showcase-card"><img src="${escapeHTML(badgeUrl(a))}" alt=""><strong>${escapeHTML(a.Title||"Conquista")}</strong><small>${escapeHTML(a._game?.title||"")} · ${Number(a.Points||0)} pts</small></div>`).join("");
+  const showcaseHTML=recent.slice(0,4).map(a=>`<div class="profile-showcase-card" title="${escapeHTML(a.Title||"Conquista")}"><img src="${escapeHTML(badgeUrl(a))}" alt=""><strong>${escapeHTML(a.Title||"Conquista")}</strong><small>${escapeHTML(a._game?.title||"")} · ${Number(a.Points||0)} pts${a.DateEarnedHardcore?" · 🔥":""}</small></div>`).join("");
   const recentHTML=recent.slice(0,12).map(a=>`<div class="profile-achievement" title="${escapeHTML(a.Title||"Conquista")}"><img src="${escapeHTML(badgeUrl(a))}" alt=""><strong>${escapeHTML(a.Title||"Conquista")}</strong><small>${a.DateEarnedHardcore?"🔥 Hardcore • ":""}${escapeHTML(profileDateLabel(a))}</small></div>`).join("");
   const perfectHTML=valid.filter(({game,data})=>{const t=Number(data.NumAchievements??game.achievements??0),e=Number(data.NumAwardedToUser??0);return t>0&&e>=t;}).map(({game,data})=>`<div class="profile-perfect-card" onclick="openGame('${escapeHTML(game.slug)}',true)"><span>🏆 PERFEITO</span><img src="${escapeHTML(game.cover)}" alt=""><div>${escapeHTML(game.title)} · ${Number(data.NumAchievements??game.achievements??0)}/ ${Number(data.NumAchievements??game.achievements??0)}</div></div>`).join("");
   const rhBadges=[
-    [earned>=1,"🎯","Primeira conquista","Desbloqueie 1 conquista","conquistas","Comum"],
-    [earned>=100,"🏆","100 conquistas","Alcance 100 conquistas","conquistas","Comum"],
-    [earned>=500,"💎","500 conquistas","Alcance 500 conquistas","conquistas","Rara"],
-    [earned>=1000,"👑","1.000 conquistas","Alcance 1.000 conquistas","conquistas","Lendária"],
-    [perfect>=1,"⭐","Primeiro 100%","Complete seu primeiro jogo","perfeitos","Comum"],
-    [perfect>=10,"👑","10 jogos perfeitos","Complete 10 jogos em 100%","perfeitos","Rara"],
-    [perfect>=25,"🏰","25 jogos perfeitos","Complete 25 jogos em 100%","perfeitos","Épica"],
-    [perfect>=50,"🐉","50 jogos perfeitos","Complete 50 jogos em 100%","perfeitos","Lendária"],
-    [points>=1000,"🔥","1.000 pontos","Some 1.000 pontos","pontos","Comum"],
-    [points>=5000,"💠","5.000 pontos","Some 5.000 pontos","pontos","Rara"],
-    [points>=10000,"🌟","10.000 pontos","Some 10.000 pontos","pontos","Épica"],
-    [points>=25000,"💜","25.000 pontos","Some 25.000 pontos","pontos","Lendária"],
-    [hardcore>=50,"⚡","Hardcore 50","Consiga 50 conquistas Hardcore","hardcore","Comum"],
-    [hardcore>=250,"☠️","Hardcore 250","Consiga 250 conquistas Hardcore","hardcore","Épica"],
-    [hardcore>=1000,"🏅","Mestre Hardcore","Consiga 1.000 conquistas Hardcore","hardcore","Lendária"],
-    [valid.length>=10,"🎮","Retro Gamer","Jogue 10 jogos diferentes","colecao","Comum"],
-    [valid.length>=50,"🕹️","Colecionador","Jogue 50 jogos diferentes","colecao","Rara"],
-    [valid.length>=100,"👾","Lenda Retro","Jogue 100 jogos diferentes","colecao","Lendária"],
-    [perfect>=1 && total>=50,"💯","Perfeccionista","Complete em 100% um jogo com muitas conquistas","especiais","Épica"]
-  ];
+    [earned>=1,"🎯","Primeira conquista","Desbloqueie 1 conquista","conquistas","Comum",()=>[earned,1]],
+    [earned>=10,"🥉","Primeiros passos","Alcance 10 conquistas","conquistas","Comum",()=>[earned,10]],
+    [earned>=25,"🥈","Caçador iniciante","Alcance 25 conquistas","conquistas","Comum",()=>[earned,25]],
+    [earned>=50,"🏆","Caçador de conquistas","Alcance 50 conquistas","conquistas","Comum",()=>[earned,50]],
+    [earned>=100,"🏆","Centenário","Alcance 100 conquistas","conquistas","Rara",()=>[earned,100]],
+    [earned>=250,"💠","Colecionador de troféus","Alcance 250 conquistas","conquistas","Rara",()=>[earned,250]],
+    [earned>=500,"💎","500 conquistas","Alcance 500 conquistas","conquistas","Épica",()=>[earned,500]],
+    [earned>=750,"👑","Elite das conquistas","Alcance 750 conquistas","conquistas","Épica",()=>[earned,750]],
+    [earned>=1000,"👑","1.000 conquistas","Alcance 1.000 conquistas","conquistas","Lendária",()=>[earned,1000]],
+    [earned>=2500,"🌟","Lenda das conquistas","Alcance 2.500 conquistas","conquistas","Lendária",()=>[earned,2500]],
+    [perfect>=1,"⭐","Primeiro 100%","Complete seu primeiro jogo","perfeitos","Comum",()=>[perfect,1]],
+    [perfect>=3,"🌟","Trinca perfeita","Complete 3 jogos em 100%","perfeitos","Comum",()=>[perfect,3]],
+    [perfect>=5,"✨","Perfeccionista I","Complete 5 jogos em 100%","perfeitos","Rara",()=>[perfect,5]],
+    [perfect>=10,"👑","10 jogos perfeitos","Complete 10 jogos em 100%","perfeitos","Rara",()=>[perfect,10]],
+    [perfect>=15,"🏅","Mestre do 100%","Complete 15 jogos em 100%","perfeitos","Épica",()=>[perfect,15]],
+    [perfect>=25,"🏰","25 jogos perfeitos","Complete 25 jogos em 100%","perfeitos","Épica",()=>[perfect,25]],
+    [perfect>=50,"🐉","50 jogos perfeitos","Complete 50 jogos em 100%","perfeitos","Lendária",()=>[perfect,50]],
+    [perfect>=100,"💯","Perfeição absoluta","Complete 100 jogos em 100%","perfeitos","Lendária",()=>[perfect,100]],
+    [points>=500,"🔥","500 pontos","Some 500 pontos","pontos","Comum",()=>[points,500]],
+    [points>=1000,"🔥","1.000 pontos","Some 1.000 pontos","pontos","Comum",()=>[points,1000]],
+    [points>=2500,"🔷","2.500 pontos","Some 2.500 pontos","pontos","Rara",()=>[points,2500]],
+    [points>=5000,"💠","5.000 pontos","Some 5.000 pontos","pontos","Rara",()=>[points,5000]],
+    [points>=10000,"🌟","10.000 pontos","Some 10.000 pontos","pontos","Épica",()=>[points,10000]],
+    [points>=25000,"💜","25.000 pontos","Some 25.000 pontos","pontos","Épica",()=>[points,25000]],
+    [points>=50000,"💫","50.000 pontos","Some 50.000 pontos","pontos","Lendária",()=>[points,50000]],
+    [points>=100000,"🌌","100.000 pontos","Some 100.000 pontos","pontos","Lendária",()=>[points,100000]],
+    [hardcore>=10,"⚡","Hardcore 10","Consiga 10 conquistas Hardcore","hardcore","Comum",()=>[hardcore,10]],
+    [hardcore>=25,"⚡","Hardcore 25","Consiga 25 conquistas Hardcore","hardcore","Comum",()=>[hardcore,25]],
+    [hardcore>=50,"🔥","Hardcore 50","Consiga 50 conquistas Hardcore","hardcore","Rara",()=>[hardcore,50]],
+    [hardcore>=100,"🔥","Hardcore 100","Consiga 100 conquistas Hardcore","hardcore","Rara",()=>[hardcore,100]],
+    [hardcore>=250,"☠️","Hardcore 250","Consiga 250 conquistas Hardcore","hardcore","Épica",()=>[hardcore,250]],
+    [hardcore>=500,"💀","Hardcore 500","Consiga 500 conquistas Hardcore","hardcore","Épica",()=>[hardcore,500]],
+    [hardcore>=1000,"🏅","Mestre Hardcore","Consiga 1.000 conquistas Hardcore","hardcore","Lendária",()=>[hardcore,1000]],
+    [hardcore>=2500,"👹","Lenda Hardcore","Consiga 2.500 conquistas Hardcore","hardcore","Lendária",()=>[hardcore,2500]],
+    [valid.length>=3,"🎮","Começando a coleção","Jogue 3 jogos diferentes","colecao","Comum",()=>[valid.length,3]],
+    [valid.length>=5,"🎮","Explorador retrô","Jogue 5 jogos diferentes","colecao","Comum",()=>[valid.length,5]],
+    [valid.length>=10,"🕹️","Retro Gamer","Jogue 10 jogos diferentes","colecao","Comum",()=>[valid.length,10]],
+    [valid.length>=25,"📚","Biblioteca retrô","Jogue 25 jogos diferentes","colecao","Rara",()=>[valid.length,25]],
+    [valid.length>=50,"🧱","Colecionador","Jogue 50 jogos diferentes","colecao","Rara",()=>[valid.length,50]],
+    [valid.length>=75,"📦","Arquivo gamer","Jogue 75 jogos diferentes","colecao","Épica",()=>[valid.length,75]],
+    [valid.length>=100,"👾","Lenda Retro","Jogue 100 jogos diferentes","colecao","Lendária",()=>[valid.length,100]],
+    [valid.length>=250,"🏛️","Museu dos games","Jogue 250 jogos diferentes","colecao","Lendária",()=>[valid.length,250]],
+    [earned>=50&&points>=1000,"🚀","Em ascensão","50 conquistas + 1.000 pontos","especiais","Comum",()=>[Math.min(earned/50,points/1000)*100,100]],
+    [valid.length>=10&&earned>=100,"🧭","Aventureiro","10 jogos + 100 conquistas","especiais","Rara",()=>[Math.min(valid.length/10,earned/100)*100,100]],
+    [hardcore>=100&&perfect>=1,"💪","Sem medo","100 Hardcore + 1 jogo perfeito","especiais","Rara",()=>[Math.min(hardcore/100,perfect)*100,100]],
+    [earned>=500&&perfect>=5,"🏹","Caçador veterano","500 conquistas + 5 jogos perfeitos","especiais","Épica",()=>[Math.min(earned/500,perfect/5)*100,100]],
+    [perfect>=1&&total>=50,"💯","Perfeccionista","Complete em 100% um jogo com muitas conquistas","especiais","Épica",()=>[perfect,1]],
+    [earned>=1000&&points>=10000&&hardcore>=250,"⚔️","Elite RetroHub","1.000 conquistas + 10.000 pontos + 250 Hardcore","especiais","Épica",()=>[Math.min(earned/1000,points/10000,hardcore/250)*100,100]],
+    [perfect>=25&&points>=25000,"👑","Mestre RetroHub","25 jogos perfeitos + 25.000 pontos","especiais","Lendária",()=>[Math.min(perfect/25,points/25000)*100,100]],
+    [earned>=2500&&perfect>=50&&points>=50000,"🌠","Lenda do RetroHub","2.500 conquistas + 50 perfeitos + 50.000 pontos","especiais","Lendária",()=>[Math.min(earned/2500,perfect/50,points/50000)*100,100]],
+
+    /* ===== NOVAS INSÍGNIAS DE DESAFIO ===== */
+    [earned>=5,"🌱","Aquecimento","Desbloqueie 5 conquistas","conquistas","Comum",()=>[earned,5]],
+    [earned>=200,"🎖️","Duzentas na conta","Alcance 200 conquistas","conquistas","Rara",()=>[earned,200]],
+    [earned>=1500,"🔱","Caçador supremo","Alcance 1.500 conquistas","conquistas","Lendária",()=>[earned,1500]],
+
+    [perfect>=2,"🌠","Dobradinha perfeita","Complete 2 jogos em 100%","perfeitos","Comum",()=>[perfect,2]],
+    [perfect>=7,"🎇","Semana perfeita","Complete 7 jogos em 100%","perfeitos","Rara",()=>[perfect,7]],
+    [perfect>=75,"🏆","Mestre da perfeição","Complete 75 jogos em 100%","perfeitos","Lendária",()=>[perfect,75]],
+
+    [points>=250,"🪙","Primeiro tesouro","Some 250 pontos","pontos","Comum",()=>[points,250]],
+    [points>=7500,"💰","Cofre cheio","Some 7.500 pontos","pontos","Rara",()=>[points,7500]],
+    [points>=75000,"🪐","Pontuação galáctica","Some 75.000 pontos","pontos","Lendária",()=>[points,75000]],
+
+    [hardcore>=1,"🔥","Primeiro Hardcore","Consiga sua primeira conquista Hardcore","hardcore","Comum",()=>[hardcore,1]],
+    [hardcore>=75,"⚔️","Guerreiro Hardcore","Consiga 75 conquistas Hardcore","hardcore","Rara",()=>[hardcore,75]],
+    [hardcore>=750,"🩸","Implacável","Consiga 750 conquistas Hardcore","hardcore","Épica",()=>[hardcore,750]],
+
+    [valid.length>=1,"🕹️","Primeiro jogo","Registre progresso em seu primeiro jogo","colecao","Comum",()=>[valid.length,1]],
+    [valid.length>=15,"📀","Estante gamer","Jogue 15 jogos diferentes","colecao","Rara",()=>[valid.length,15]],
+    [valid.length>=150,"🗃️","Arquivo RetroHub","Jogue 150 jogos diferentes","colecao","Lendária",()=>[valid.length,150]],
+
+    [earned>=25&&hardcore>=10,"🛡️","Sem facilidades","25 conquistas e 10 em Hardcore","especiais","Comum",()=>[Math.min(earned/25,hardcore/10)*100,100]],
+    [perfect>=3&&hardcore>=50,"⚔️","Perfeito e Hardcore","3 jogos perfeitos e 50 Hardcore","especiais","Rara",()=>[Math.min(perfect/3,hardcore/50)*100,100]],
+    [valid.length>=25&&points>=5000,"🗺️","Explorador veterano","25 jogos e 5.000 pontos","especiais","Rara",()=>[Math.min(valid.length/25,points/5000)*100,100]],
+    [earned>=750&&hardcore>=250,"🐺","Caçador implacável","750 conquistas e 250 Hardcore","especiais","Épica",()=>[Math.min(earned/750,hardcore/250)*100,100]],
+    [perfect>=10&&earned>=1000,"🏛️","Hall da fama","10 jogos perfeitos e 1.000 conquistas","especiais","Épica",()=>[Math.min(perfect/10,earned/1000)*100,100]],
+
+    /* Insígnias temáticas por plataforma, calculadas pelos jogos sincronizados */
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=3,"💙","Explorador do PS2","Jogue 3 títulos de PlayStation 2","especiais","Rara",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length,3]],
+    [valid.filter(x=>/game boy advance|gba/i.test(String(x.game?.platform||""))).length>=3,"🟣","Explorador do GBA","Jogue 3 títulos de Game Boy Advance","especiais","Rara",()=>[valid.filter(x=>/game boy advance|gba/i.test(String(x.game?.platform||""))).length,3]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=3,"🏅","Mestre do PS2","Complete 3 jogos de PS2 em 100%","especiais","Épica",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length,3]],
+    [valid.filter(x=>/game boy advance|gba/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=3,"🏅","Mestre do GBA","Complete 3 jogos de GBA em 100%","especiais","Épica",()=>[valid.filter(x=>/game boy advance|gba/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||0)).length,3]],
+
+    /* Desafios de raridade/progressão baseados nos dados disponíveis */
+    [recent.filter(a=>Number(a.Points||0)>=25).length>=5,"💎","Caçador de raridades","Conquiste 5 desafios valendo 25 pontos ou mais","especiais","Rara",()=>[recent.filter(a=>Number(a.Points||0)>=25).length,5]],
+    [recent.filter(a=>Number(a.Points||0)>=50).length>=3,"👑","Caçador de relíquias","Conquiste 3 desafios valendo 50 pontos ou mais","especiais","Épica",()=>[recent.filter(a=>Number(a.Points||0)>=50).length,3]],
+    [hardcore>=earned&&earned>=100,"💀","Purista Hardcore","Tenha 100 conquistas com todas registradas em Hardcore","especiais","Lendária",()=>[earned?Math.min(hardcore/earned*100,100):0,100]],
+
+    /* Insígnias secretas: nome/objetivo ocultos até serem desbloqueadas */
+    [perfect>=5&&hardcore>=250,"🔒","Insígnia secreta","???","especiais","Secreta",()=>[Math.min(perfect/5,hardcore/250)*100,100]],
+    [earned>=1000&&valid.length>=50&&perfect>=10,"🔒","Insígnia secreta","???","especiais","Secreta",()=>[Math.min(earned/1000,valid.length/50,perfect/10)*100,100]],
+    [earned>=2500&&points>=100000&&hardcore>=1000&&perfect>=50,"🔒","Insígnia secreta","???","especiais","Secreta",()=>[Math.min(earned/2500,points/100000,hardcore/1000,perfect/50)*100,100]],
+
+    /* ===== 20 INSÍGNIAS EXCLUSIVAS DE PLAYSTATION 2 ===== */
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=1,"💙","Bem-vindo ao PS2","Jogue seu primeiro título de PlayStation 2","ps2","Comum",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length,1]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=3,"🎮","Explorador PS2","Jogue 3 títulos de PlayStation 2","ps2","Comum",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length,3]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=5,"💿","Coleção PS2","Jogue 5 títulos de PlayStation 2","ps2","Comum",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length,5]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=10,"🕹️","Veterano do PS2","Jogue 10 títulos de PlayStation 2","ps2","Rara",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length,10]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=20,"📚","Biblioteca PS2","Jogue 20 títulos de PlayStation 2","ps2","Rara",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length,20]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=50,"🏛️","Museu PS2","Jogue 50 títulos de PlayStation 2","ps2","Lendária",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length,50]],
+
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=1,"⭐","Primeiro 100% no PS2","Complete 1 jogo de PS2 em 100%","ps2","Comum",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length,1]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=3,"🏅","Mestre do PS2","Complete 3 jogos de PS2 em 100%","ps2","Rara",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length,3]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=5,"🏆","Perfeccionista PS2","Complete 5 jogos de PS2 em 100%","ps2","Rara",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length,5]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=10,"👑","Rei do PS2","Complete 10 jogos de PS2 em 100%","ps2","Épica",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length,10]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=25,"🌟","Lenda do PS2","Complete 25 jogos de PS2 em 100%","ps2","Lendária",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length,25]],
+
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarned||a.DateEarnedHardcore).length,0)>=50,"🥉","Caçador PS2","Desbloqueie 50 conquistas em jogos de PS2","ps2","Comum",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarned||a.DateEarnedHardcore).length,0),50]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarned||a.DateEarnedHardcore).length,0)>=100,"🥈","Centenário PS2","Desbloqueie 100 conquistas em jogos de PS2","ps2","Rara",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarned||a.DateEarnedHardcore).length,0),100]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarned||a.DateEarnedHardcore).length,0)>=250,"💎","Elite PS2","Desbloqueie 250 conquistas em jogos de PS2","ps2","Épica",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarned||a.DateEarnedHardcore).length,0),250]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarned||a.DateEarnedHardcore).length,0)>=500,"🔱","Lenda das conquistas PS2","Desbloqueie 500 conquistas em jogos de PS2","ps2","Lendária",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarned||a.DateEarnedHardcore).length,0),500]],
+
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarnedHardcore).length,0)>=25,"🔥","PS2 Hardcore","Consiga 25 conquistas Hardcore em jogos de PS2","ps2","Rara",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarnedHardcore).length,0),25]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarnedHardcore).length,0)>=100,"⚡","Guerreiro PS2 Hardcore","Consiga 100 conquistas Hardcore em jogos de PS2","ps2","Épica",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarnedHardcore).length,0),100]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarnedHardcore).length,0)>=250,"💀","Mestre PS2 Hardcore","Consiga 250 conquistas Hardcore em jogos de PS2","ps2","Lendária",()=>[valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).reduce((n,x)=>n+Object.values(x.data?.Achievements||{}).filter(a=>a.DateEarnedHardcore).length,0),250]],
+
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=25 && valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=10,"🦁","Veterano de uma geração","Jogue 25 jogos de PS2 e complete 10 em 100%","ps2","Lendária",()=>[Math.min(valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length/25,valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length/10)*100,100]],
+    [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=50 && valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=25,"🏆","Platina PS2 RetroHub","Jogue 50 jogos de PS2 e complete 25 em 100%","ps2","Lendária",()=>[Math.min(valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length/50,valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length/25)*100,100]],
+
+    ];
   window.retrohubBadgeState=rhBadges;
-  const badgeClass=r=>r==="Lendária"?"legendary":r==="Épica"?"epic":r==="Rara"?"rare":"common";
-  const renderRhBadge=([ok,icon,title,desc,cat,rarity])=>`<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${icon}</div><div><strong>${title}</strong><small>${ok?"✓ Desbloqueada":desc}</small></div></div>`;
+  const badgeClass=r=>r==="Secreta"?"secret":r==="Lendária"?"legendary":r==="Épica"?"epic":r==="Rara"?"rare":"common";
+  const renderRhBadge=([ok,icon,title,desc,cat,rarity,getProgress])=>{const [curRaw,targetRaw]=getProgress?getProgress():[0,1],cur=Math.max(0,Number(curRaw||0)),goal=Math.max(1,Number(targetRaw||1)),pct=Math.max(0,Math.min(100,Math.round(cur/goal*100)));return `<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${icon}</div><div class="rh-badge-info"><strong>${rarity==="Secreta"&&!ok?"???":title}</strong><small>${ok?(rarity==="Secreta"?"✦ Segredo descoberto · "+desc:"✓ Desbloqueada"):(rarity==="Secreta"?"Objetivo secreto":desc)}</small>${!ok?`<div class="rh-progress"><i style="width:${pct}%"></i></div><em>${pct}% concluído</em>`:""}</div></div>`;};
   const rhBadgesHTML=rhBadges.slice(0,10).map(renderRhBadge).join("");
-  const activityHTML=recent.slice(0,8).map(a=>`<div class="profile-activity-item"><img class="profile-activity-icon" src="${escapeHTML(badgeUrl(a))}" alt=""><div><strong>🏆 Desbloqueou ${escapeHTML(a.Title||"uma conquista")}</strong><small>${escapeHTML(a._game?.title||"")}${a.DateEarnedHardcore?" · Hardcore":""}</small></div><div class="profile-activity-date">${escapeHTML(profileDateLabel(a))}</div></div>`).join("");
+
 
   const gamesHTML=valid.map(({game,data})=>{
     const t=Number(data.NumAchievements??game.achievements??0),e=Number(data.NumAwardedToUser??0),h=Number(data.NumAwardedToUserHardcore??0),p=t?Math.round(e/t*100):0;
@@ -4858,10 +5130,10 @@ async function loadRetrohubFullProfile(raUser){
   target.innerHTML=`
   <div class="profile-stats-strip"><div class="profile-stat-inline">🎮 <strong>${valid.length}</strong> jogos</div><div class="profile-stat-inline">🏆 <strong>${earned}</strong> conquistas</div><div class="profile-stat-inline">💯 <strong>${perfect}</strong> perfeitos</div><div class="profile-stat-inline">💎 <strong>${points.toLocaleString("pt-BR")}</strong> pontos</div><div class="profile-stat-inline">⚡ <strong>${hardcore}</strong> Hardcore</div><div class="profile-stat-inline">📈 <strong>${completion}%</strong> conclusão</div></div>
   <div id="profileFeaturedArea" class="profile-featured-grid"></div>
-  <div class="profile-section"><div class="profile-section-head"><h2>💎 Vitrine de conquistas</h2><span>${points.toLocaleString("pt-BR")} pontos conquistados</span></div>${showcaseHTML?`<div class="profile-showcase-grid">${showcaseHTML}</div>`:`<div class="profile-empty">Suas conquistas mais recentes aparecerão aqui.</div>`}</div>
+  <div class="profile-section"><div class="profile-section-head"><h2>💎 Vitrine de conquistas</h2><span>4 conquistas em destaque</span></div>${showcaseHTML?`<div class="profile-showcase-grid">${showcaseHTML}</div>`:`<div class="profile-empty">Suas conquistas mais recentes aparecerão aqui.</div>`}</div>
   <div class="profile-section"><div class="profile-section-head"><h2>🏆 Jogos perfeitos</h2><span>${perfect} concluído${perfect===1?"":"s"} em 100%</span></div>${perfectHTML?`<div class="profile-perfect-grid">${perfectHTML}</div>`:`<div class="profile-empty">Quando você completar um jogo em 100%, ele ganhará destaque aqui.</div>`}</div>
   <div class="profile-section"><div class="profile-section-head"><h2>🏅 Insígnias RetroHub</h2><span>${rhBadges.filter(b=>b[0]).length} de ${rhBadges.length} desbloqueadas</span></div><div class="profile-retrohub-badges">${rhBadgesHTML}</div><div class="rh-badges-actions"><button class="rh-badges-more" onclick="openRetrohubBadgesPage()">Ver todas as insígnias →</button></div></div>
-  <div class="profile-section"><div class="profile-section-head"><h2>🕘 Atividade recente</h2><span>Últimas conquistas</span></div>${activityHTML?`<div class="profile-activity">${activityHTML}</div>`:`<div class="profile-empty">Nenhuma atividade recente.</div>`}</div>
+
   <div class="profile-section"><div class="profile-section-head"><h2>🎮 Meus jogos</h2><span>Progresso no RetroAchievements</span></div><div class="profile-games">${gamesHTML||'<div class="profile-empty">Nenhum jogo compatível encontrado.</div>'}</div></div>`;
   // Renderiza os destaques somente depois que #profileFeaturedArea existe no DOM.
   // Antes esta função era chamada antes do target.innerHTML, por isso a escolha
@@ -4876,8 +5148,8 @@ function openRetrohubBadgesPage(){
   const app=document.getElementById("app");
   history.pushState({page:"badges"},"",location.pathname+"#badges");
   const earnedCount=badges.filter(b=>b[0]).length;
-  const badgeClass=r=>r==="Lendária"?"legendary":r==="Épica"?"epic":r==="Rara"?"rare":"common";
-  const render=([ok,icon,title,desc,cat,rarity])=>`<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${icon}</div><div><strong>${title}</strong><small>${ok?"✓ Desbloqueada":desc}</small></div></div>`;
+  const badgeClass=r=>r==="Secreta"?"secret":r==="Lendária"?"legendary":r==="Épica"?"epic":r==="Rara"?"rare":"common";
+  const render=([ok,icon,title,desc,cat,rarity,getProgress])=>{const [curRaw,targetRaw]=getProgress?getProgress():[0,1],cur=Math.max(0,Number(curRaw||0)),goal=Math.max(1,Number(targetRaw||1)),pct=Math.max(0,Math.min(100,Math.round(cur/goal*100)));return `<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${icon}</div><div class="rh-badge-info"><strong>${rarity==="Secreta"&&!ok?"???":title}</strong><small>${ok?(rarity==="Secreta"?"✦ Segredo descoberto · "+desc:"✓ Desbloqueada"):(rarity==="Secreta"?"Objetivo secreto":desc)}</small>${!ok?`<div class="rh-progress"><i style="width:${pct}%"></i></div><em>${pct}% concluído</em>`:""}</div></div>`;};
   app.innerHTML=`<section class="badge-page"><div class="badge-page-head"><div><h1>🏅 Insígnias RetroHub</h1><div class="badge-summary">${earnedCount} de ${badges.length} desbloqueadas · desafios exclusivos do seu perfil</div></div><button class="account-secondary" onclick="openFullRetrohubProfile()">← Voltar ao perfil</button></div><div class="badge-page-tabs"><button class="badge-tab active" onclick="filterRetrohubBadges('all',this)">Todas</button><button class="badge-tab" onclick="filterRetrohubBadges('conquistas',this)">Conquistas</button><button class="badge-tab" onclick="filterRetrohubBadges('perfeitos',this)">Jogos perfeitos</button><button class="badge-tab" onclick="filterRetrohubBadges('pontos',this)">Pontos</button><button class="badge-tab" onclick="filterRetrohubBadges('hardcore',this)">Hardcore</button><button class="badge-tab" onclick="filterRetrohubBadges('colecao',this)">Coleção</button><button class="badge-tab" onclick="filterRetrohubBadges('especiais',this)">Especiais</button></div><div class="badge-page-grid">${badges.map(render).join("")}</div></section>`;
   window.scrollTo({top:0,behavior:"smooth"});
 }
