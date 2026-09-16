@@ -1522,6 +1522,13 @@ button,
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 function syncProfileEditorRAHeader(){const h=document.getElementById("profileRAHeader"),i=document.getElementById("profileRAInput");if(h)h.textContent=i&&i.value?`RetroAchievements · ${i.value}`:"RetroAchievements";}
 document.addEventListener("input",e=>{if(e.target&&e.target.id==="profileRAInput")syncProfileEditorRAHeader();});
+
+const RETROHUB_RA_GAME_IDS = Object.freeze({
+  "need-for-speed-most-wanted-black-edition": 7788
+});
+function getRetrohubRAGameId(game){
+  return Number(game?.retroAchievementsGameId || RETROHUB_RA_GAME_IDS[game?.slug] || 0);
+}
 </script>
 
 </head>
@@ -1697,6 +1704,7 @@ const games = [
 
   {
     slug: "need-for-speed-most-wanted-black-edition",
+  retroAchievementsGameId: 7788,
     title: "Need for Speed: Most Wanted - Black Edition",
     platform: "PS2",
     year: "2005",
