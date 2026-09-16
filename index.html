@@ -1610,7 +1610,7 @@ document.addEventListener("input",e=>{if(e.target&&e.target.id==="profileRAInput
       <div class="profile-editor-title"><div><h2>Editar perfil</h2><p>Personalize como seu perfil aparece no RetroHub BR.</p></div></div>
 
       <div class="profile-editor-identity">
-        <img id="profileAvatar" class="profile-avatar" alt="Foto de perfil">
+        <img id="profileAvatar" class="profile-avatar" alt="Foto de perfil" onerror="this.onerror=null;this.src=avatarFallback()">
         <div class="profile-editor-identity-copy">
           <div id="profileUsername" class="profile-username">@usuário</div>
           <div class="profile-editor-ra-line">🎮 <span id="profileRAHeader">RetroAchievements</span></div>
@@ -4139,6 +4139,8 @@ async function loadRetrohubProfile(){
   const { data, error } = await retrohubSupabase
     .from("profiles").select("*").eq("id", retrohubSession.user.id).single();
   if(!error) retrohubProfile = data;
+  const savedHighlights=retrohubSession?.user?.user_metadata?.profile_highlights;
+  if(savedHighlights && typeof savedHighlights === "object") localStorage.setItem("retrohub_profile_highlights",JSON.stringify(savedHighlights));
   refreshRetrohubAccountUI();
 }
 
@@ -4168,8 +4170,10 @@ function refreshRetrohubAccountUI(){
   document.getElementById("profileUsernameInput").value = username;
   document.getElementById("profileRAInput").value = retrohubProfile?.retroachievements_username || "";
   const avatar = retrohubProfile?.avatar_url || avatarFallback();
-  document.getElementById("profileAvatar").src = avatar;
-  mini.innerHTML = `<img src="${avatar}" alt="">`;
+  const profileAvatarEl=document.getElementById("profileAvatar");
+  profileAvatarEl.onerror=()=>{profileAvatarEl.onerror=null;profileAvatarEl.src=avatarFallback();};
+  profileAvatarEl.src = avatar;
+  mini.innerHTML = `<img src="${avatar}" alt="" onerror="this.onerror=null;this.src=avatarFallback()">`;
   const wallpaperPreview=document.getElementById("wallpaperPreview");
   if(wallpaperPreview){
     const wallpaper=retrohubProfile?.wallpaper_url||"";
@@ -4200,9 +4204,22 @@ async function saveRetrohubProfile(event){
   }
   retrohubProfile = data;
   if(ra) localStorage.setItem("retrohub_ra_user", ra); else localStorage.removeItem("retrohub_ra_user");
+
+  // Persiste os destaques também no Supabase Auth para sobreviver a outro navegador/dispositivo.
+  const highlights={
+    game: document.getElementById("favoriteGameSelect")?.value || "",
+    achievement: document.getElementById("favoriteAchievementSelect")?.value || "",
+    badge: document.getElementById("favoriteBadgeSelect")?.value || ""
+  };
+  localStorage.setItem("retrohub_profile_highlights",JSON.stringify(highlights));
+  const {data:authData,error:authError}=await retrohubSupabase.auth.updateUser({data:{profile_highlights:highlights}});
+  if(authError) return setAccountMessage("profileMessage",authError.message);
+  if(authData?.user && retrohubSession) retrohubSession={...retrohubSession,user:authData.user};
+
   setAccountMessage("profileMessage","Perfil salvo com sucesso!", true);
   refreshRetrohubAccountUI();
-  if(location.hash === "#profile" && typeof renderRetrohubProfilePage === "function") renderRetrohubProfilePage();
+  closeAccountPanel();
+  openFullRetrohubProfile();
   const game = typeof getCurrentGame === "function" ? getCurrentGame() : null;
   if(game && ra && typeof loadRetroAchievementsProgress === "function") loadRetroAchievementsProgress(ra, game);
 }
@@ -4213,6 +4230,8 @@ async function uploadRetrohubAvatar(event){
   if(file.size > 5 * 1024 * 1024) return setAccountMessage("profileMessage","A imagem deve ter no máximo 5 MB.");
   if(!["image/jpeg","image/png","image/webp"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG ou WebP.");
 
+  const localPreview=URL.createObjectURL(file);
+  const avatarEl=document.getElementById("profileAvatar"); if(avatarEl) avatarEl.src=localPreview;
   setAccountMessage("profileMessage","Enviando foto...", true);
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
   const path = `${retrohubSession.user.id}/avatar.${ext}`;
@@ -4234,6 +4253,8 @@ async function uploadRetrohubWallpaper(event){
   if(!file||!retrohubSession?.user) return;
   if(file.size>8*1024*1024) return setAccountMessage("profileMessage","O papel de parede deve ter no máximo 8 MB.");
   if(!["image/jpeg","image/png","image/webp"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG ou WebP.");
+  const localPreview=URL.createObjectURL(file);
+  const wp=document.getElementById("wallpaperPreview"); if(wp){wp.style.backgroundImage=`linear-gradient(rgba(8,13,27,.28),rgba(8,13,27,.28)),url("${localPreview}")`;wp.textContent="";}
   setAccountMessage("profileMessage","Enviando papel de parede...",true);
   const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
   const path=`${retrohubSession.user.id}/wallpaper.${ext}`;
@@ -4305,6 +4326,8 @@ function toggleProfileGameAchievements(button){
 }
 
 function getProfileHighlights(){
+  const meta=retrohubSession?.user?.user_metadata?.profile_highlights;
+  if(meta && typeof meta === "object") return meta;
   try{return JSON.parse(localStorage.getItem("retrohub_profile_highlights")||"{}")||{};}catch(e){return {};}
 }
 function updateEditorHighlightPreviews(){
@@ -4317,9 +4340,9 @@ function updateEditorHighlightPreviews(){
   if(bp&&badgeSel){const o=badgeSel.options[badgeSel.selectedIndex];const show=!!badgeSel.value;bp.classList.toggle("active",show);bp.textContent=show?`🏅 ${o?.textContent||"Insígnia selecionada"}`:"";}
 }
 function saveProfileHighlight(type,value){
-  const h=getProfileHighlights(); h[type]=value||""; localStorage.setItem("retrohub_profile_highlights",JSON.stringify(h));
-  const ra=retrohubProfile?.retroachievements_username||localStorage.getItem("retrohub_ra_user")||"";
-  if(ra && !document.getElementById("profileDashboard")?.hidden) loadRetrohubFullProfile(ra);
+  const h={...getProfileHighlights()}; h[type]=value||"";
+  localStorage.setItem("retrohub_profile_highlights",JSON.stringify(h));
+  updateEditorHighlightPreviews();
 }
 function fillProfileHighlightSelects(valid,recent,rhBadges){
   const h=getProfileHighlights();
@@ -4360,7 +4383,7 @@ async function renderRetrohubProfilePage(){
   const wallpaperStyle=wallpaper?` style="--profile-wallpaper:url('${escapeHTML(wallpaper).replace(/'/g,"%27")}')"`:"";
   app.innerHTML=`<section class="profile-page">
     <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}><div class="profile-hero-grid">
-      <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar">
+      <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
       <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1><div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
       <div class="profile-hero-actions"><button class="account-secondary" onclick="openAccountPanel()">✏️ Editar perfil</button></div>
     </div></div>
