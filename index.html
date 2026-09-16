@@ -1704,21 +1704,48 @@ const games = [
 
   {
     slug: "need-for-speed-most-wanted-black-edition",
-  retroAchievementsGameId: 7788,
     title: "Need for Speed: Most Wanted - Black Edition",
-    platform: "PS2",
+    platform: "PlayStation 2",
     year: "2005",
     language: "Português",
     region: "NTSC-U/C",
     size: "2.85 GB",
-    developer: "EA Canada",
+    developer: "EA Black Box",
     publisher: "Electronic Arts",
     genre: "Corrida",
     format: "ISO",
     translation: "Diogo Amaral - RafaSZ e ZANIT",
 
-    cover: "images/need-for-speed-most-wanted-black-edition.jpg",
+    retroAchievements: true,
+    achievements: 131,
+    achievementPoints: 955,
+    supportedHashes: 1,
+    hardcoreSupport: true,
+    recommendedEmulator: "PCSX2",
+    retroAchievementsUrl: "https://retroachievements.org/game/7788",
+    retroAchievementsGameId: 7788,
+    retroHashesUrl: "https://retroachievements.org/game/7788/hashes",
+    achievementBadge: "images/badges/need-for-speed-most-wanted-black-edition.png",
+    achievementBadgeText: "Complete o conjunto de conquistas e torne-se o piloto mais procurado de Rockport para conquistar esta insígnia",
 
+    achievementGuide: {
+      available: true,
+      difficulty: "8/10",
+      estimatedTime: "35–60 horas",
+      playthroughs: "1–2 recomendadas",
+      missables: "32",
+      summary: "Guia em português para as 131 conquistas do conjunto base de Need for Speed: Most Wanted - Black Edition no RetroAchievements. O conjunto soma 955 pontos e mistura progressão da Blacklist, Pink Slips, perseguições, Rap Sheet, Challenge Series, tempos de corrida e desafios especiais.",
+      steps: [
+        { title: "1. Campanha e Blacklist", text: "Avance pela carreira derrotando os 15 membros da Blacklist. Complete todas as corridas e Milestones de cada rival antes de seguir para o próximo." },
+        { title: "2. Pink Slips e conquistas perdíveis", text: "O conjunto possui 32 conquistas perdíveis. Dê atenção especial aos Pink Slips, aos desafios com carros iniciais e às condições que só podem ser feitas antes de determinados pontos da carreira." },
+        { title: "3. Rap Sheet e perseguições", text: "Faça os objetivos de perseguição em sessões planejadas: tempo de perseguição, viaturas envolvidas/danificadas/imobilizadas, bloqueios, faixas de pregos, helicópteros, infrações, custo para o Estado e Bounty." },
+        { title: "4. Challenge Series e tempos", text: "Finalize os 68 eventos da Challenge Series e depois ataque os tempos Blaze's Times. Use carros totalmente preparados quando a conquista permitir e pratique cada rota antes das tentativas sérias." },
+        { title: "5. Limpeza para 100%", text: "Finalize os códigos secretos, atalhos, desafios especiais e a perseguição final sem exploits proibidos. Use o filtro de bloqueadas para localizar o que ainda falta." }
+      ],
+      achievements: []
+    },
+
+    cover: "images/need-for-speed-most-wanted-black-edition.jpg",
     banner: "banners/need-for-speed-most-wanted-black-edition.png",
 
     description: "Need for Speed: Most Wanted - Black Edition é uma edição especial de Most Wanted, com conteúdos extras e foco em corridas de rua e perseguições policiais.",
@@ -2759,7 +2786,7 @@ function setGenre(genre){
   renderFilters();
   renderHome();
 
-  setTimeout(() => { initRetroAchievementsProgress(game); initGameAchievementCards(); }, 0);
+  setTimeout(() => { initRetroAchievementsProgress(game); initGameAchievementCards(); loadNfsAchievementCatalog(game); }, 0);
 
   window.scrollTo({
     top:0,
@@ -3908,6 +3935,82 @@ function translateRetroAchievementDescription(text){
 
   return t;
 }
+
+function buildNfsAchievementGuide(title, description){
+  const d = String(description || "");
+  const low = d.toLowerCase();
+
+  if(low.includes("pink slip"))
+    return "Após derrotar esse membro da Blacklist, escolha os marcadores de recompensa até obter o documento do carro (Pink Slip). Como é perdível, faça backup do save antes das escolhas.";
+  if(low.includes("win all races") && low.includes("milestones"))
+    return "Antes de desafiar o próximo rival, conclua todas as corridas e todos os Milestones disponíveis no capítulo deste membro da Blacklist.";
+  if(low.includes("defeat") && low.includes("performance upgrades") && low.includes("starter car"))
+    return "Use um dos carros iniciais permitidos e respeite exatamente o limite total de upgrades de desempenho indicado. Evite instalar peças extras antes da corrida contra o rival.";
+  if(low.includes("complete") && low.includes("or less"))
+    return "Entre no evento indicado com um carro bem preparado, memorize a rota, use nitro nas retas e Speedbreaker apenas onde ele realmente economizar tempo. Termine dentro do tempo exigido.";
+  if(low.includes("single non-final pursuit"))
+    return "Faça isso em uma única perseguição normal da carreira, antes da perseguição final. Não use atalhos fora do mapa nem o truque da Bus Station; encerre a perseguição somente depois de cumprir o número exigido.";
+  if(low.includes("lifetime") || low.includes("total of"))
+    return "Este objetivo é acumulativo na carreira. Continue realizando perseguições até atingir o total exigido; não é necessário fazer tudo em uma única sessão.";
+  if(low.includes("challenge series"))
+    return "Abra a Challenge Series e conclua o evento indicado respeitando todas as restrições da conquista. Se o requisito proibir Bus Station ou atalhos fora do mapa, faça a prova pela rota normal.";
+  if(low.includes("secret code"))
+    return "Digite o código secreto correspondente na tela indicada pelo jogo e, se houver uma prova liberada pelo código, conclua também o evento para registrar a conquista.";
+  if(low.includes("perfect launch"))
+    return "Em uma corrida que não seja Drag, mantenha o acelerador na faixa ideal durante a largada até o jogo registrar um Perfect Launch.";
+  if(low.includes("most wanted racer"))
+    return "Avance pela carreira até derrotar Razor e assumir a posição nº 1 da Blacklist.";
+  if(low.includes("unlock") && low.includes("borough"))
+    return "Continue a campanha e derrote o membro da Blacklist exigido para liberar automaticamente essa região de Rockport.";
+  if(low.includes("heat level"))
+    return "Avance pela Blacklist até liberar o nível de perseguição exigido e cumpra a condição descrita antes de encerrar a perseguição.";
+  if(low.includes("police helicopter"))
+    return "Entre em uma perseguição de Heat alto, espere o helicóptero aparecer e provoque sua destruição durante a perseguição.";
+  if(low.includes("quick play"))
+    return "No menu de Quick Play, escolha qualquer evento permitido e vença a corrida.";
+  if(low.includes("custom play"))
+    return "Configure a corrida personalizada exatamente como o requisito pede — pista, tráfego, adversários, dificuldade e Catch Up — e vença.";
+  if(low.includes("final pursuit"))
+    return "Chegue à perseguição final e conclua-a legitimamente. Não utilize atalhos fora dos limites do mapa nem o truque da Bus Station.";
+  if(low.includes("lotus elise") && low.includes("300 mph"))
+    return "Use o Lotus Elise em um Photo Ticket Milestone ainda disponível e execute a técnica de velocidade necessária para registrar mais de 300 MPH (483 km/h). Faça isso antes de concluir todos os Photo Tickets.";
+  if(low.includes("junkman"))
+    return "Consiga as peças Junkman necessárias e equipe as 6 peças exigidas, exceto Nitrous, no mesmo carro da carreira.";
+  if(low.includes("impound strikes"))
+    return "Acumule os strikes extras de apreensão no mesmo carro até chegar à quantidade indicada, evitando perder definitivamente o veículo.";
+  if(low.includes("shortcut") || low.includes("barrier") || low.includes("escape the track"))
+    return "Use o ponto específico de saída/atalho descrito pela conquista e siga até o destino indicado. Faça um save antes da tentativa para poder repetir rapidamente.";
+  return "Cumpra o requisito exatamente como descrito. Antes da tentativa, confira carro, modo de jogo, evento, nível de Heat e qualquer restrição de upgrades ou atalhos.";
+}
+
+async function loadNfsAchievementCatalog(game){
+  if(!game || game.slug !== "need-for-speed-most-wanted-black-edition") return;
+  const guide = game.achievementGuide;
+  if(!guide) return;
+
+  const container = document.querySelector(".guide-full.achievements-list-only");
+  if(!container) return;
+
+  container.innerHTML = '<p class="guide-empty">Carregando as 131 conquistas e o guia...</p>';
+
+  try{
+    // A rota do próprio RetroHub já é usada para sincronizar o RetroAchievements.
+    // Aqui ela é usada apenas como catálogo para mostrar as conquistas mesmo antes
+    // do visitante conectar a própria conta.
+    const response = await fetch(`/api/retroachievements?user=${encodeURIComponent("raiquesantos")}&gameId=${encodeURIComponent(game.retroAchievementsGameId)}`, {cache:"no-store"});
+    if(!response.ok) throw new Error("Falha ao consultar o catálogo");
+    const data = await response.json();
+    const achievements = data?.Achievements || {};
+    ensureAllRetroAchievementsInGuide(achievements);
+
+    const count = Object.values(achievements).filter(a=>a && a.Title).length;
+    const summary = document.querySelector(".achievement-summary-compact h2");
+    if(summary) summary.textContent = `${game.title} — Roteiro para 100% • ${count || 131} conquistas`;
+  }catch(err){
+    container.innerHTML = '<p class="guide-empty">Não foi possível carregar o catálogo de conquistas agora. Tente recarregar a página.</p>';
+  }
+}
+
 function ensureAllRetroAchievementsInGuide(achievements){
   const game = getCurrentGame();
   if(!game) return;
@@ -3954,7 +4057,7 @@ function ensureAllRetroAchievementsInGuide(achievements){
         </div>
         <div class="guide-points">${Number(item.Points || 0)} pontos</div>
         ${desc ? `<p><strong>Requisito:</strong> ${escapeHTML(desc)}</p>` : ""}
-        <p><strong>Como conseguir:</strong> ${desc ? `Cumpra o requisito acima exatamente como indicado.` : `Conclua o objetivo oficial desta conquista.`}</p>
+        <p><strong>Como conseguir:</strong> ${escapeHTML(game.slug === "need-for-speed-most-wanted-black-edition" ? buildNfsAchievementGuide(item.Title, item.Description || "") : (desc ? "Cumpra o requisito acima exatamente como indicado." : "Conclua o objetivo oficial desta conquista."))}</p>
       </div>`;
     container.appendChild(card);
   });
