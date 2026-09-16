@@ -1688,6 +1688,19 @@ button,
 .rh-badge[data-badge-category="ps2"]:not(.locked){box-shadow:0 0 0 1px rgba(73,119,255,.22),0 8px 24px rgba(0,0,0,.18)}
 .rh-badge[data-badge-category="ps2"] .rh-badge-icon{background:#13264d}
 
+
+/* ===== RETROHUB — XP + NÍVEIS + TÍTULOS + PRÓXIMA META ===== */
+.profile-progression{margin-top:14px;padding:16px 18px;border:1px solid #293858;border-radius:16px;background:linear-gradient(135deg,#0d1629,#111b32)}
+.profile-progression-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:11px}
+.profile-progression-level{display:flex;align-items:center;gap:10px}.profile-level-orb{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#5d55ff;color:#fff;font-size:20px;font-weight:950;box-shadow:0 0 22px rgba(93,85,255,.25)}
+.profile-progression-level strong{display:block;color:#fff;font-size:14px}.profile-progression-level small{display:block;color:#8ea0c5;font-size:10px;margin-top:2px}.profile-xp-number{font-size:12px;color:#aebde0;font-weight:850}
+.profile-xp-track{height:8px;background:#202b42;border-radius:999px;overflow:hidden}.profile-xp-track i{display:block;height:100%;background:linear-gradient(90deg,#6558ff,#38dba0);border-radius:999px}
+.profile-progression-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.profile-title-box,.profile-next-goal{padding:12px;border:1px solid #263653;border-radius:12px;background:#0a1324}
+.profile-title-box span,.profile-next-goal span{display:block;color:#7083aa;font-size:9px;text-transform:uppercase;letter-spacing:.8px;font-weight:900;margin-bottom:5px}.profile-title-box strong,.profile-next-goal strong{display:block;color:#fff;font-size:13px}
+.profile-title-box small,.profile-next-goal small{display:block;color:#91a3c8;font-size:10px;margin-top:4px}.profile-next-goal-track{height:5px;background:#1d2940;border-radius:999px;overflow:hidden;margin-top:8px}.profile-next-goal-track i{display:block;height:100%;background:linear-gradient(90deg,#6558ff,#38dba0);border-radius:999px}
+.profile-title-select{margin-top:8px;width:100%;background:#111c31;color:#dce5fa;border:1px solid #30415f;border-radius:8px;padding:7px 8px;font-size:10px}
+@media(max-width:700px){.profile-progression-grid{grid-template-columns:1fr}.profile-progression-top{align-items:flex-start}.profile-xp-number{text-align:right}}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -4956,6 +4969,38 @@ async function renderRetrohubProfilePage(){
   if(raUser) await loadRetrohubFullProfile(raUser);
 }
 
+
+function getRetroHubProgression(stats,badges){
+  const unlocked=badges.filter(b=>Boolean(b[0]));
+  const rarityXP={Comum:50,Rara:150,"Épica":400,"Lendária":1000,Secreta:2000};
+  const xp=Math.max(0,Math.round(
+    unlocked.reduce((sum,b)=>sum+(rarityXP[b[5]]||50),0)+
+    Number(stats.earned||0)*10+
+    Number(stats.hardcore||0)*5+
+    Number(stats.perfect||0)*250
+  ));
+  const level=Math.min(100,Math.max(1,Math.floor(Math.sqrt(xp/250))+1));
+  const prevXP=(level-1)*(level-1)*250;
+  const nextXP=level>=100?prevXP:level*level*250;
+  const levelPct=level>=100?100:Math.max(0,Math.min(100,Math.round((xp-prevXP)/(nextXP-prevXP)*100)));
+  const titles=[[1,"Novato Retro"],[5,"Explorador"],[10,"Caçador de Conquistas"],[15,"Veterano Retro"],[20,"Colecionador"],[25,"Perfeccionista"],[30,"Guerreiro Hardcore"],[40,"Mestre Retro"],[50,"Elite RetroHub"],[60,"Mestre do PS2"],[75,"Lenda Retro"],[90,"Guardião dos Clássicos"],[100,"Lenda do RetroHub"]];
+  const unlockedTitles=titles.filter(t=>level>=t[0]);
+  const saved=localStorage.getItem("retrohub_profile_title");
+  const selected=unlockedTitles.some(t=>t[1]===saved)?saved:unlockedTitles[unlockedTitles.length-1][1];
+  let nextGoal=null;
+  badges.forEach(b=>{
+    if(b[0]||typeof b[6]!=="function")return;
+    const p=b[6](),current=Math.max(0,Number(p?.[0]||0)),target=Math.max(1,Number(p?.[1]||1));
+    const pct=Math.max(0,Math.min(100,Math.round(current/target*100)));
+    if(!nextGoal||pct>nextGoal.pct)nextGoal={name:b[2],desc:b[3],rarity:b[5],pct};
+  });
+  return {xp,level,nextXP,levelPct,unlockedTitles,selected,nextGoal,unlockedCount:unlocked.length};
+}
+function saveRetroHubProfileTitle(value){
+  localStorage.setItem("retrohub_profile_title",value);
+  document.querySelectorAll("[data-profile-selected-title]").forEach(el=>el.textContent=value);
+}
+
 async function loadRetrohubFullProfile(raUser){
   const target=document.getElementById("profileDashboard");
   if(!target) return;
@@ -5111,6 +5156,18 @@ async function loadRetrohubFullProfile(raUser){
     [valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length>=50 && valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length>=25,"🏆","Platina PS2 RetroHub","Jogue 50 jogos de PS2 e complete 25 em 100%","ps2","Lendária",()=>[Math.min(valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||""))).length/50,valid.filter(x=>/playstation 2|ps2/i.test(String(x.game?.platform||"")) && Number(x.data?.NumAchievements||x.game?.achievements||0)>0 && Number(x.data?.NumAwardedToUser||0)>=Number(x.data?.NumAchievements||x.game?.achievements||0)).length/25)*100,100]],
 
     ];
+  const progression=getRetroHubProgression({earned,points,hardcore,perfect,total,games:valid.length},rhBadges);
+  const nextGoal=progression.nextGoal;
+  const titleOptions=progression.unlockedTitles.map(t=>`<option value="${escapeHTML(t[1])}" ${t[1]===progression.selected?"selected":""}>Nv. ${t[0]} · ${escapeHTML(t[1])}</option>`).join("");
+  const progressionHTML=`<div class="profile-progression">
+    <div class="profile-progression-top"><div class="profile-progression-level"><div class="profile-level-orb">${progression.level}</div><div><strong>Nível ${progression.level}</strong><small><span data-profile-selected-title>${escapeHTML(progression.selected)}</span> · ${progression.unlockedCount}/100 insígnias</small></div></div><div class="profile-xp-number">${progression.xp.toLocaleString("pt-BR")} XP${progression.level<100?` · próximo nível: ${progression.nextXP.toLocaleString("pt-BR")} XP`:" · Nível máximo"}</div></div>
+    <div class="profile-xp-track"><i style="width:${progression.levelPct}%"></i></div>
+    <div class="profile-progression-grid">
+      <div class="profile-title-box"><span>🏷️ Título do perfil</span><strong data-profile-selected-title>${escapeHTML(progression.selected)}</strong><small>Novos títulos são liberados conforme seu nível aumenta.</small><select class="profile-title-select" onchange="saveRetroHubProfileTitle(this.value)">${titleOptions}</select></div>
+      <div class="profile-next-goal"><span>🎯 Próxima meta</span><strong>${nextGoal?escapeHTML(nextGoal.name):"Todas as metas concluídas"}</strong><small>${nextGoal?`${escapeHTML(nextGoal.desc)} · ${nextGoal.pct}% concluído`:"Você desbloqueou todas as insígnias disponíveis."}</small>${nextGoal?`<div class="profile-next-goal-track"><i style="width:${nextGoal.pct}%"></i></div>`:""}</div>
+    </div>
+  </div>`;
+
   window.retrohubBadgeState=rhBadges;
   const badgeClass=r=>r==="Secreta"?"secret":r==="Lendária"?"legendary":r==="Épica"?"epic":r==="Rara"?"rare":"common";
   const renderRhBadge=([ok,icon,title,desc,cat,rarity,getProgress])=>{const [curRaw,targetRaw]=getProgress?getProgress():[0,1],cur=Math.max(0,Number(curRaw||0)),goal=Math.max(1,Number(targetRaw||1)),pct=Math.max(0,Math.min(100,Math.round(cur/goal*100)));return `<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${icon}</div><div class="rh-badge-info"><strong>${rarity==="Secreta"&&!ok?"???":title}</strong><small>${ok?(rarity==="Secreta"?"✦ Segredo descoberto · "+desc:"✓ Desbloqueada"):(rarity==="Secreta"?"Objetivo secreto":desc)}</small>${!ok?`<div class="rh-progress"><i style="width:${pct}%"></i></div><em>${pct}% concluído</em>`:""}</div></div>`;};
@@ -5128,6 +5185,7 @@ async function loadRetrohubFullProfile(raUser){
   }).join("");
 
   target.innerHTML=`
+  ${progressionHTML}
   <div class="profile-stats-strip"><div class="profile-stat-inline">🎮 <strong>${valid.length}</strong> jogos</div><div class="profile-stat-inline">🏆 <strong>${earned}</strong> conquistas</div><div class="profile-stat-inline">💯 <strong>${perfect}</strong> perfeitos</div><div class="profile-stat-inline">💎 <strong>${points.toLocaleString("pt-BR")}</strong> pontos</div><div class="profile-stat-inline">⚡ <strong>${hardcore}</strong> Hardcore</div><div class="profile-stat-inline">📈 <strong>${completion}%</strong> conclusão</div></div>
   <div id="profileFeaturedArea" class="profile-featured-grid"></div>
   <div class="profile-section"><div class="profile-section-head"><h2>💎 Vitrine de conquistas</h2><span>4 conquistas em destaque</span></div>${showcaseHTML?`<div class="profile-showcase-grid">${showcaseHTML}</div>`:`<div class="profile-empty">Suas conquistas mais recentes aparecerão aqui.</div>`}</div>
