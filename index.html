@@ -1956,6 +1956,36 @@ const games = [
   genre: "Corrida",
   format: "ISO",
     translation: "Não informado",
+    retroAchievements: true,
+    achievements: 126,
+    achievementPoints: 1081,
+    supportedHashes: 1,
+    hardcoreSupport: true,
+    recommendedEmulator: "PCSX2",
+    retroAchievementsUrl: "https://retroachievements.org/game/3113",
+    retroAchievementsGameId: 3113,
+    retroHashesUrl: "https://retroachievements.org/game/3113/hashes",
+    achievementBadge: "images/badges/midnight-club-3-dub-edition-remix.png",
+    achievementBadgeText: "Complete os desafios de corrida e domine as cidades para conquistar esta insígnia",
+
+    achievementGuide: {
+      available: true,
+      difficulty: "7/10",
+      estimatedTime: "30–45 horas",
+      playthroughs: "1 campanha + limpeza",
+      missables: "1",
+      summary: "Roteiro para as 126 conquistas do conjunto base de Midnight Club 3: DUB Edition Remix no RetroAchievements. O conjunto soma 1.081 pontos e acompanha a carreira, torneios, clubes, colecionáveis, técnicas de direção e desafios especiais.",
+      steps: [
+        { title: "1. Carreira e cidades", text: "Avance pela carreira vencendo os eventos de San Diego, Atlanta, Detroit e o conteúdo Remix. Faça os eventos e torneios conforme forem liberados." },
+        { title: "2. Torneios, clubes e veículos", text: "Conclua torneios e desafios de clubes para liberar veículos e personalizações ligados às conquistas." },
+        { title: "3. Rockstar Logos e desafios", text: "Colete os Rockstar Logos e complete objetivos de direção, velocidade, Zone, slipstream, saltos e patrimônio." },
+        { title: "4. Conquista perdível", text: "Existe 1 conquista marcada como perdível no conjunto. Confira o requisito antes de avançar demais na carreira." },
+        { title: "5. Limpeza para 100%", text: "Depois da campanha, use os filtros de conquistas bloqueadas para finalizar eventos e desafios restantes." }
+      ],
+      achievements: []
+    },
+
+
 
   cover: "images/midnight-club-3-dub-edition-remix.jpg",
 
@@ -4120,6 +4150,23 @@ function translateRetroAchievementDescription(text){
   return t;
 }
 
+
+function buildMidnightClub3AchievementGuide(title,description){
+  const d=String(description||""),low=d.toLowerCase();
+  if(low.includes("rites of passage")) return "Vença a corrida Rites of Passage em San Diego durante o modo Career.";
+  if(low.includes("defeat")&&low.includes("san diego")) return "Avance pelos eventos de San Diego até enfrentar o rival indicado e vença a corrida para liberar a recompensa descrita.";
+  if(low.includes("tournament")) return "Vença o torneio indicado no modo Career. Complete todas as provas necessárias até receber a recompensa.";
+  if(low.includes("rockstar logos")) return "Explore as cidades no modo Career e colete a quantidade de Rockstar Logos exigida pelo requisito.";
+  if(low.includes("250 mph")) return "Use um veículo de alto desempenho no modo Career, prepare uma reta longa e ultrapasse 250 mph.";
+  if(low.includes("zone")&&low.includes("six")) return "Durante uma corrida no Career, use a habilidade Zone seis vezes e ainda termine em primeiro lugar.";
+  if(low.includes("airborne")) return "Procure um salto grande e permaneça no ar por pelo menos 4 segundos no modo Career.";
+  if(low.includes("slip stream")) return "Fique no vácuo de um adversário durante a corrida até carregar o turbo de slipstream e execute-o.";
+  if(low.includes("assets")) return "Continue vencendo eventos, comprando/ganhando veículos e acumulando patrimônio até atingir o valor exigido.";
+  if(low.includes("autocross")&&low.includes("first lap")) return "Faça esta conquista durante o modo Career: complete uma prova Autocross já na primeira volta. Ela é marcada como perdível.";
+  if(low.includes("career")) return "Cumpra exatamente a condição descrita durante o modo Career.";
+  return "Cumpra o requisito oficial acima no modo indicado. Use o filtro de bloqueadas para acompanhar o que ainda falta.";
+}
+
 function buildNfsAchievementGuide(title, description){
   const d = String(description || "");
   const low = d.toLowerCase();
@@ -4241,7 +4288,7 @@ function ensureAllRetroAchievementsInGuide(achievements){
         </div>
         <div class="guide-points">${Number(item.Points || 0)} pontos</div>
         ${desc ? `<p><strong>Requisito:</strong> ${escapeHTML(desc)}</p>` : ""}
-        <p><strong>Como conseguir:</strong> ${escapeHTML(game.slug === "need-for-speed-most-wanted-black-edition" ? buildNfsAchievementGuide(item.Title, item.Description || "") : (desc ? "Cumpra o requisito acima exatamente como indicado." : "Conclua o objetivo oficial desta conquista."))}</p>
+        <p><strong>Como conseguir:</strong> ${escapeHTML(game.slug === "midnight-club-3-dub-edition-remix" ? buildMidnightClub3AchievementGuide(item.Title, item.Description || "") : game.slug === "need-for-speed-most-wanted-black-edition" ? buildNfsAchievementGuide(item.Title, item.Description || "") : (desc ? "Cumpra o requisito acima exatamente como indicado." : "Conclua o objetivo oficial desta conquista."))}</p>
       </div>`;
     container.appendChild(card);
   });
