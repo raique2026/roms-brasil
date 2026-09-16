@@ -1364,7 +1364,7 @@ button,
 .account-primary{background:#6b5cff;color:#fff}.account-secondary{background:#202c49;color:#fff}.account-danger{background:#3a1c29;color:#ff9bb5}
 .account-message{min-height:20px;margin-top:10px;font-size:13px;color:#9daccc}
 .profile-head{display:flex;align-items:center;gap:16px;margin:12px 0 18px}
-.profile-avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#202c49;border:2px solid #425174}
+.profile-avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid #425174;color:transparent}.profile-avatar.avatar-empty{background:#fff;object-fit:contain}
 .profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .profile-grid{display:grid;gap:12px}.profile-grid .account-form{padding-top:4px}
 .profile-username{font-size:22px;font-weight:900}
@@ -1613,7 +1613,7 @@ document.addEventListener("input",e=>{if(e.target&&e.target.id==="profileRAInput
       <div class="profile-editor-title"><div><h2>Editar perfil</h2><p>Personalize como seu perfil aparece no RetroHub BR.</p></div></div>
 
       <div class="profile-editor-identity">
-        <img id="profileAvatar" class="profile-avatar" alt="Foto de perfil" onerror="this.onerror=null;this.src=avatarFallback()">
+        <img id="profileAvatar" class="profile-avatar avatar-empty" alt="" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="" onerror="this.onerror=null;this.removeAttribute('src');this.classList.add('avatar-empty')">
         <div class="profile-editor-identity-copy">
           <div id="profileUsername" class="profile-username">@usuário</div>
           <div class="profile-editor-ra-line">🎮 <span id="profileRAHeader">RetroAchievements</span></div>
@@ -4108,26 +4108,32 @@ async function retrohubLogin(event){
   event.preventDefault();
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
+  const submit = event.submitter || event.currentTarget?.querySelector('button[type="submit"]');
+  if(submit) submit.disabled = true;
   setAccountMessage("authMessage","Entrando...", true);
 
-  const { data, error } = await retrohubSupabase.auth.signInWithPassword({ email, password });
-  if(error){
-    return setAccountMessage("authMessage", "Não foi possível entrar. Verifique o e-mail, a senha e se o e-mail foi confirmado.");
+  try {
+    const { data, error } = await retrohubSupabase.auth.signInWithPassword({ email, password });
+    if(error) throw error;
+
+    retrohubSession = data?.session || null;
+    if(!retrohubSession?.user) throw new Error("A sessão não foi criada.");
+
+    // Carrega o perfil uma única vez antes de navegar.
+    await loadRetrohubProfile();
+
+    // O login terminou: o modal nunca deve continuar cobrindo a página.
+    closeAccountPanel();
+    await openFullRetrohubProfile({ replaceHistory: true });
+  } catch(error) {
+    console.error("Erro no login RetroHub:", error);
+    setAccountMessage(
+      "authMessage",
+      "Não foi possível entrar. Verifique o e-mail, a senha e se o e-mail foi confirmado."
+    );
+  } finally {
+    if(submit) submit.disabled = false;
   }
-
-  // Atualiza a sessão imediatamente, sem depender apenas do evento assíncrono do Supabase.
-  retrohubSession = data.session;
-  if(!retrohubSession?.user){
-    return setAccountMessage("authMessage", "Login realizado, mas a sessão não foi criada. Tente novamente.");
-  }
-
-  await loadRetrohubProfile();
-  refreshRetrohubAccountUI();
-  setAccountMessage("authMessage","Login realizado!", true);
-
-  // Fecha a janela de autenticação e leva direto para o perfil completo.
-  closeAccountPanel();
-  openFullRetrohubProfile();
 }
 
 async function retrohubLogout(){
@@ -4148,7 +4154,7 @@ async function loadRetrohubProfile(){
 
 function avatarFallback(){
   return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><rect width="100%" height="100%" fill="#202c49"/><text x="50%" y="56%" text-anchor="middle" font-size="82">👤</text></svg>'
+    '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><rect width="100%" height="100%" fill="#ffffff"/></svg>'
   );
 }
 
@@ -4160,21 +4166,34 @@ function refreshRetrohubAccountUI(){
   const mini = document.getElementById("accountAvatarMini");
 
   if(!logged){
-    btnText.textContent = "Entrar";
-    mini.innerHTML = "👤";
+    if(btnText) btnText.textContent = "Entrar";
+    if(mini) mini.innerHTML = "👤";
     return;
   }
 
   const username = retrohubProfile?.username || retrohubSession.user.user_metadata?.username || "Perfil";
-  btnText.textContent = "Perfil";
-  document.getElementById("profileUsername").textContent = "@" + username;
-  document.getElementById("profileEmail").textContent = retrohubSession.user.email || "";
-  document.getElementById("profileRAInput").value = retrohubProfile?.retroachievements_username || "";
-  const avatar = retrohubProfile?.avatar_url || avatarFallback();
+  if(btnText) btnText.textContent = "Perfil";
+  const profileUsernameEl = document.getElementById("profileUsername");
+  if(profileUsernameEl) profileUsernameEl.textContent = "@" + username;
+  // profileEmail foi removido do novo editor. Nunca tente escrever em um elemento inexistente.
+  const profileEmailEl = document.getElementById("profileEmail");
+  if(profileEmailEl) profileEmailEl.textContent = retrohubSession.user.email || "";
+  const profileRAInputEl = document.getElementById("profileRAInput");
+  if(profileRAInputEl) profileRAInputEl.value = retrohubProfile?.retroachievements_username || "";
+  const profileRAHeaderEl = document.getElementById("profileRAHeader");
+  if(profileRAHeaderEl) profileRAHeaderEl.textContent =
+    retrohubProfile?.retroachievements_username || "RetroAchievements";
+  const avatar = retrohubProfile?.avatar_url || "";
   const profileAvatarEl=document.getElementById("profileAvatar");
-  profileAvatarEl.onerror=()=>{profileAvatarEl.onerror=null;profileAvatarEl.src=avatarFallback();};
-  profileAvatarEl.src = avatar;
-  mini.innerHTML = `<img src="${avatar}" alt="" onerror="this.onerror=null;this.src=avatarFallback()">`;
+  if(avatar){
+    profileAvatarEl.classList.remove("avatar-empty");
+    profileAvatarEl.onerror=()=>{profileAvatarEl.onerror=null;profileAvatarEl.removeAttribute("src");profileAvatarEl.classList.add("avatar-empty");};
+    profileAvatarEl.src = avatar;
+  }else{
+    profileAvatarEl.removeAttribute("src");
+    profileAvatarEl.classList.add("avatar-empty");
+  }
+  if(mini) mini.innerHTML = avatar ? `<img src="${avatar}" alt="" onerror="this.remove()">` : "👤";
   const wallpaperPreview=document.getElementById("wallpaperPreview");
   if(wallpaperPreview){
     const wallpaper=retrohubProfile?.wallpaper_url||"";
@@ -4189,51 +4208,70 @@ function refreshRetrohubAccountUI(){
 
 async function saveRetrohubProfile(event){
   event.preventDefault();
-  if(!retrohubSession?.user) return;
-  // O nome público do RetroHub vem diretamente da conta e não é editado nesta tela.
-  const username = retrohubProfile?.username || retrohubSession.user.user_metadata?.username || "Perfil";
-  const ra = document.getElementById("profileRAInput").value.trim();
-  if(ra && !/^[A-Za-z0-9_-]{1,50}$/.test(ra)) return setAccountMessage("profileMessage","Usuário do RetroAchievements inválido.");
-
-  const { data, error } = await retrohubSupabase.from("profiles")
-    .update({retroachievements_username: ra || null})
-    .eq("id", retrohubSession.user.id).select().single();
-
-  if(error){
-    return setAccountMessage("profileMessage", error.message);
+  if(!retrohubSession?.user){
+    closeAccountPanel();
+    openAccountPanel();
+    return;
   }
-  retrohubProfile = data;
-  if(ra) localStorage.setItem("retrohub_ra_user", ra); else localStorage.removeItem("retrohub_ra_user");
 
-  // Persiste os destaques também no Supabase Auth para sobreviver a outro navegador/dispositivo.
-  const highlights={
+  const submit = event.submitter || event.currentTarget?.querySelector('button[type="submit"]');
+  if(submit) submit.disabled = true;
+
+  const raInput = document.getElementById("profileRAInput");
+  const ra = (raInput?.value || "").trim();
+  if(ra && !/^[A-Za-z0-9_-]{1,50}$/.test(ra)){
+    if(submit) submit.disabled = false;
+    return setAccountMessage("profileMessage","Usuário do RetroAchievements inválido.");
+  }
+
+  const highlights = {
     game: document.getElementById("favoriteGameSelect")?.value || "",
     achievement: document.getElementById("favoriteAchievementSelect")?.value || "",
     badge: document.getElementById("favoriteBadgeSelect")?.value || ""
   };
-  localStorage.setItem("retrohub_profile_highlights",JSON.stringify(highlights));
 
-  // Atualiza a interface primeiro: Salvar deve sempre fechar o editor e voltar ao perfil.
-  setAccountMessage("profileMessage","Perfil salvo com sucesso!", true);
-  refreshRetrohubAccountUI();
-  closeAccountPanel();
-  openFullRetrohubProfile();
-
-  // Salva os destaques na conta Supabase sem bloquear a navegação do usuário.
-  // Se essa etapa falhar, a escolha continua preservada localmente neste navegador.
   try {
-    const {data:authData,error:authError}=await retrohubSupabase.auth.updateUser({data:{profile_highlights:highlights}});
-    if(!authError && authData?.user && retrohubSession){
-      retrohubSession={...retrohubSession,user:authData.user};
-      // Renderiza novamente para refletir imediatamente a escolha confirmada no Supabase.
-      if(location.hash==="#profile") renderRetrohubProfilePage();
-    }
-  } catch(e) {
-    console.warn("Não foi possível sincronizar os destaques com o Supabase agora.", e);
-  }
+    setAccountMessage("profileMessage","Salvando...", true);
 
-  const game = typeof getCurrentGame === "function" ? getCurrentGame() : null;
-  if(game && ra && typeof loadRetroAchievementsProgress === "function") loadRetroAchievementsProgress(ra, game);
+    const { data, error } = await retrohubSupabase
+      .from("profiles")
+      .update({ retroachievements_username: ra || null })
+      .eq("id", retrohubSession.user.id)
+      .select()
+      .single();
+
+    if(error) throw error;
+
+    retrohubProfile = data;
+    if(ra) localStorage.setItem("retrohub_ra_user", ra);
+    else localStorage.removeItem("retrohub_ra_user");
+    localStorage.setItem("retrohub_profile_highlights", JSON.stringify(highlights));
+
+    // Primeiro sai do editor e mostra o perfil. O usuário não precisa apertar X.
+    closeAccountPanel();
+    await openFullRetrohubProfile({ replaceHistory: true });
+
+    // Depois sincroniza as preferências na conta. Isso não bloqueia a navegação.
+    try {
+      const { data: authData, error: authError } =
+        await retrohubSupabase.auth.updateUser({ data: { profile_highlights: highlights } });
+      if(!authError && authData?.user && retrohubSession){
+        retrohubSession = { ...retrohubSession, user: authData.user };
+      }
+    } catch(syncError) {
+      console.warn("Preferências mantidas localmente; sincronização remota falhou:", syncError);
+    }
+
+    // Re-render final para refletir imediatamente jogo/conquista/insígnia escolhidos.
+    if(location.hash === "#profile") await renderRetrohubProfilePage();
+  } catch(error) {
+    console.error("Erro ao salvar perfil RetroHub:", error);
+    setAccountMessage("profileMessage", error?.message || "Não foi possível salvar o perfil.");
+    // Em caso de erro real, mantenha o editor aberto para o usuário ver a mensagem.
+    document.getElementById("accountModal").hidden = false;
+  } finally {
+    if(submit) submit.disabled = false;
+  }
 }
 
 async function uploadRetrohubAvatar(event){
@@ -4243,7 +4281,7 @@ async function uploadRetrohubAvatar(event){
   if(!["image/jpeg","image/png","image/webp"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG ou WebP.");
 
   const localPreview=URL.createObjectURL(file);
-  const avatarEl=document.getElementById("profileAvatar"); if(avatarEl) avatarEl.src=localPreview;
+  const avatarEl=document.getElementById("profileAvatar"); if(avatarEl){ avatarEl.classList.remove("avatar-empty"); avatarEl.src=localPreview; }
   setAccountMessage("profileMessage","Enviando foto...", true);
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
   const path = `${retrohubSession.user.id}/avatar.${ext}`;
@@ -4292,29 +4330,68 @@ async function removeRetrohubWallpaper(){
   if(location.hash==="#profile") renderRetrohubProfilePage();
 }
 
-retrohubSupabase.auth.onAuthStateChange(async (_event, session) => {
+retrohubSupabase.auth.onAuthStateChange((_event, session) => {
+  // O callback do Auth deve ser rápido. Fazer consultas/await aqui pode disputar
+  // com signIn/updateUser e deixar a interface presa no modal.
   retrohubSession = session;
-  if(session?.user) await loadRetrohubProfile();
-  else { retrohubProfile = null; refreshRetrohubAccountUI(); }
+  if(!session?.user){
+    retrohubProfile = null;
+    refreshRetrohubAccountUI();
+    return;
+  }
+  setTimeout(async () => {
+    try {
+      await loadRetrohubProfile();
+      // Se o usuário já estiver na rota de perfil, mantenha a tela sincronizada.
+      if(location.hash === "#profile") await renderRetrohubProfilePage();
+    } catch (err) {
+      console.error("Falha ao atualizar perfil após mudança de autenticação:", err);
+      refreshRetrohubAccountUI();
+    }
+  }, 0);
 });
 
 (async function initRetrohubAuth(){
-  const { data } = await retrohubSupabase.auth.getSession();
-  retrohubSession = data.session;
-  if(retrohubSession?.user) await loadRetrohubProfile();
-  else refreshRetrohubAccountUI();
-  if(location.hash === "#profile") renderRetrohubProfilePage();
+  try {
+    const { data, error } = await retrohubSupabase.auth.getSession();
+    if(error) throw error;
+    retrohubSession = data?.session || null;
+    if(retrohubSession?.user) await loadRetrohubProfile();
+    else refreshRetrohubAccountUI();
+    if(location.hash === "#profile") await renderRetrohubProfilePage();
+  } catch(error) {
+    console.error("Erro ao restaurar sessão RetroHub:", error);
+    retrohubSession = null;
+    retrohubProfile = null;
+    refreshRetrohubAccountUI();
+  }
 })();
 
 
 
 /* ===== PERFIL COMPLETO RETROHUB ===== */
-function openFullRetrohubProfile(){
-  if(!retrohubSession?.user) return;
+async function openFullRetrohubProfile(options = {}){
+  if(!retrohubSession?.user){
+    openAccountPanel();
+    return false;
+  }
+
   closeAccountPanel();
-  history.pushState({page:"profile"},"",location.pathname+"#profile");
-  renderRetrohubProfilePage();
-  window.scrollTo({top:0,behavior:"smooth"});
+
+  const targetUrl = location.pathname + location.search + "#profile";
+  if(location.hash !== "#profile"){
+    if(options.replaceHistory){
+      history.replaceState({page:"profile"},"",targetUrl);
+    }else{
+      history.pushState({page:"profile"},"",targetUrl);
+    }
+  }else if(options.replaceHistory){
+    history.replaceState({page:"profile"},"",targetUrl);
+  }
+
+  await renderRetrohubProfilePage();
+  window.scrollTo({top:0,behavior:"auto"});
+  return true;
 }
 
 function profileDateValue(item){
