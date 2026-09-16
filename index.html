@@ -1516,6 +1516,7 @@ button,
 
 .profile-editor-fields.profile-editor-fields-single{grid-template-columns:1fr}
 .profile-editor-fields.profile-editor-fields-single label{max-width:none}
+.guide-badge-placeholder{width:64px;height:64px;border-radius:8px;background:#111a30;border:1px solid #27385e}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -2053,28 +2054,7 @@ const games = [
       { title: "3. Dragon Warrior", text: "Depois de conhecer as fases, faça a campanha e os desafios exigidos na dificuldade Dragon Warrior. Use o conhecimento adquirido na primeira passagem para reduzir tentativas." },
       { title: "4. Desafios especiais e perdíveis", text: "Deixe os desafios mais exigentes, incluindo tarefas sem sofrer dano e condições específicas, para quando dominar cada fase. O conjunto possui 10 conquistas marcadas como perdíveis." }
     ],
-    achievements: [
-      { name: "A Dream Beyond Telling", officialName: "A Dream Beyond Telling", points: 5, description: "Conclua Po's Dream na dificuldade Master ou superior.", guide: "Complete a fase Po's Dream jogando em Master ou dificuldade superior." },
-      { name: "A Legacy's Beginning", officialName: "A Legacy's Beginning", points: 5, description: "Conclua as duas partes de Tournament of the Dragon Warrior na dificuldade Master ou superior.", guide: "Finalize as duas partes do torneio mantendo a dificuldade Master ou superior." },
-      { name: "Basic Kung Fu Training", officialName: "Basic Kung Fu Training", points: 5, description: "Conclua Po's First Day na dificuldade Master ou superior.", guide: "Finalize Po's First Day em Master ou superior." },
-      { name: "Preparations!", officialName: "Preparations!", points: 5, description: "Conclua Protect the Palace na dificuldade Master ou superior.", guide: "Finalize Protect the Palace em Master ou superior." },
-      { name: "Lakeside Kung Fu", officialName: "Lakeside Kung Fu", points: 5, description: "Conclua Lake of Tears na dificuldade Master ou superior.", guide: "Finalize Lake of Tears em Master ou superior." },
-      { name: "A New Temple", officialName: "A New Temple", points: 5, description: "Conclua Wudang Temple na dificuldade Master ou superior.", guide: "Finalize Wudang Temple em Master ou superior." },
-      { name: "Dangerous Waters", officialName: "Dangerous Waters", points: 5, description: "Conclua Treacherous Waters na dificuldade Master ou superior.", guide: "Finalize Treacherous Waters em Master ou superior." },
-      { name: "Panda Heist", officialName: "Panda Heist", points: 5, description: "Conclua Wudang Rescue na dificuldade Master ou superior.", guide: "Finalize Wudang Rescue em Master ou superior." },
-      { name: "Po's Darkness", officialName: "Po's Darkness", points: 5, description: "Conclua Howling Moon na dificuldade Master ou superior.", guide: "Finalize Howling Moon em Master ou superior." },
-      { name: "Prince of Po", officialName: "Prince of Po", points: 5, description: "Conclua Secret of the Sands na dificuldade Master ou superior.", guide: "Finalize Secret of the Sands em Master ou superior." },
-      { name: "Delaying Evil", officialName: "Delaying Evil", points: 5, description: "Conclua The Palace na dificuldade Master ou superior.", guide: "Finalize The Palace em Master ou superior." },
-      { name: "Fireman Po", officialName: "Fireman Po", points: 5, description: "Conclua The Warrior's Destiny (Parte 1) na dificuldade Master ou superior.", guide: "Finalize a primeira parte de The Warrior's Destiny em Master ou superior." },
-      { name: "Archer Annihiliation", officialName: "Archer Annihiliation", points: 5, description: "Conclua The Warrior's Destiny (Parte 2) na dificuldade Master ou superior.", guide: "Finalize a segunda parte de The Warrior's Destiny em Master ou superior." },
-      { name: "Kung Fu Mastery", officialName: "Kung Fu Mastery", points: 25, description: "Conclua The Final Battle na dificuldade Master ou superior.", guide: "Complete a batalha final contra Tai Lung em Master ou dificuldade superior." },
-      { name: "Dream Kung Fu Warrior", officialName: "Dream Kung Fu Warrior", points: 10, description: "Conclua Po's Dream na dificuldade Dragon Warrior.", guide: "Refaça Po's Dream com Dragon Warrior selecionado e conclua a fase." },
-      { name: "The Furious Five Would Be Proud!", officialName: "The Furious Five Would Be Proud!", points: 10, description: "Conclua as duas partes de Tournament of the Dragon Warrior na dificuldade Dragon Warrior.", guide: "Finalize as duas partes do torneio na dificuldade Dragon Warrior." },
-      { name: "Advanced Kung Fu Training", officialName: "Advanced Kung Fu Training", points: 5, description: "Conclua Po's First Day na dificuldade Dragon Warrior.", guide: "Finalize Po's First Day na dificuldade Dragon Warrior." },
-      { name: "Extra Preparation: Dragon Style!", officialName: "Extra Preparation: Dragon Style!", points: 10, description: "Conclua Protect the Palace na dificuldade Dragon Warrior.", guide: "Finalize Protect the Palace na dificuldade Dragon Warrior." },
-      { name: "Tears Swept Away", officialName: "Tears Swept Away", points: 10, description: "Conclua Lake of Tears na dificuldade Dragon Warrior.", guide: "Finalize Lake of Tears na dificuldade Dragon Warrior." },
-      { name: "Wudang Mastery", officialName: "Wudang Mastery", points: 10, description: "Conclua Wudang Temple na dificuldade Dragon Warrior.", guide: "Finalize Wudang Temple na dificuldade Dragon Warrior." }
-    ]
+    achievements: []
   },
 
   cover: "images/kung-fu-panda.jpg",
@@ -2195,6 +2175,31 @@ const games = [
 },
   
 ];
+/* ===== RETROHUB: PADRÃO METROID PARA TODOS OS JOGOS ===== */
+function ensureMetroidStyleForAllGames(){
+  if(!Array.isArray(games)) return;
+  games.forEach(game => {
+    if(!game.achievementGuide){
+      game.achievementGuide = {
+        available:true,
+        difficulty:"—",
+        estimatedTime:"—",
+        playthroughs:"—",
+        missables:"—",
+        summary:"Conquistas, progresso, filtros e status sincronizados com o RetroAchievements.",
+        steps:[],
+        achievements:[]
+      };
+    }else{
+      game.achievementGuide.available = true;
+      if(!Array.isArray(game.achievementGuide.steps)) game.achievementGuide.steps=[];
+      if(!Array.isArray(game.achievementGuide.achievements)) game.achievementGuide.achievements=[];
+    }
+  });
+}
+
+ensureMetroidStyleForAllGames();
+
 
 /* =========================================================
    FIM DOS JOGOS
@@ -3795,7 +3800,7 @@ async function loadRetroAchievementsProgress(user, game){
   }
 }
 
-function translateKungFuPandaAchievementDescription(text){
+function translateRetroAchievementDescription(text){
   let t = String(text || "").trim();
   if(!t) return "";
   const replacements = [
@@ -3823,50 +3828,58 @@ function translateKungFuPandaAchievementDescription(text){
 
 function ensureAllRetroAchievementsInGuide(achievements){
   const game = getCurrentGame();
-  if(!game || game.slug !== "kung-fu-panda") return;
+  if(!game) return;
+
   const container = document.querySelector(".guide-full.achievements-list-only");
   if(!container) return;
 
-  const existing = new Set(Array.from(container.querySelectorAll(".guide-achievement[data-ra-name]"))
-    .map(card => normalizeRAName(card.dataset.raName)));
-
-  const items = Object.values(achievements || {}).filter(item => item && item.Title)
+  const items = Object.values(achievements || {})
+    .filter(item => item && item.Title)
     .sort((a,b) => Number(a.DisplayOrder ?? a.ID ?? 0) - Number(b.DisplayOrder ?? b.ID ?? 0));
 
+  if(!items.length) return;
+
+  // Fonte única para TODOS os jogos: RetroAchievements. Não mistura cards manuais com cards sincronizados.
+  container.replaceChildren();
+
   items.forEach(item => {
-    const key = normalizeRAName(item.Title);
-    if(existing.has(key)) return;
-    const article = document.createElement("article");
-    article.className = "guide-achievement";
-    article.dataset.raName = item.Title;
-    const badge = item.BadgeName
-      ? `https://media.retroachievements.org/Badge/${encodeURIComponent(item.BadgeName)}.png`
-      : (item.BadgeURL || item.Badge || "");
-    const translated = translateKungFuPandaAchievementDescription(item.Description || "");
+    const card = document.createElement("article");
+    card.className = "guide-achievement";
+    card.dataset.raName = item.Title;
+
+    let badge = "";
+    const bn = String(item.BadgeName || "").trim();
+    if(bn){
+      badge = bn.startsWith("http")
+        ? bn
+        : `https://media.retroachievements.org/Badge/${encodeURIComponent(bn)}.png`;
+    } else {
+      badge = String(item.BadgeURL || item.Badge || "");
+    }
+
+    const desc = translateRetroAchievementDescription(item.Description || "");
     const missable = String(item.Type || "").toLowerCase() === "missable";
-    article.innerHTML = `
-      ${badge ? `<img src="${escapeHTML(badge)}" alt="${escapeHTML(item.Title)}" onerror="this.style.display='none'">` : ""}
+
+    card.innerHTML = `
+      ${badge ? `<img src="${escapeHTML(badge)}" alt="${escapeHTML(item.Title)}" loading="lazy">` : `<div class="guide-badge-placeholder"></div>`}
       <div>
         <div class="guide-achievement-title">
           ${missable ? `<span class="guide-missable-icon" title="Conquista perdível">⚠️</span>` : ""}
           <div>
             <h3><span class="ra-lock-icon">🔒</span> ${escapeHTML(item.Title)}</h3>
             <div class="ra-earned-slot"></div>
-            <div class="guide-official-name">${escapeHTML(item.Title)}</div>
           </div>
         </div>
-        ${item.Points != null ? `<div class="guide-points">${Number(item.Points)} pontos</div>` : ""}
-        ${translated ? `<p><strong>Requisito:</strong> ${escapeHTML(translated)}</p>` : ""}
-        <p><strong>Como conseguir:</strong> Cumpra o requisito acima durante a fase indicada. Em desafios de dificuldade, sem dano ou sem pausa, mantenha todas as condições até a conquista ser registrada.</p>
+        <div class="guide-points">${Number(item.Points || 0)} pontos</div>
+        ${desc ? `<p><strong>Requisito:</strong> ${escapeHTML(desc)}</p>` : ""}
+        <p><strong>Como conseguir:</strong> ${desc ? `Cumpra o requisito acima exatamente como indicado.` : `Conclua o objetivo oficial desta conquista.`}</p>
       </div>`;
-    container.appendChild(article);
-    existing.add(key);
+    container.appendChild(card);
   });
 
   const summary = document.querySelector(".achievement-summary-compact h2");
-  if(summary && items.length) summary.textContent = `${game.title} — Roteiro para 100% • ${items.length} conquistas`;
+  if(summary) summary.textContent = `${game.title} — Roteiro para 100% • ${items.length} conquistas`;
 }
-
 function applyRetroAchievementsToGuide(achievements){
   ensureAllRetroAchievementsInGuide(achievements);
   const byName = new Map();
