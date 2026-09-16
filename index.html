@@ -1513,6 +1513,9 @@ button,
 .profile-highlight-editor-list{display:grid;gap:7px}.profile-highlight-editor-row{display:grid;grid-template-columns:36px 1fr minmax(170px,220px);align-items:center;gap:10px;padding:9px 10px;border:1px solid #263552;border-radius:12px;background:#0a1325}.profile-highlight-symbol{width:34px;height:34px;border-radius:9px;background:#16223e;display:grid;place-items:center}.profile-highlight-label{display:flex;flex-direction:column;min-width:0}.profile-highlight-label b{font-size:11.5px;color:#eef3ff}.profile-highlight-label small{font-size:9.5px;color:#7f8dab;margin-top:2px}.profile-highlight-editor-row select{width:100%;min-width:0;border:1px solid #33415f;border-radius:9px;background:#111d35;color:#fff;padding:9px 10px;font-size:11px;outline:none}.profile-editor-choice-preview{display:none;margin:-2px 0 3px 46px;color:#8fa0c3;font-size:10px}.profile-editor-choice-preview.active{display:block}.profile-editor-choice-preview img{width:22px;height:22px;object-fit:cover;border-radius:5px;vertical-align:middle;margin-right:7px}
 .profile-editor-sticky-save{position:sticky;bottom:-16px;z-index:3;margin:2px -4px 0;padding:12px 4px 4px;background:linear-gradient(180deg,rgba(17,26,48,0),#111a30 35%)}.profile-editor-sticky-save .account-primary{width:100%;padding:12px}.profile-editor-logout{display:block;margin:10px auto 0;border:0;background:transparent;color:#a8b3ca;font-size:11px;font-weight:800;cursor:pointer;padding:7px 14px}.profile-editor-logout:hover{color:#ff9bb5;text-decoration:underline}
 @media(max-width:620px){.profile-editor-fields{grid-template-columns:1fr}.profile-highlight-editor-row{grid-template-columns:34px 1fr}.profile-highlight-editor-row select{grid-column:1/-1}.profile-editor-cover-actions{flex-wrap:wrap}.profile-editor-identity .profile-avatar{width:68px;height:68px}}
+
+.profile-editor-fields.profile-editor-fields-single{grid-template-columns:1fr}
+.profile-editor-fields.profile-editor-fields-single label{max-width:none}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -1621,8 +1624,7 @@ document.addEventListener("input",e=>{if(e.target&&e.target.id==="profileRAInput
       <form class="profile-editor-form" onsubmit="saveRetrohubProfile(event)">
         <section class="profile-editor-section">
           <div class="profile-editor-section-head"><span class="profile-editor-section-icon">👤</span><div><h3>Informações do perfil</h3><p>Dados principais da sua conta pública.</p></div></div>
-          <div class="profile-editor-fields">
-            <label>Nome de usuário<input id="profileUsernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" required></label>
+          <div class="profile-editor-fields profile-editor-fields-single">
             <label>Usuário do RetroAchievements<input id="profileRAInput" maxlength="50" pattern="[A-Za-z0-9_-]+" placeholder="Ex.: raiquesantos"></label>
           </div>
         </section>
@@ -4167,7 +4169,6 @@ function refreshRetrohubAccountUI(){
   btnText.textContent = "Perfil";
   document.getElementById("profileUsername").textContent = "@" + username;
   document.getElementById("profileEmail").textContent = retrohubSession.user.email || "";
-  document.getElementById("profileUsernameInput").value = username;
   document.getElementById("profileRAInput").value = retrohubProfile?.retroachievements_username || "";
   const avatar = retrohubProfile?.avatar_url || avatarFallback();
   const profileAvatarEl=document.getElementById("profileAvatar");
@@ -4189,18 +4190,17 @@ function refreshRetrohubAccountUI(){
 async function saveRetrohubProfile(event){
   event.preventDefault();
   if(!retrohubSession?.user) return;
-  const username = document.getElementById("profileUsernameInput").value.trim();
+  // O nome público do RetroHub vem diretamente da conta e não é editado nesta tela.
+  const username = retrohubProfile?.username || retrohubSession.user.user_metadata?.username || "Perfil";
   const ra = document.getElementById("profileRAInput").value.trim();
-  if(!/^[A-Za-z0-9_]{3,24}$/.test(username)) return setAccountMessage("profileMessage","Nome de usuário inválido.");
   if(ra && !/^[A-Za-z0-9_-]{1,50}$/.test(ra)) return setAccountMessage("profileMessage","Usuário do RetroAchievements inválido.");
 
   const { data, error } = await retrohubSupabase.from("profiles")
-    .update({username, retroachievements_username: ra || null})
+    .update({retroachievements_username: ra || null})
     .eq("id", retrohubSession.user.id).select().single();
 
   if(error){
-    const msg = error.code === "23505" ? "Esse nome de usuário já está em uso." : error.message;
-    return setAccountMessage("profileMessage", msg);
+    return setAccountMessage("profileMessage", error.message);
   }
   retrohubProfile = data;
   if(ra) localStorage.setItem("retrohub_ra_user", ra); else localStorage.removeItem("retrohub_ra_user");
@@ -4212,14 +4212,26 @@ async function saveRetrohubProfile(event){
     badge: document.getElementById("favoriteBadgeSelect")?.value || ""
   };
   localStorage.setItem("retrohub_profile_highlights",JSON.stringify(highlights));
-  const {data:authData,error:authError}=await retrohubSupabase.auth.updateUser({data:{profile_highlights:highlights}});
-  if(authError) return setAccountMessage("profileMessage",authError.message);
-  if(authData?.user && retrohubSession) retrohubSession={...retrohubSession,user:authData.user};
 
+  // Atualiza a interface primeiro: Salvar deve sempre fechar o editor e voltar ao perfil.
   setAccountMessage("profileMessage","Perfil salvo com sucesso!", true);
   refreshRetrohubAccountUI();
   closeAccountPanel();
   openFullRetrohubProfile();
+
+  // Salva os destaques na conta Supabase sem bloquear a navegação do usuário.
+  // Se essa etapa falhar, a escolha continua preservada localmente neste navegador.
+  try {
+    const {data:authData,error:authError}=await retrohubSupabase.auth.updateUser({data:{profile_highlights:highlights}});
+    if(!authError && authData?.user && retrohubSession){
+      retrohubSession={...retrohubSession,user:authData.user};
+      // Renderiza novamente para refletir imediatamente a escolha confirmada no Supabase.
+      if(location.hash==="#profile") renderRetrohubProfilePage();
+    }
+  } catch(e) {
+    console.warn("Não foi possível sincronizar os destaques com o Supabase agora.", e);
+  }
+
   const game = typeof getCurrentGame === "function" ? getCurrentGame() : null;
   if(game && ra && typeof loadRetroAchievementsProgress === "function") loadRetroAchievementsProgress(ra, game);
 }
