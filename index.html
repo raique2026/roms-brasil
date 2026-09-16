@@ -4012,6 +4012,56 @@ function buildMidnightClub3AchievementGuide(title,description){
   return "Cumpra o requisito oficial acima no modo indicado. Use o filtro de bloqueadas para acompanhar o que ainda falta.";
 }
 
+function buildUniversalAchievementGuide(title, description){
+  const raw = String(description || "").trim();
+  const d = raw.toLowerCase();
+  const translated = translateRetroAchievementDescription(raw);
+
+  // Gera uma orientação útil a partir do requisito oficial sem inventar
+  // locais, itens ou condições que o RetroAchievements não informou.
+  if(!raw) return "Abra os detalhes da conquista e cumpra o objetivo oficial mostrado pelo RetroAchievements.";
+
+  if(/without (taking )?damage|without being hit|no damage|without getting hit/.test(d))
+    return "Faça a luta ou trecho indicado sem receber nenhum golpe. Priorize esquivas e padrões seguros; se sofrer dano, reinicie a tentativa antes de concluir o objetivo.";
+
+  if(/collect all|obtain all|find all|gather all/.test(d))
+    return "Explore toda a fase ou área indicada e pegue todos os colecionáveis exigidos antes de finalizar o objetivo. Confira caminhos laterais e áreas opcionais para não deixar nenhum para trás.";
+
+  if(/collect|obtain|find|gather/.test(d) && /\b\d+\b/.test(d))
+    return "Durante a fase ou modo indicado, procure e obtenha a quantidade exigida pelo requisito. Explore rotas secundárias antes de avançar para o final.";
+
+  if(/a rank|rank a|s rank|rank s|grade a|grade s/.test(d)){
+    const hero = /hero/.test(d) ? " na dificuldade Hero" : " na dificuldade indicada";
+    return `Jogue a fase ou evento${hero} e busque o rank exigido. Evite derrotas e erros desnecessários e conclua o objetivo com desempenho suficiente para registrar o rank pedido.`;
+  }
+
+  if(/difficulty/.test(d) && /(complete|finish|beat|defeat|win)/.test(d))
+    return "Selecione a dificuldade exigida antes de iniciar e conclua o objetivo nela. Não reduza a dificuldade durante a tentativa, pois isso pode impedir o desbloqueio.";
+
+  if(/under|less than|within|seconds|minutes|hours|time/.test(d) && /(complete|finish|beat|win|escape|reach)/.test(d))
+    return "É um desafio de tempo. Vá direto ao objetivo, evite desvios e repetições desnecessárias e termine dentro do limite indicado no requisito.";
+
+  if(/defeat|beat|kill/.test(d))
+    return "Avance até o confronto indicado e derrote o inimigo ou chefe cumprindo também qualquer condição adicional descrita no requisito. Se houver restrição de dano, equipamento ou dificuldade, ela precisa ser mantida até o fim.";
+
+  if(/win/.test(d) && /(race|event|tournament|match|challenge)/.test(d))
+    return "Entre na corrida, evento ou desafio indicado e termine em primeiro lugar. Antes de começar, confira se modo, veículo, dificuldade e demais condições correspondem ao requisito.";
+
+  if(/complete|finish|clear/.test(d))
+    return "Avance normalmente até a fase, missão ou evento citado e conclua-o por completo. Antes de finalizar, confirme se há alguma condição adicional no requisito, como dificuldade, rank, tempo ou coletáveis.";
+
+  if(/unlock|acquire|earn|get /.test(d))
+    return "Continue a progressão até liberar ou receber o item, habilidade ou conteúdo indicado. O desbloqueio ocorre quando a condição descrita no requisito oficial é registrada pelo jogo.";
+
+  if(/purchase|buy/.test(d))
+    return "Acumule os recursos necessários e compre exatamente o item ou melhoria indicada. Faça a compra no modo exigido pelo requisito para que a conquista seja registrada.";
+
+  if(/score|points/.test(d) && /\b\d+\b/.test(d))
+    return "Jogue o modo indicado buscando a pontuação exigida. Priorize ações que aumentem a pontuação e só encerre a tentativa depois de alcançar ou superar o valor pedido.";
+
+  return `Siga o objetivo oficial: ${translated}. Confira antes da tentativa todas as condições citadas no requisito e conclua o objetivo sem alterá-las.`;
+}
+
 function buildNfsAchievementGuide(title, description){
   const d = String(description || "");
   const low = d.toLowerCase();
@@ -4132,7 +4182,7 @@ function ensureAllRetroAchievementsInGuide(achievements){
         </div>
         <div class="guide-points">${Number(item.Points || 0)} pontos</div>
         ${desc ? `<p><strong>Requisito:</strong> ${escapeHTML(desc)}</p>` : ""}
-        <p><strong>Como conseguir:</strong> ${escapeHTML(game.slug === "midnight-club-3-dub-edition-remix" ? buildMidnightClub3AchievementGuide(item.Title, item.Description || "") : game.slug === "need-for-speed-most-wanted-black-edition" ? buildNfsAchievementGuide(item.Title, item.Description || "") : (desc ? "Cumpra o requisito acima exatamente como indicado." : "Conclua o objetivo oficial desta conquista."))}</p>
+        <p><strong>Como conseguir:</strong> ${escapeHTML(game.slug === "midnight-club-3-dub-edition-remix" ? buildMidnightClub3AchievementGuide(item.Title, item.Description || "") : game.slug === "need-for-speed-most-wanted-black-edition" ? buildNfsAchievementGuide(item.Title, item.Description || "") : buildUniversalAchievementGuide(item.Title, item.Description || ""))}</p>
       </div>`;
     container.appendChild(card);
   });
