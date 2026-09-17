@@ -1982,6 +1982,59 @@ function getRetrohubRAGameId(game){
 
 const games = [
   {
+    slug: "black",
+    title: "BLACK",
+    platform: "PS2",
+    year: "2006",
+    language: "Português",
+    region: "NTSC-U/C",
+    size: "Edite o tamanho",
+    developer: "Criterion Games",
+    publisher: "Electronic Arts",
+    genre: "FPS / Ação",
+    format: "ISO",
+    translation: "Não informado",
+
+    retroAchievements: true,
+    achievements: 56,
+    achievementPoints: 600,
+    supportedHashes: 1,
+    hardcoreSupport: true,
+    recommendedEmulator: "PCSX2",
+    retroAchievementsUrl: "https://retroachievements.org/game/19040",
+    retroAchievementsGameId: 19040,
+    retroHashesUrl: "https://retroachievements.org/game/19040/hashes",
+    achievementBadge: "images/badges/black.png",
+    achievementBadgeText: "Complete o conjunto de conquistas de BLACK para conquistar esta insígnia",
+
+    achievementGuide: {
+      available: true,
+      difficulty: "7/10",
+      estimatedTime: "18–30 horas",
+      playthroughs: "3 recomendadas",
+      missables: "Objetivos e coletáveis por missão",
+      summary: "Guia em português para as 56 conquistas do conjunto base de BLACK no RetroAchievements. O conjunto soma 600 pontos e inclui conclusão das oito missões, dificuldades Hard e Black Ops, objetivos de combate, coletáveis, destruição e desafios de tempo.",
+      steps: [
+        { title: "1. Primeira campanha no Hard", text: "Faça a primeira campanha no Hard. Explore cada fase com calma, priorize headshots, eliminações específicas e objetivos de combate. Isso prepara o save e libera equipamentos úteis para as próximas etapas." },
+        { title: "2. Black Ops e objetivos das fases", text: "Depois, conclua as oito missões no Black Ops. Aproveite as armas prateadas e munição facilitada para cumprir objetivos secundários, destruir alvos e buscar itens que tenham ficado para trás." },
+        { title: "3. Coletáveis e destruição", text: "Antes de sair de cada área, confira os objetivos da missão. Alguns pontos não permitem retorno, então verifique documentos, intel, armamentos e alvos destrutíveis antes de avançar." },
+        { title: "4. Desafios de tempo", text: "Deixe as conquistas de tempo para depois da campanha no Black Ops. Com melhor conhecimento dos mapas e armamento liberado, use a dificuldade Easy quando o requisito permitir e ignore confrontos desnecessários." },
+        { title: "5. Limpeza para 100%", text: "No fim, filtre as conquistas ainda bloqueadas no RetroHub BR e refaça apenas as missões necessárias. Dê prioridade às eliminações acumulativas, headshots e objetivos específicos que ainda faltarem." }
+      ],
+      achievements: []
+    },
+
+    cover: "images/black.jpg",
+    banner: "banners/black.jpg",
+    description: "BLACK é um jogo de tiro em primeira pessoa desenvolvido pela Criterion Games. A campanha acompanha operações militares intensas, com foco em armas de grande impacto, cenários destrutíveis e combates cinematográficos.",
+    screenshots: [
+      "screenshots/black/screenshot-01.jpg",
+      "screenshots/black/screenshot-02.jpg",
+      "screenshots/black/screenshot-03.jpg"
+    ],
+    download: "#"
+  },
+  {
     slug: "need-for-speed-most-wanted-black-edition",
     title: "Need for Speed: Most Wanted - Black Edition",
     platform: "PlayStation 2",
@@ -3294,8 +3347,14 @@ function goHome(updateHistory = true){
 
 function getLatestGames(){
 
-  // O último jogo colocado no const games aparece primeiro.
-  return [...games].reverse();
+  /*
+    ORDEM DOS ÚLTIMOS JOGOS:
+    O primeiro jogo cadastrado no array "games" é considerado o mais novo.
+    Portanto, sempre adicione jogos novos NO INÍCIO do const games.
+    Assim o jogo recém-adicionado aparecerá automaticamente em primeiro
+    em "Últimos jogos adicionados", sem precisar alterar outra parte do site.
+  */
+  return [...games];
 }
 
 function getVisibleLatestGames(){
