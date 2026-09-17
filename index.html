@@ -491,6 +491,30 @@ button,
 
 
 
+
+/* ===== CARROSSEL PREMIUM - DESTAQUES E RECOMENDADOS ===== */
+.featured-section-title{margin:30px 0 14px;font-size:24px;font-weight:900;letter-spacing:-.2px}
+.featured-wrap{margin:0 0 38px;overflow:hidden;border-radius:0;padding:0 56px 24px}
+.featured-track{gap:18px}
+.featured-card{flex:0 0 92%;height:420px;border-radius:4px;background:#101a2b;border:1px solid #263754;opacity:.34;transform:scale(.96);box-shadow:none}
+.featured-card.active{opacity:1;transform:scale(1);box-shadow:0 18px 48px rgba(0,0,0,.38)}
+.featured-card>img{position:absolute;left:0;top:0;width:72%;height:100%;object-fit:cover;object-position:center}
+.featured-card .featured-overlay{background:linear-gradient(90deg,transparent 0 62%,rgba(12,25,43,.28) 69%,#10253a 72%,#10253a 100%)}
+.featured-card .featured-info{width:30%;right:0;padding:24px 20px;background:linear-gradient(180deg,#17314a,#10253a);justify-content:flex-start}
+.featured-info h2{font-size:25px;line-height:1.1;margin:0 0 10px}
+.featured-info p{font-size:13px;line-height:1.45;color:#c3d0df;margin:0 0 15px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.featured-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 16px}
+.featured-preview-grid img{position:static!important;width:100%!important;height:74px!important;object-fit:cover!important;border-radius:2px;opacity:.92}
+.featured-recommend{margin-top:auto}.featured-recommend strong{display:block;color:#b7e546;font-size:15px;margin-bottom:4px}.featured-recommend span{font-size:12px;color:#c6d4df}
+.featured-tags{margin-top:13px}.featured-tags span{padding:5px 8px;border-radius:3px;background:rgba(0,0,0,.24);font-size:11px;color:#d6e4ef}
+.featured-arrow{width:52px;height:78px;border-radius:3px;background:linear-gradient(90deg,rgba(10,20,34,.15),rgba(70,96,120,.65));font-size:34px}
+.featured-prev{left:0}.featured-next{right:0;background:linear-gradient(270deg,rgba(10,20,34,.15),rgba(70,96,120,.65))}
+.featured-arrow:hover{background:#5b7185}
+.featured-dots{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);margin:0;gap:5px;z-index:6}
+.featured-dot{width:16px;height:9px;border-radius:4px;background:#536273}.featured-dot.active{background:#dbe7f1}
+@media(max-width:900px){.featured-wrap{padding:0 40px 22px}.featured-card{flex-basis:96%;height:360px}.featured-card>img{width:65%}.featured-card .featured-overlay{background:linear-gradient(90deg,transparent 0 55%,#10253a 65%)}.featured-card .featured-info{width:36%}.featured-preview-grid img{height:58px!important}}
+@media(max-width:620px){.featured-section-title{font-size:20px}.featured-wrap{padding:0 0 22px}.featured-card{flex-basis:100%;height:390px}.featured-card>img{position:relative;width:100%;height:55%}.featured-card .featured-overlay{display:none}.featured-card .featured-info{position:absolute;top:auto;bottom:0;width:100%;height:45%;padding:14px;background:linear-gradient(180deg,#17314a,#10253a)}.featured-preview-grid{display:none}.featured-info h2{font-size:20px}.featured-info p{-webkit-line-clamp:2}.featured-arrow{width:38px;height:60px}.featured-prev{left:4px}.featured-next{right:4px}}
+
 /* ÚLTIMOS JOGOS ADICIONADOS */
 .latest-section{
   margin:34px 0 38px;
@@ -3252,6 +3276,7 @@ function renderHome(){
 
     ${showHomeSections ? `
 
+    <h2 class="featured-section-title">Destaques e recomendados</h2>
     <section class="featured-wrap">
 
       <button class="featured-arrow featured-prev" onclick="event.stopPropagation();featuredPrev()">❮</button>
@@ -3279,6 +3304,17 @@ function renderHome(){
               <p>
                 ${slide.game.description}
               </p>
+
+              ${(slide.game.screenshots || []).length ? `
+                <div class="featured-preview-grid">
+                  ${(slide.game.screenshots || []).slice(0,4).map(src => `<img src="${src}" alt="Prévia de ${slide.game.title}">`).join("")}
+                </div>
+              ` : ""}
+
+              <div class="featured-recommend">
+                <strong>↗ Em destaque</strong>
+                <span>Selecionado para você conhecer no RetroHub BR</span>
+              </div>
 
               <div class="featured-tags">
                 <span>${slide.game.platform}</span>
