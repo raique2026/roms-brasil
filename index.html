@@ -2955,6 +2955,7 @@ function showAchievementGuides(){
   emulatorMode = false;
   q.value = "";
   q.style.display = "";
+  q.closest(".search-wrap")?.style.removeProperty("display");
   filters.style.display = "flex";
 
   const guideGames = games.filter(game => game.retroAchievements);
@@ -3330,6 +3331,7 @@ function goHome(updateHistory = true){
   }
 
   q.style.display = "";
+  q.closest(".search-wrap")?.style.removeProperty("display");
   filters.style.display = "flex";
 
   const socialX = document.getElementById("socialX");
@@ -3676,6 +3678,7 @@ function openGame(slug, updateHistory = true){
     );
 
     q.style.display = "";
+  q.closest(".search-wrap")?.style.removeProperty("display");
     filters.style.display = "flex";
 
     document.getElementById("socialX").style.display = "";
@@ -3694,6 +3697,7 @@ function openGame(slug, updateHistory = true){
   }
 
   q.style.display = "none";
+  q.closest(".search-wrap")?.style.setProperty("display", "none");
   filters.style.display = "none";
 
   document.getElementById("socialX").style.display = "none";
@@ -3707,10 +3711,6 @@ function openGame(slug, updateHistory = true){
   ){
 
     screenshotsHTML = `
-
-      <h2 class="screens-title">
-        Screenshots
-      </h2>
 
       <div class="shots">
 
@@ -3729,10 +3729,6 @@ function openGame(slug, updateHistory = true){
   }else{
 
     screenshotsHTML = `
-
-      <h2 class="screens-title">
-        Screenshots
-      </h2>
 
       <p class="no-shots">
         Nenhum screenshot adicionado.
@@ -5086,7 +5082,7 @@ async function renderRetrohubProfilePage(){
   const app=document.getElementById("app");
   const q=document.getElementById("q");
   const filters=document.getElementById("filters");
-  if(q) q.style.display="none";
+  if(q){ q.style.display="none"; q.closest(".search-wrap")?.style.setProperty("display","none"); }
   if(filters) filters.style.display="none";
   if(!retrohubSession?.user){
     app.innerHTML=`<section class="profile-page"><div class="profile-section profile-empty">Entre na sua conta para visualizar seu perfil.</div></section>`;
