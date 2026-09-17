@@ -1746,6 +1746,18 @@ button,
   cursor:pointer;
 }
 
+
+.featured-preview-grid .featured-screenshot-thumb{
+  cursor:pointer;
+  transition:transform .16s ease, opacity .16s ease, outline-color .16s ease;
+}
+.featured-preview-grid .featured-screenshot-thumb:hover{
+  transform:scale(1.035);
+  opacity:1;
+  outline:2px solid rgba(255,255,255,.85);
+  outline-offset:-2px;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -3312,6 +3324,9 @@ function renderHome(){
           >
 
             <img
+              class="featured-main-image"
+              data-featured-main-image
+              data-original-banner="${getBanner(slide.game)}"
               src="${getBanner(slide.game)}"
               alt="${slide.game.title}"
             >
@@ -3328,7 +3343,7 @@ function renderHome(){
 
               ${(slide.game.screenshots || []).length ? `
                 <div class="featured-preview-grid">
-                  ${(slide.game.screenshots || []).slice(0,4).map(src => `<img src="${src}" alt="Prévia de ${slide.game.title}">`).join("")}
+                  ${(slide.game.screenshots || []).slice(0,4).map(src => `<img class="featured-screenshot-thumb" data-featured-screenshot data-full="${src}" src="${src}" alt="Prévia de ${slide.game.title}" onclick="event.stopPropagation()">`).join("")}
                 </div>
               ` : ""}
 
@@ -5265,60 +5280,82 @@ document.addEventListener("keydown", function(e){
 }, true);
 </script>
 
+
+
 <script>
-
-/* ===== HOVER DAS SCREENSHOTS -> BANNER PRINCIPAL ===== */
+/* ===== PREVIEW CORRIGIDO: SCREENSHOT -> BANNER ===== */
 (function(){
-  const thumbSelector = [
-    ".featured-screenshot img",
-    ".premium-screenshot img",
-    ".featured-thumbs img",
-    ".premium-thumbs img",
-    ".featured-screenshots img",
-    ".premium-screenshots img",
-    "[data-featured-screenshot]"
-  ].join(",");
-
-  function getCard(el){
-    return el.closest(".featured-card,.premium-card,.featured-slide,.premium-slide,.featured-item,.premium-item");
-  }
-  function getHero(card){
-    if(!card) return null;
-    return card.querySelector(
-      ".featured-main-image,.premium-main-image,.featured-hero img,.premium-hero img,"+
-      ".featured-banner img,.premium-banner img,[data-featured-main-image]"
-    );
+  function cardFromThumb(thumb){
+    return thumb.closest(".featured-card");
   }
 
-  document.addEventListener("mouseover", function(e){
-    const thumb=e.target.closest && e.target.closest(thumbSelector);
-    if(!thumb) return;
-    const card=getCard(thumb);
-    const hero=getHero(card);
-    if(!hero || hero===thumb) return;
+  function showScreenshot(thumb){
+    const card = cardFromThumb(thumb);
+    if(!card) return;
 
-    if(!hero.dataset.originalBanner) hero.dataset.originalBanner=hero.currentSrc || hero.src;
-    const preview=thumb.dataset.full || thumb.dataset.src || thumb.currentSrc || thumb.src;
+    const banner = card.querySelector(".featured-main-image");
+    if(!banner) return;
+
+    if(!banner.dataset.savedBanner){
+      banner.dataset.savedBanner =
+        banner.dataset.originalBanner ||
+        banner.getAttribute("src") ||
+        "";
+    }
+
+    const preview =
+      thumb.dataset.full ||
+      thumb.getAttribute("src");
+
     if(!preview) return;
 
-    hero.classList.add("is-previewing");
-    hero.src=preview;
+    banner.classList.add("is-previewing");
+    banner.setAttribute("src", preview);
+  }
+
+  function restoreBanner(thumb){
+    const card = cardFromThumb(thumb);
+    if(!card) return;
+
+    const banner = card.querySelector(".featured-main-image");
+    if(!banner) return;
+
+    const original =
+      banner.dataset.savedBanner ||
+      banner.dataset.originalBanner;
+
+    if(original){
+      banner.setAttribute("src", original);
+    }
+
+    banner.classList.remove("is-previewing");
+  }
+
+  document.addEventListener("pointerover", function(e){
+    const thumb = e.target.closest(".featured-screenshot-thumb");
+    if(!thumb) return;
+    showScreenshot(thumb);
   });
 
-  document.addEventListener("mouseout", function(e){
-    const thumb=e.target.closest && e.target.closest(thumbSelector);
+  document.addEventListener("pointerout", function(e){
+    const thumb = e.target.closest(".featured-screenshot-thumb");
     if(!thumb) return;
+
     if(e.relatedTarget && thumb.contains(e.relatedTarget)) return;
+    restoreBanner(thumb);
+  });
 
-    const card=getCard(thumb);
-    const hero=getHero(card);
-    if(!hero || !hero.dataset.originalBanner) return;
+  // Também funciona por clique/toque em celular.
+  document.addEventListener("click", function(e){
+    const thumb = e.target.closest(".featured-screenshot-thumb");
+    if(!thumb) return;
 
-    hero.src=hero.dataset.originalBanner;
-    hero.classList.remove("is-previewing");
+    e.preventDefault();
+    e.stopPropagation();
+    showScreenshot(thumb);
   });
 })();
-
 </script>
+
 </body>
 </html>
