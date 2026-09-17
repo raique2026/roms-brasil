@@ -1725,6 +1725,27 @@ button,
 .profile-title-select{margin-top:8px;width:100%;background:#111c31;color:#dce5fa;border:1px solid #30415f;border-radius:8px;padding:7px 8px;font-size:10px}
 @media(max-width:700px){.profile-progression-grid{grid-template-columns:1fr}.profile-progression-top{align-items:flex-start}.profile-xp-number{text-align:right}}
 
+
+/* Preview de screenshots no banner do carrossel */
+.featured-main-image,
+.featured-hero img,
+.premium-main-image,
+.premium-hero img{
+  transition:opacity .18s ease, transform .35s ease;
+}
+.featured-main-image.is-previewing,
+.featured-hero img.is-previewing,
+.premium-main-image.is-previewing,
+.premium-hero img.is-previewing{
+  opacity:.96;
+}
+.featured-screenshot img,
+.premium-screenshot img,
+.featured-thumbs img,
+.premium-thumbs img{
+  cursor:pointer;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -5244,5 +5265,60 @@ document.addEventListener("keydown", function(e){
 }, true);
 </script>
 
+<script>
+
+/* ===== HOVER DAS SCREENSHOTS -> BANNER PRINCIPAL ===== */
+(function(){
+  const thumbSelector = [
+    ".featured-screenshot img",
+    ".premium-screenshot img",
+    ".featured-thumbs img",
+    ".premium-thumbs img",
+    ".featured-screenshots img",
+    ".premium-screenshots img",
+    "[data-featured-screenshot]"
+  ].join(",");
+
+  function getCard(el){
+    return el.closest(".featured-card,.premium-card,.featured-slide,.premium-slide,.featured-item,.premium-item");
+  }
+  function getHero(card){
+    if(!card) return null;
+    return card.querySelector(
+      ".featured-main-image,.premium-main-image,.featured-hero img,.premium-hero img,"+
+      ".featured-banner img,.premium-banner img,[data-featured-main-image]"
+    );
+  }
+
+  document.addEventListener("mouseover", function(e){
+    const thumb=e.target.closest && e.target.closest(thumbSelector);
+    if(!thumb) return;
+    const card=getCard(thumb);
+    const hero=getHero(card);
+    if(!hero || hero===thumb) return;
+
+    if(!hero.dataset.originalBanner) hero.dataset.originalBanner=hero.currentSrc || hero.src;
+    const preview=thumb.dataset.full || thumb.dataset.src || thumb.currentSrc || thumb.src;
+    if(!preview) return;
+
+    hero.classList.add("is-previewing");
+    hero.src=preview;
+  });
+
+  document.addEventListener("mouseout", function(e){
+    const thumb=e.target.closest && e.target.closest(thumbSelector);
+    if(!thumb) return;
+    if(e.relatedTarget && thumb.contains(e.relatedTarget)) return;
+
+    const card=getCard(thumb);
+    const hero=getHero(card);
+    if(!hero || !hero.dataset.originalBanner) return;
+
+    hero.src=hero.dataset.originalBanner;
+    hero.classList.remove("is-previewing");
+  });
+})();
+
+</script>
 </body>
 </html>
