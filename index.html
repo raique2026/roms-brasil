@@ -1759,43 +1759,30 @@ button,
 }
 
 
-/* ===== AVISO COMPACTO RETROACHIEVEMENTS ===== */
-.ra-compact-notice{
+/* ===== AVISO RETROACHIEVEMENTS NO FINAL DA HOME ===== */
+.ra-footer-notice{
   max-width:1380px;
-  min-height:42px;
-  margin:16px auto 8px;
-  padding:8px 14px;
+  margin:28px auto 8px;
+  padding:14px 12px 4px;
+  border-top:1px solid #263653;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  border:1px solid #263653;
-  border-radius:11px;
-  background:#0d1729;
-  color:#9fb0d0;
-  font-size:12px;
+  justify-content:center;
+  gap:9px;
+  color:#7f91b3;
+  font-size:11px;
+  text-align:center;
 }
-.ra-compact-main{display:flex;align-items:center;gap:8px;min-width:0}
-.ra-compact-main strong{color:#eaf0ff;font-weight:850}
-.ra-compact-icon{font-size:15px;line-height:1}
-.ra-compact-sep{margin:0 6px;color:#536685}
-.ra-info-link{
-  flex:0 0 auto;
-  border:0;
-  background:transparent;
-  color:#75a8ff;
-  font:inherit;
-  font-weight:800;
-  cursor:pointer;
-  padding:4px 2px;
+.ra-footer-notice strong{color:#aebddd}
+.ra-footer-more{
+  border:0;background:transparent;color:#76aaff;
+  padding:3px 0;font:inherit;font-weight:850;cursor:pointer;
 }
-.ra-info-link:hover{color:#a8c8ff}
-.ra-info-link span{font-size:16px;vertical-align:-1px}
+.ra-footer-more:hover{color:#b0ceff}
 .ra-info-modal-backdrop{
   position:fixed;inset:0;z-index:10050;
   display:none;align-items:center;justify-content:center;
-  padding:20px;background:rgba(2,7,16,.76);
-  backdrop-filter:blur(5px);
+  padding:20px;background:rgba(2,7,16,.76);backdrop-filter:blur(5px);
 }
 .ra-info-modal-backdrop.is-open{display:flex}
 .ra-info-modal{
@@ -1811,25 +1798,9 @@ button,
   border:0;border-radius:8px;background:#18253d;color:#dbe5fa;
   cursor:pointer;font-size:18px;font-weight:900;
 }
-.ra-info-modal-close:hover{background:#213251}
 @media(max-width:700px){
-  .ra-compact-notice{margin:10px 12px 6px;font-size:11px}
-  .ra-compact-sep{display:none}
-  .ra-compact-main span:last-child{line-height:1.35}
-  .ra-info-link{font-size:11px}
+  .ra-footer-notice{margin:20px 12px 6px;flex-wrap:wrap}
 }
-
-
-/* Aviso RetroAchievements no rodapé — somente na página inicial */
-.ra-footer-notice{
-  max-width:1380px;margin:14px auto 0;padding:12px 14px;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  border-top:1px solid #263653;color:#7f91b3;font-size:11px;text-align:center;
-}
-.ra-footer-notice strong{color:#aebddd}
-.ra-footer-notice .ra-info-link{font-size:11px}
-body.game-page-open .ra-footer-notice{display:none!important}
-@media(max-width:700px){.ra-footer-notice{margin-top:10px;flex-wrap:wrap;padding:12px}}
 
 </style>
 
@@ -1982,6 +1953,25 @@ function getRetrohubRAGameId(game){
 
 
 
+
+
+<main id="app"></main>
+
+<!-- LIGHTBOX / VISUALIZADOR -->
+<div id="imageViewer" class="image-viewer" onclick="closeScreenshot(event)">
+  <button class="viewer-close" onclick="closeScreenshot()">×</button>
+  <button class="viewer-prev" onclick="event.stopPropagation();prevScreenshot()">❮</button>
+
+  <img
+    id="viewerImage"
+    src=""
+    alt="Screenshot ampliado"
+    onclick="event.stopPropagation()"
+  >
+
+  <button class="viewer-next" onclick="event.stopPropagation();nextScreenshot()">❯</button>
+  <div id="viewerCounter" class="viewer-counter"></div>
+</div>
 
 <script>
 
@@ -3518,6 +3508,11 @@ function renderHome(){
       ` : ""}
 
     </section>
+
+    <div class="ra-footer-notice">
+      <span>🏆 <strong>Conquistas via RetroAchievements</strong> · Disponíveis em jogos compatíveis.</span>
+      <button class="ra-footer-more" type="button" onclick="event.stopPropagation();openRaInfoModal()">Saiba mais ›</button>
+    </div>
 
     ` : ""}
 
@@ -5430,9 +5425,9 @@ document.addEventListener("keydown", function(e){
 </script>
 
 
-<div class="ra-info-modal-backdrop" id="raInfoModal" onclick="if(event.target===this) closeRaInfoModal()">
+<div class="ra-info-modal-backdrop" id="raInfoModal" onclick="if(event.target===this)closeRaInfoModal()">
   <div class="ra-info-modal" role="dialog" aria-modal="true" aria-labelledby="raInfoTitle">
-    <button class="ra-info-modal-close" type="button" aria-label="Fechar" onclick="closeRaInfoModal()">×</button>
+    <button class="ra-info-modal-close" type="button" onclick="closeRaInfoModal()" aria-label="Fechar">×</button>
     <h3 id="raInfoTitle">🏆 Conquistas no RetroHub BR</h3>
     <p>Jogos identificados como compatíveis podem oferecer conquistas através do RetroAchievements.</p>
     <p>O RetroHub BR é um projeto independente e não é afiliado, patrocinado ou administrado pelo RetroAchievements.</p>
@@ -5440,33 +5435,16 @@ document.addEventListener("keydown", function(e){
 </div>
 <script>
 function openRaInfoModal(){
-  const modal=document.getElementById("raInfoModal");
-  if(modal) modal.classList.add("is-open");
+  const el=document.getElementById("raInfoModal");
+  if(el) el.classList.add("is-open");
 }
 function closeRaInfoModal(){
-  const modal=document.getElementById("raInfoModal");
-  if(modal) modal.classList.remove("is-open");
+  const el=document.getElementById("raInfoModal");
+  if(el) el.classList.remove("is-open");
 }
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape") closeRaInfoModal();
 });
-</script>
-
-<div class="ra-footer-notice" id="raFooterNotice">
-  <span>🏆 <strong>Conquistas via RetroAchievements</strong> · Disponíveis em jogos compatíveis.</span>
-  <button class="ra-info-link" type="button" onclick="openRaInfoModal()">Saiba mais ›</button>
-</div>
-
-<script>
-(function(){
-  function syncRaFooterVisibility(){
-    const isGame = location.hash.startsWith("#game=");
-    document.body.classList.toggle("game-page-open", isGame);
-  }
-  window.addEventListener("hashchange", syncRaFooterVisibility);
-  document.addEventListener("DOMContentLoaded", syncRaFooterVisibility);
-  syncRaFooterVisibility();
-})();
 </script>
 
 </body>
