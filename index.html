@@ -2168,6 +2168,26 @@ function getRetrohubRAGameId(game){
 @media(max-width:700px){.chat-page{padding:12px}.chat-shell{height:calc(100vh - 100px);min-height:500px;border-radius:14px}.chat-profile{display:none}.chat-messages{padding:14px}.chat-bubble{max-width:86%}.chat-send{min-width:76px}.chat-compose{padding:10px}}
 </style>
 
+
+<style id="retrohub-message-notifications-css">
+.message-notify-wrap{position:relative;display:none}
+.message-notify-wrap.show{display:block}
+.message-bell{position:relative;width:43px;height:43px;border:1px solid #2a3d63;border-radius:11px;background:#111c33;color:#aab8d2;display:grid;place-items:center;cursor:pointer;font-size:18px}
+.message-bell:hover,.message-bell.active{background:#192844;color:#fff;border-color:#445f96}
+.message-badge{position:absolute;right:-6px;top:-7px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#ff4f73;color:#fff;border:2px solid #081122;display:none;align-items:center;justify-content:center;font-size:10px;font-weight:900}
+.message-badge.show{display:flex}
+.message-popover{position:absolute;right:0;top:52px;width:350px;max-height:470px;overflow:auto;background:#0a1428;border:1px solid #293d64;border-radius:15px;box-shadow:0 22px 60px #000a;z-index:10000;display:none}
+.message-popover.show{display:block}
+.message-pop-head{padding:14px 15px;border-bottom:1px solid #1d2e4e;color:#fff;font-weight:900}
+.message-notice{display:grid;grid-template-columns:46px 1fr auto;gap:11px;align-items:center;padding:12px 14px;border-bottom:1px solid #172744;cursor:pointer}
+.message-notice:hover{background:#101e38}.message-notice:last-child{border-bottom:0}
+.message-notice img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #5367c7}
+.message-notice strong{display:block;color:#f1f5ff;font-size:13px}.message-notice span{display:block;color:#879abd;font-size:12px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:205px}
+.message-notice-count{min-width:23px;height:23px;padding:0 6px;border-radius:999px;background:#6370ff;color:#fff;display:grid;place-items:center;font-size:10px;font-weight:900}
+.message-pop-empty{padding:28px 18px;text-align:center;color:#7588aa;font-size:13px}
+@media(max-width:600px){.message-popover{position:fixed;left:12px;right:12px;top:70px;width:auto}}
+</style>
+
 </head>
 
 <body class="dark-mode">
@@ -2193,6 +2213,17 @@ function getRetrohubRAGameId(game){
       </svg>
     </span>
   </div>
+
+  <div id="messageNotifyWrap" class="message-notify-wrap">
+    <button id="messageBell" class="message-bell" type="button" onclick="toggleRetrohubMessageNotifications(event)" title="Mensagens" aria-label="Mensagens">🔔
+      <span id="messageNotifyBadge" class="message-badge">0</span>
+    </button>
+    <div id="messageNotifyPopover" class="message-popover" onclick="event.stopPropagation()">
+      <div class="message-pop-head">Novas mensagens</div>
+      <div id="messageNotifyList"><div class="message-pop-empty">Nenhuma mensagem nova.</div></div>
+    </div>
+  </div>
+
 <button id="accountButton" class="account-button" type="button" onclick="handleAccountButton()">
     <span id="accountAvatarMini" class="account-avatar-mini">👤</span>
     <span id="accountButtonText">Entrar</span>
@@ -6297,6 +6328,7 @@ async function openRetrohubChat(friendId,pushState=true){
     </section>`;
 
     await loadRetrohubChatMessages(true);
+    await markRetrohubChatRead(friendId);
     retrohubChatTimer=setInterval(()=>loadRetrohubChatMessages(false),3000);
     document.getElementById("retrohubChatInput")?.focus();
   }catch(e){
@@ -6360,6 +6392,80 @@ function retrohubChatKeydown(event){
 window.addEventListener("hashchange",()=>{
   if(!location.hash.startsWith("#chat/"))stopRetrohubChatPolling();
 });
+</script>
+
+
+<script id="retrohub-message-notifications-js">
+/* ===== RETROHUB BR · NOTIFICAÇÕES DE MENSAGENS ===== */
+let retrohubNotifyTimer=null;
+
+function startRetrohubMessageNotifications(){
+  if(retrohubNotifyTimer)clearInterval(retrohubNotifyTimer);
+  updateRetrohubMessageNotifications();
+  retrohubNotifyTimer=setInterval(updateRetrohubMessageNotifications,5000);
+}
+function stopRetrohubMessageNotifications(){
+  if(retrohubNotifyTimer){clearInterval(retrohubNotifyTimer);retrohubNotifyTimer=null}
+  document.getElementById("messageNotifyWrap")?.classList.remove("show");
+}
+async function updateRetrohubMessageNotifications(){
+  const wrap=document.getElementById("messageNotifyWrap");
+  if(!wrap)return;
+  if(!retrohubSession?.user){wrap.classList.remove("show");return}
+  wrap.classList.add("show");
+  const uid=retrohubSession.user.id;
+  const {data,error}=await retrohubSupabase.from("messages")
+    .select("id,sender_id,content,created_at")
+    .eq("receiver_id",uid).is("read_at",null)
+    .order("created_at",{ascending:false}).limit(100);
+  if(error){console.error("Notificações:",error);return}
+  const unread=data||[], grouped={};
+  unread.forEach(m=>{
+    if(!grouped[m.sender_id])grouped[m.sender_id]={count:0,last:m};
+    grouped[m.sender_id].count++;
+  });
+  const ids=Object.keys(grouped);
+  let profiles={};
+  if(ids.length){
+    const {data:p}=await retrohubSupabase.from("profiles").select("id,username,avatar_url").in("id",ids);
+    profiles=Object.fromEntries((p||[]).map(x=>[x.id,x]));
+  }
+  const total=unread.length,badge=document.getElementById("messageNotifyBadge"),list=document.getElementById("messageNotifyList");
+  if(badge){badge.textContent=total>99?"99+":String(total);badge.classList.toggle("show",total>0)}
+  if(!list)return;
+  list.innerHTML=ids.length?ids.map(id=>{
+    const p=profiles[id]||{username:"Usuário",avatar_url:""};
+    const g=grouped[id],avatar=retrohubSocialAvatar(p.avatar_url);
+    return `<div class="message-notice" onclick="openRetrohubChatFromNotification('${id}')">
+      <img src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()">
+      <div><strong>@${escapeHTML(p.username||"Usuário")}</strong><span>${escapeHTML(g.last.content||"Nova mensagem")}</span></div>
+      <b class="message-notice-count">${g.count}</b>
+    </div>`;
+  }).join(""):`<div class="message-pop-empty">Nenhuma mensagem nova.</div>`;
+}
+function toggleRetrohubMessageNotifications(event){
+  event?.stopPropagation();
+  const pop=document.getElementById("messageNotifyPopover"),bell=document.getElementById("messageBell");
+  const open=!pop?.classList.contains("show");
+  pop?.classList.toggle("show",open);bell?.classList.toggle("active",open);
+  if(open)updateRetrohubMessageNotifications();
+}
+document.addEventListener("click",()=>{
+  document.getElementById("messageNotifyPopover")?.classList.remove("show");
+  document.getElementById("messageBell")?.classList.remove("active");
+});
+async function openRetrohubChatFromNotification(friendId){
+  document.getElementById("messageNotifyPopover")?.classList.remove("show");
+  await openRetrohubChat(friendId);
+}
+async function markRetrohubChatRead(friendId){
+  if(!retrohubSession?.user||!friendId)return;
+  const {error}=await retrohubSupabase.from("messages").update({read_at:new Date().toISOString()})
+    .eq("sender_id",friendId).eq("receiver_id",retrohubSession.user.id).is("read_at",null);
+  if(error)console.error("Marcar mensagens como lidas:",error);
+  updateRetrohubMessageNotifications();
+}
+window.addEventListener("load",()=>setTimeout(startRetrohubMessageNotifications,1800));
 </script>
 
 </body>
