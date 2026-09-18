@@ -1948,6 +1948,33 @@ function getRetrohubRAGameId(game){
 }
 </script>
 
+
+<style id="retrohub-friends-css">
+/* ===== RETROHUB BR · AMIZADES V1 ===== */
+.friends-page{max-width:1275px;margin:0 auto;padding:28px 0 60px}
+.friends-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:22px}
+.friends-head h1{margin:0 0 5px;font-size:30px}.friends-head p{margin:0;color:#93a4c7}
+.friends-search{display:flex;gap:10px;margin:18px 0 22px}
+.friends-search input{flex:1;min-width:0;background:#0b1429;border:1px solid #26385e;color:#fff;border-radius:12px;padding:13px 15px;outline:none}
+.friends-search input:focus{border-color:#6d75ff;box-shadow:0 0 0 3px rgba(109,117,255,.12)}
+.friends-search button,.friend-action{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;background:#6975ff;color:#fff}
+.friend-action.secondary{background:#172542;color:#cbd7ef;border:1px solid #2d416b}
+.friend-action.danger{background:#351827;color:#ffb0c4;border:1px solid #663047}
+.friends-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.friends-tab{border:1px solid #26385e;background:#0b1429;color:#aebbd4;padding:9px 13px;border-radius:999px;font-weight:800;cursor:pointer}
+.friends-tab.active{background:#1c2c55;color:#fff;border-color:#5369b2}
+.friends-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:12px}
+.friend-card{display:flex;align-items:center;gap:13px;background:linear-gradient(145deg,#0c162c,#091124);border:1px solid #22365c;border-radius:15px;padding:14px}
+.friend-avatar{width:58px;height:58px;border-radius:12px;object-fit:cover;background:#fff;border:1px solid #344a75;flex:0 0 auto}
+.friend-info{min-width:0;flex:1}.friend-info strong{display:block;color:#f6f8ff;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.friend-info small{display:block;color:#7f93bb;margin-top:4px}
+.friend-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.friend-actions .friend-action{padding:7px 10px;font-size:12px}
+.friend-status{font-size:12px;font-weight:800;color:#5ee6a8}.friend-status.pending{color:#f5c96b}
+.friends-empty{grid-column:1/-1;padding:36px;text-align:center;border:1px dashed #2b3e64;border-radius:15px;color:#8799ba;background:#091225}
+.friends-count{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:23px;padding:0 7px;border-radius:999px;background:#263963;color:#fff;font-size:11px;margin-left:5px}
+@media(max-width:650px){.friends-head{align-items:flex-start;flex-direction:column}.friends-search{flex-direction:column}.friends-page{padding:18px 12px 50px}}
+</style>
+
 </head>
 
 <body class="dark-mode">
@@ -2157,7 +2184,6 @@ const games = [
     },
 
     cover: "images/shadow-of-the-colossus.jpg",
-    heroBackground: "banners/shadow-of-the-colossus-hero.jpg",
     banner: "banners/shadow-of-the-colossus.jpg",
     description: "Shadow of the Colossus acompanha Wander em uma jornada pelas Terras Proibidas para derrotar dezesseis colossos e tentar restaurar a vida de Mono. A aventura combina exploração, escalada e batalhas gigantescas em um mundo melancólico e monumental.",
     screenshots: [
@@ -5350,7 +5376,7 @@ async function renderRetrohubProfilePage(){
     <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}><div class="profile-hero-grid">
       <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
       <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1><div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
-      <div class="profile-hero-actions"><button class="account-secondary" onclick="openAccountPanel()">✏️ Editar perfil</button></div>
+      <div class="profile-hero-actions"><button class="account-secondary" onclick="openRetrohubFriends()">👥 Amigos</button><button class="account-secondary" onclick="openAccountPanel()">✏️ Editar perfil</button></div>
     </div></div>
     <div id="profileDashboard"><div class="profile-loading">${raUser?"Carregando suas conquistas...":"Vincule seu usuário do RetroAchievements em Editar perfil para sincronizar suas conquistas."}</div></div>
   </section>`;
@@ -5753,6 +5779,148 @@ function closeRaInfoModal(){
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape") closeRaInfoModal();
 });
+</script>
+
+
+<script id="retrohub-friends-js">
+/* ===== RETROHUB BR · AMIZADES V1 ===== */
+let retrohubFriendsTab="friends";
+let retrohubFriendCache={friends:[],incoming:[],outgoing:[],blocked:[]};
+
+function retrohubHideHomeControls(){
+  const q=document.getElementById("q"), filters=document.getElementById("filters");
+  if(q){q.style.display="none";q.closest(".search-wrap")?.style.setProperty("display","none");}
+  if(filters) filters.style.display="none";
+}
+function retrohubSocialAvatar(url){
+  return url || avatarFallback();
+}
+function retrohubFriendCard(profile, relation, mode){
+  const username=profile?.username||"Usuário";
+  const avatar=retrohubSocialAvatar(profile?.avatar_url);
+  let buttons="";
+  if(mode==="search"){
+    if(!relation) buttons=`<button class="friend-action" onclick="sendRetrohubFriendRequest('${profile.id}')">Adicionar amigo</button>`;
+    else if(relation.status==="accepted") buttons=`<span class="friend-status">✓ Amigo</span>`;
+    else if(relation.status==="pending"&&relation.sender_id===retrohubSession.user.id) buttons=`<span class="friend-status pending">Pedido enviado</span><button class="friend-action secondary" onclick="removeRetrohubFriendship('${relation.id}')">Cancelar</button>`;
+    else if(relation.status==="pending") buttons=`<button class="friend-action" onclick="acceptRetrohubFriendRequest('${relation.id}')">Aceitar</button><button class="friend-action secondary" onclick="removeRetrohubFriendship('${relation.id}')">Recusar</button>`;
+  }else if(mode==="incoming"){
+    buttons=`<button class="friend-action" onclick="acceptRetrohubFriendRequest('${relation.id}')">Aceitar</button><button class="friend-action secondary" onclick="removeRetrohubFriendship('${relation.id}')">Recusar</button>`;
+  }else if(mode==="outgoing"){
+    buttons=`<span class="friend-status pending">Aguardando</span><button class="friend-action secondary" onclick="removeRetrohubFriendship('${relation.id}')">Cancelar</button>`;
+  }else if(mode==="blocked"){
+    buttons=`<button class="friend-action secondary" onclick="removeRetrohubFriendship('${relation.id}')">Desbloquear</button>`;
+  }else{
+    buttons=`<span class="friend-status">● Amigo</span><button class="friend-action danger" onclick="removeRetrohubFriendship('${relation.id}')">Remover</button>`;
+  }
+  return `<article class="friend-card">
+    <img class="friend-avatar" src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()">
+    <div class="friend-info"><strong>@${escapeHTML(username)}</strong><small>${escapeHTML(profile?.retroachievements_username||"RetroHub BR")}</small><div class="friend-actions">${buttons}</div></div>
+  </article>`;
+}
+async function getRetrohubRelations(){
+  if(!retrohubSession?.user) return [];
+  const uid=retrohubSession.user.id;
+  const {data,error}=await retrohubSupabase.from("friendships").select("*").or(`sender_id.eq.${uid},receiver_id.eq.${uid}`).order("created_at",{ascending:false});
+  if(error) throw error;
+  return data||[];
+}
+async function getRetrohubProfiles(ids){
+  const unique=[...new Set((ids||[]).filter(Boolean))];
+  if(!unique.length) return {};
+  const {data,error}=await retrohubSupabase.from("profiles").select("id,username,avatar_url,retroachievements_username").in("id",unique);
+  if(error) throw error;
+  return Object.fromEntries((data||[]).map(p=>[p.id,p]));
+}
+async function loadRetrohubFriends(){
+  const uid=retrohubSession.user.id;
+  const relations=await getRetrohubRelations();
+  const profiles=await getRetrohubProfiles(relations.map(r=>r.sender_id===uid?r.receiver_id:r.sender_id));
+  retrohubFriendCache={friends:[],incoming:[],outgoing:[],blocked:[]};
+  relations.forEach(r=>{
+    const otherId=r.sender_id===uid?r.receiver_id:r.sender_id, profile=profiles[otherId];
+    if(!profile)return;
+    const item={profile,relation:r};
+    if(r.status==="accepted") retrohubFriendCache.friends.push(item);
+    else if(r.status==="blocked") retrohubFriendCache.blocked.push(item);
+    else if(r.status==="pending"&&r.receiver_id===uid) retrohubFriendCache.incoming.push(item);
+    else if(r.status==="pending") retrohubFriendCache.outgoing.push(item);
+  });
+  renderRetrohubFriendsTab(retrohubFriendsTab);
+}
+function setRetrohubFriendsTab(tab,button){
+  retrohubFriendsTab=tab;
+  document.querySelectorAll(".friends-tab").forEach(x=>x.classList.remove("active"));
+  button?.classList.add("active");
+  renderRetrohubFriendsTab(tab);
+}
+function renderRetrohubFriendsTab(tab){
+  const box=document.getElementById("friendsResults"); if(!box)return;
+  const list=retrohubFriendCache[tab]||[];
+  const mode=tab==="incoming"?"incoming":tab==="outgoing"?"outgoing":tab==="blocked"?"blocked":"friends";
+  box.innerHTML=list.length?list.map(x=>retrohubFriendCard(x.profile,x.relation,mode)).join(""):`<div class="friends-empty">${tab==="friends"?"Você ainda não adicionou amigos. Use a busca acima para encontrar pessoas.":tab==="incoming"?"Nenhum pedido de amizade recebido.":tab==="outgoing"?"Nenhum pedido enviado aguardando resposta.":"Nenhum usuário bloqueado."}</div>`;
+  const incomingCount=document.getElementById("incomingFriendCount"); if(incomingCount) incomingCount.textContent=retrohubFriendCache.incoming.length;
+}
+async function openRetrohubFriends(){
+  if(!retrohubSession?.user){openAccountPanel();return;}
+  closeAccountPanel(); retrohubHideHomeControls();
+  const url=location.pathname+location.search+"#friends";
+  if(location.hash!=="#friends")history.pushState({page:"friends"},"",url);
+  const app=document.getElementById("app");
+  app.innerHTML=`<section class="friends-page">
+    <div class="friends-head"><div><h1>👥 Amigos</h1><p>Encontre pessoas, aceite pedidos e acompanhe sua lista de amigos.</p></div><button class="account-secondary" onclick="openFullRetrohubProfile()">← Meu perfil</button></div>
+    <form class="friends-search" onsubmit="searchRetrohubPeople(event)"><input id="friendsSearchInput" maxlength="24" autocomplete="off" placeholder="Pesquisar pelo nome de usuário..."><button type="submit">🔎 Pesquisar</button></form>
+    <div class="friends-tabs">
+      <button class="friends-tab active" onclick="setRetrohubFriendsTab('friends',this)">Amigos</button>
+      <button class="friends-tab" onclick="setRetrohubFriendsTab('incoming',this)">Pedidos <span id="incomingFriendCount" class="friends-count">0</span></button>
+      <button class="friends-tab" onclick="setRetrohubFriendsTab('outgoing',this)">Enviados</button>
+      <button class="friends-tab" onclick="setRetrohubFriendsTab('blocked',this)">Bloqueados</button>
+    </div><div id="friendsNotice"></div><div id="friendsResults" class="friends-grid"><div class="friends-empty">Carregando...</div></div>
+  </section>`;
+  try{await loadRetrohubFriends();}catch(e){console.error(e);document.getElementById("friendsResults").innerHTML=`<div class="friends-empty">Não foi possível carregar amizades. Execute primeiro o arquivo SQL do Supabase.</div>`;}
+  window.scrollTo({top:0,behavior:"auto"});
+}
+async function searchRetrohubPeople(event){
+  event.preventDefault();
+  const input=document.getElementById("friendsSearchInput"), term=(input?.value||"").trim();
+  const box=document.getElementById("friendsResults");
+  if(term.length<2){box.innerHTML=`<div class="friends-empty">Digite pelo menos 2 caracteres.</div>`;return;}
+  box.innerHTML=`<div class="friends-empty">Pesquisando...</div>`;
+  const uid=retrohubSession.user.id;
+  try{
+    const [{data:profiles,error},relations]=await Promise.all([
+      retrohubSupabase.from("profiles").select("id,username,avatar_url,retroachievements_username").ilike("username",`%${term}%`).neq("id",uid).limit(30),
+      getRetrohubRelations()
+    ]);
+    if(error)throw error;
+    const relationMap={};
+    relations.forEach(r=>{const other=r.sender_id===uid?r.receiver_id:r.sender_id;relationMap[other]=r;});
+    box.innerHTML=(profiles||[]).length?(profiles||[]).map(p=>retrohubFriendCard(p,relationMap[p.id],"search")).join(""):`<div class="friends-empty">Nenhum usuário encontrado.</div>`;
+  }catch(e){console.error(e);box.innerHTML=`<div class="friends-empty">Erro ao pesquisar usuários.</div>`;}
+}
+async function sendRetrohubFriendRequest(receiverId){
+  const uid=retrohubSession?.user?.id;if(!uid||uid===receiverId)return;
+  const {error}=await retrohubSupabase.from("friendships").insert({sender_id:uid,receiver_id:receiverId,status:"pending"});
+  if(error){alert(error.code==="23505"?"Já existe uma relação com este usuário.":"Não foi possível enviar o pedido.");return;}
+  await loadRetrohubFriends(); const f=document.querySelector(".friends-search"); if(f) f.requestSubmit();
+}
+async function acceptRetrohubFriendRequest(id){
+  const {error}=await retrohubSupabase.from("friendships").update({status:"accepted",updated_at:new Date().toISOString()}).eq("id",id).eq("receiver_id",retrohubSession.user.id).eq("status","pending");
+  if(error){alert("Não foi possível aceitar o pedido.");return;} await loadRetrohubFriends();
+}
+async function removeRetrohubFriendship(id){
+  const {error}=await retrohubSupabase.from("friendships").delete().eq("id",id);
+  if(error){alert("Não foi possível alterar esta amizade.");return;} await loadRetrohubFriends();
+}
+async function blockRetrohubUser(otherId){
+  const uid=retrohubSession?.user?.id;if(!uid||uid===otherId)return;
+  const relations=await getRetrohubRelations();
+  const existing=relations.find(r=>(r.sender_id===uid&&r.receiver_id===otherId)||(r.sender_id===otherId&&r.receiver_id===uid));
+  if(existing) await retrohubSupabase.from("friendships").delete().eq("id",existing.id);
+  const {error}=await retrohubSupabase.from("friendships").insert({sender_id:uid,receiver_id:otherId,status:"blocked"});
+  if(error)alert("Não foi possível bloquear este usuário."); else await loadRetrohubFriends();
+}
+window.addEventListener("hashchange",()=>{if(location.hash==="#friends"&&retrohubSession?.user)openRetrohubFriends();});
 </script>
 
 </body>
