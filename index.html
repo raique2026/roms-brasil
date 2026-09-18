@@ -2121,6 +2121,31 @@ function getRetrohubRAGameId(game){
 }
 </style>
 
+
+<style id="retrohub-public-profile-css">
+/* ===== RETROHUB BR · PERFIL PÚBLICO DE AMIGO ===== */
+.public-profile-page{max-width:1240px;margin:0 auto;padding:30px 24px 70px}
+.public-profile-back{margin-bottom:15px;background:transparent;border:0;color:#8fa4cc;font-weight:800;cursor:pointer;padding:7px 0}
+.public-profile-back:hover{color:#fff}
+.public-profile-hero{position:relative;min-height:255px;border:1px solid #26395f;border-radius:20px;overflow:hidden;background:linear-gradient(135deg,#111d38,#091225)}
+.public-profile-cover{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,10,24,.08),rgba(5,10,24,.92)),var(--public-cover);background-size:cover;background-position:center}
+.public-profile-content{position:relative;z-index:1;min-height:255px;display:flex;align-items:flex-end;gap:20px;padding:30px}
+.public-profile-avatar{width:112px;height:112px;border-radius:20px;object-fit:cover;background:#101a30;border:3px solid #7180ff;box-shadow:0 12px 30px #0008}
+.public-profile-main{min-width:0;flex:1}.public-profile-main h1{font-size:30px;margin:0 0 6px;color:#fff}.public-profile-handle{color:#93a7ce;font-size:14px}
+.public-profile-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.public-profile-tag{padding:6px 10px;border-radius:999px;background:#142442;border:1px solid #2b416b;color:#b9c8e4;font-size:12px;font-weight:800}
+.public-profile-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.public-profile-grid{display:grid;grid-template-columns:1.6fr .9fr;gap:16px;margin-top:16px}
+.public-profile-panel{background:#091225;border:1px solid #1e2e4e;border-radius:16px;padding:20px}
+.public-profile-panel h2{font-size:16px;margin:0 0 16px}
+.public-profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.public-profile-stat{background:#0d1930;border:1px solid #1f3153;border-radius:13px;padding:16px}.public-profile-stat strong{display:block;font-size:22px;color:#fff}.public-profile-stat span{font-size:11px;color:#7488ae}
+.public-profile-about{display:grid;gap:11px}.public-profile-row{display:flex;justify-content:space-between;gap:15px;padding-bottom:10px;border-bottom:1px solid #172642;color:#7f93b8;font-size:13px}.public-profile-row:last-child{border-bottom:0;padding-bottom:0}.public-profile-row strong{color:#dce5f7;text-align:right}
+.friend-card .friend-avatar-wrap,.friend-card .friend-info strong{cursor:pointer}
+.friend-card .friend-avatar-wrap:hover .friend-avatar{border-color:#756cff !important;box-shadow:0 0 0 3px rgba(117,108,255,.12)}
+.friend-card .friend-info strong:hover{color:#8d87ff}
+@media(max-width:760px){.public-profile-page{padding:18px 12px 50px}.public-profile-content{align-items:flex-start;flex-direction:column;justify-content:flex-end}.public-profile-avatar{width:90px;height:90px}.public-profile-actions{width:100%}.public-profile-grid{grid-template-columns:1fr}.public-profile-stats{grid-template-columns:1fr 1fr}.public-profile-main h1{font-size:25px}}
+</style>
+
 </head>
 
 <body class="dark-mode">
@@ -5960,9 +5985,9 @@ function retrohubFriendCard(profile, relation, mode){
     buttons=`<span class="friend-status">● Amigo</span><button class="friend-action danger" onclick="removeRetrohubFriendship('${relation.id}')">Remover</button>`;
   }
   return `<article class="friend-card">
-    <div class="friend-avatar-wrap"><img class="friend-avatar" src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()"><span class="friend-online-dot" title="Usuário do RetroHub"></span></div>
+    <div class="friend-avatar-wrap" onclick="openRetrohubPublicProfile('${profile.id}')" title="Ver perfil de @${escapeHTML(username)}"><img class="friend-avatar" src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()"><span class="friend-online-dot" title="Usuário do RetroHub"></span></div>
     <div class="friend-info">
-      <strong>@${escapeHTML(username)}</strong>
+      <strong onclick="openRetrohubPublicProfile('${profile.id}')" title="Ver perfil">@${escapeHTML(username)}</strong>
       <small>${profile?.retroachievements_username ? "RetroAchievements: "+escapeHTML(profile.retroachievements_username) : "Membro do RetroHub BR"}</small>
       <div class="friend-meta"><span class="friend-level">RetroHub</span><span>Perfil de jogador</span></div>
     </div>
@@ -6088,6 +6113,75 @@ async function blockRetrohubUser(otherId){
   if(error)alert("Não foi possível bloquear este usuário."); else await loadRetrohubFriends();
 }
 window.addEventListener("hashchange",()=>{if(location.hash==="#friends"&&retrohubSession?.user)openRetrohubFriends();});
+</script>
+
+
+<script id="retrohub-public-profile-js">
+/* ===== RETROHUB BR · PERFIL PÚBLICO DE OUTRO USUÁRIO ===== */
+async function getRetrohubRelationWith(otherId){
+  if(!retrohubSession?.user)return null;
+  const uid=retrohubSession.user.id;
+  const {data,error}=await retrohubSupabase.from("friendships").select("*")
+    .or(`and(sender_id.eq.${uid},receiver_id.eq.${otherId}),and(sender_id.eq.${otherId},receiver_id.eq.${uid})`)
+    .maybeSingle();
+  if(error){console.error(error);return null}
+  return data||null;
+}
+function publicProfileActionHTML(profile,relation){
+  if(!retrohubSession?.user)return "";
+  const uid=retrohubSession.user.id;
+  if(profile.id===uid)return `<button class="friend-action" onclick="openFullRetrohubProfile()">Meu perfil</button>`;
+  if(!relation)return `<button class="friend-action" onclick="sendRetrohubFriendRequestFromProfile('${profile.id}')">＋ Adicionar amigo</button><button class="friend-action secondary" onclick="blockRetrohubUserFromProfile('${profile.id}')">Bloquear</button>`;
+  if(relation.status==="accepted")return `<button class="friend-action secondary">✓ Amigos</button><button class="friend-action danger" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Remover amigo</button>`;
+  if(relation.status==="blocked")return `<button class="friend-action secondary" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Desbloquear</button>`;
+  if(relation.receiver_id===uid)return `<button class="friend-action" onclick="acceptRetrohubFriendRequestFromProfile('${relation.id}','${profile.id}')">✓ Aceitar pedido</button><button class="friend-action secondary" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Recusar</button>`;
+  return `<button class="friend-action secondary">Pedido enviado</button><button class="friend-action danger" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Cancelar</button>`;
+}
+async function openRetrohubPublicProfile(userId,pushState=true){
+  if(!retrohubSession?.user){openAccountPanel();return}
+  if(userId===retrohubSession.user.id){openFullRetrohubProfile();return}
+  closeAccountPanel();retrohubHideHomeControls();
+  const app=document.getElementById("app");
+  app.innerHTML=`<section class="public-profile-page"><button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button><div class="friends-empty"><div class="friends-empty-icon">👤</div><strong>Carregando perfil...</strong></div></section>`;
+  try{
+    const [{data:profile,error},relation]=await Promise.all([
+      retrohubSupabase.from("profiles").select("*").eq("id",userId).single(),
+      getRetrohubRelationWith(userId)
+    ]);
+    if(error)throw error;
+    if(pushState)history.pushState({page:"public-profile",userId},"",location.pathname+location.search+"#profile/"+encodeURIComponent(profile.username||userId));
+    const avatar=profile.avatar_url||avatarFallback();
+    const cover=profile.cover_url||profile.banner_url||"";
+    const ra=profile.retroachievements_username||"Não conectado";
+    const favorite=profile.favorite_game||profile.favorite_game_title||"Não definido";
+    const badge=profile.featured_badge||profile.favorite_badge||"Nenhuma em destaque";
+    const level=profile.level||1;
+    const xp=profile.xp||0;
+    app.innerHTML=`<section class="public-profile-page">
+      <button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button>
+      <div class="public-profile-hero">
+        <div class="public-profile-cover" style="--public-cover:${cover?`url('${escapeHTML(cover)}')`:"linear-gradient(135deg,#152750,#0b1530)"}"></div>
+        <div class="public-profile-content">
+          <img class="public-profile-avatar" src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()">
+          <div class="public-profile-main"><h1>${escapeHTML(profile.username||"Usuário")}</h1><div class="public-profile-handle">@${escapeHTML(profile.username||"usuario")}</div><div class="public-profile-tags"><span class="public-profile-tag">Nível ${escapeHTML(String(level))}</span><span class="public-profile-tag">🎮 RetroHub BR</span>${profile.retroachievements_username?`<span class="public-profile-tag">🏆 RetroAchievements</span>`:""}</div></div>
+          <div class="public-profile-actions">${publicProfileActionHTML(profile,relation)}</div>
+        </div>
+      </div>
+      <div class="public-profile-grid">
+        <div class="public-profile-panel"><h2>Visão geral</h2><div class="public-profile-stats"><div class="public-profile-stat"><strong>${escapeHTML(String(level))}</strong><span>NÍVEL</span></div><div class="public-profile-stat"><strong>${escapeHTML(String(xp))}</strong><span>XP RETROHUB</span></div><div class="public-profile-stat"><strong>${relation?.status==="accepted"?"✓":"—"}</strong><span>AMIZADE</span></div></div></div>
+        <div class="public-profile-panel"><h2>Sobre o jogador</h2><div class="public-profile-about"><div class="public-profile-row"><span>RetroAchievements</span><strong>${escapeHTML(String(ra))}</strong></div><div class="public-profile-row"><span>Jogo favorito</span><strong>${escapeHTML(String(favorite))}</strong></div><div class="public-profile-row"><span>Insígnia</span><strong>${escapeHTML(String(badge))}</strong></div></div></div>
+      </div>
+    </section>`;
+    window.scrollTo({top:0,behavior:"auto"});
+  }catch(e){
+    console.error(e);
+    app.innerHTML=`<section class="public-profile-page"><button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button><div class="friends-empty friends-error"><div class="friends-empty-icon">!</div><strong>Perfil indisponível</strong><span>Não foi possível carregar este usuário.</span></div></section>`;
+  }
+}
+async function sendRetrohubFriendRequestFromProfile(id){await sendRetrohubFriendRequest(id);await openRetrohubPublicProfile(id,false)}
+async function acceptRetrohubFriendRequestFromProfile(id,userId){await acceptRetrohubFriendRequest(id);await openRetrohubPublicProfile(userId,false)}
+async function removeRetrohubFriendshipFromProfile(id){await removeRetrohubFriendship(id);openRetrohubFriends()}
+async function blockRetrohubUserFromProfile(id){await blockRetrohubUser(id);await openRetrohubPublicProfile(id,false)}
 </script>
 
 </body>
