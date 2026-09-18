@@ -2428,7 +2428,7 @@ function getRetrohubRAGameId(game){
 </style>
 
 <style id="retrohub-custom-badge-icons-v10">
-.retrohub-badge-icon-img{width:48px;height:48px;display:block;object-fit:contain;border-radius:10px}
+.retrohub-badge-icon-img{width:100%;height:100%;display:block;object-fit:contain;border-radius:9px}
 </style>
 
 </head>
@@ -5808,7 +5808,7 @@ function fillProfileHighlightSelects(valid,recent,rhBadges){
   const gs=document.getElementById("favoriteGameSelect"), as=document.getElementById("favoriteAchievementSelect"), bs=document.getElementById("favoriteBadgeSelect");
   if(gs){gs.innerHTML='<option value="">Automático</option>'+valid.map(({game})=>`<option value="${escapeHTML(game.slug)}">${escapeHTML(game.title)}</option>`).join('');gs.value=h.game||'';}
   if(as){as.innerHTML='<option value="">Mais recente</option>'+recent.slice(0,60).map(a=>`<option value="${escapeHTML(String(a.ID||a.BadgeName||a.Title))}">${escapeHTML(a.Title||"Conquista")} — ${escapeHTML(a._game?.title||"")}</option>`).join('');as.value=h.achievement||'';}
-  if(bs){bs.innerHTML='<option value="">Automática</option>'+rhBadges.filter(b=>b[0]).map(b=>`<option value="${escapeHTML(b[2])}">${String(b[1]||"").includes("/")?`<img class="retrohub-badge-icon-img" src="${escapeHTML(b[1])}" alt="">`:escapeHTML(b[1]||"🏅")} ${escapeHTML(b[2])}</option>`).join('');bs.value=h.badge||'';}  setTimeout(updateEditorHighlightPreviews,0);
+  if(bs){bs.innerHTML='<option value="">Automática</option>'+rhBadges.filter(b=>b[0]).map(b=>`<option value="${escapeHTML(b[2])}">${escapeHTML(b[2])}</option>`).join('');bs.value=h.badge||'';}  setTimeout(updateEditorHighlightPreviews,0);
 }
 function renderProfileFeatured(valid,recent,rhBadges,badgeUrl){
   const h=window.retrohubViewingPublicProfile ? {} : getProfileHighlights();
@@ -6052,7 +6052,7 @@ async function loadRetrohubFullProfile(raUser){
 
   window.retrohubBadgeState=rhBadges;
   const badgeClass=r=>r==="Secreta"?"secret":r==="Lendária"?"legendary":r==="Épica"?"epic":r==="Rara"?"rare":"common";
-  const renderRhBadge=([ok,icon,title,desc,cat,rarity,getProgress])=>{const [curRaw,targetRaw]=getProgress?getProgress():[0,1],cur=Math.max(0,Number(curRaw||0)),goal=Math.max(1,Number(targetRaw||1)),pct=Math.max(0,Math.min(100,Math.round(cur/goal*100)));return `<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${icon}</div><div class="rh-badge-info"><strong>${rarity==="Secreta"&&!ok?"???":title}</strong><small>${ok?(rarity==="Secreta"?"✦ Segredo descoberto · "+desc:"✓ Desbloqueada"):(rarity==="Secreta"?"Objetivo secreto":desc)}</small>${!ok?`<div class="rh-progress"><i style="width:${pct}%"></i></div><em>${pct}% concluído</em>`:""}</div></div>`;};
+  const renderRhBadge=([ok,icon,title,desc,cat,rarity,getProgress])=>{const [curRaw,targetRaw]=getProgress?getProgress():[0,1],cur=Math.max(0,Number(curRaw||0)),goal=Math.max(1,Number(targetRaw||1)),pct=Math.max(0,Math.min(100,Math.round(cur/goal*100)));return `<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${String(icon||"").includes("/")?`<img class="retrohub-badge-icon-img" src="${escapeHTML(icon)}" alt="${escapeHTML(title)}">`:escapeHTML(icon||"🏅")}</div><div class="rh-badge-info"><strong>${rarity==="Secreta"&&!ok?"???":title}</strong><small>${ok?(rarity==="Secreta"?"✦ Segredo descoberto · "+desc:"✓ Desbloqueada"):(rarity==="Secreta"?"Objetivo secreto":desc)}</small>${!ok?`<div class="rh-progress"><i style="width:${pct}%"></i></div><em>${pct}% concluído</em>`:""}</div></div>`;};
   const rhBadgesHTML=rhBadges.slice(0,10).map(renderRhBadge).join("");
 
 
@@ -6089,7 +6089,7 @@ function openRetrohubBadgesPage(){
   history.pushState({page:"badges"},"",location.pathname+"#badges");
   const earnedCount=badges.filter(b=>b[0]).length;
   const badgeClass=r=>r==="Secreta"?"secret":r==="Lendária"?"legendary":r==="Épica"?"epic":r==="Rara"?"rare":"common";
-  const render=([ok,icon,title,desc,cat,rarity,getProgress])=>{const [curRaw,targetRaw]=getProgress?getProgress():[0,1],cur=Math.max(0,Number(curRaw||0)),goal=Math.max(1,Number(targetRaw||1)),pct=Math.max(0,Math.min(100,Math.round(cur/goal*100)));return `<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${icon}</div><div class="rh-badge-info"><strong>${rarity==="Secreta"&&!ok?"???":title}</strong><small>${ok?(rarity==="Secreta"?"✦ Segredo descoberto · "+desc:"✓ Desbloqueada"):(rarity==="Secreta"?"Objetivo secreto":desc)}</small>${!ok?`<div class="rh-progress"><i style="width:${pct}%"></i></div><em>${pct}% concluído</em>`:""}</div></div>`;};
+  const render=([ok,icon,title,desc,cat,rarity,getProgress])=>{const [curRaw,targetRaw]=getProgress?getProgress():[0,1],cur=Math.max(0,Number(curRaw||0)),goal=Math.max(1,Number(targetRaw||1)),pct=Math.max(0,Math.min(100,Math.round(cur/goal*100)));return `<div class="rh-badge ${ok?"":"locked"} ${badgeClass(rarity)}" data-badge-category="${cat}"><span class="rh-badge-rarity">${rarity}</span><div class="rh-badge-icon">${String(icon||"").includes("/")?`<img class="retrohub-badge-icon-img" src="${escapeHTML(icon)}" alt="${escapeHTML(title)}">`:escapeHTML(icon||"🏅")}</div><div class="rh-badge-info"><strong>${rarity==="Secreta"&&!ok?"???":title}</strong><small>${ok?(rarity==="Secreta"?"✦ Segredo descoberto · "+desc:"✓ Desbloqueada"):(rarity==="Secreta"?"Objetivo secreto":desc)}</small>${!ok?`<div class="rh-progress"><i style="width:${pct}%"></i></div><em>${pct}% concluído</em>`:""}</div></div>`;};
   app.innerHTML=`<section class="badge-page"><div class="badge-page-head"><div><h1>🏅 Insígnias RetroHub</h1><div class="badge-summary">${earnedCount} de ${badges.length} desbloqueadas · desafios exclusivos do seu perfil</div></div><button class="account-secondary" onclick="openFullRetrohubProfile()">← Voltar ao perfil</button></div><div class="badge-page-tabs"><button class="badge-tab active" onclick="filterRetrohubBadges('all',this)">Todas</button><button class="badge-tab" onclick="filterRetrohubBadges('conquistas',this)">Conquistas</button><button class="badge-tab" onclick="filterRetrohubBadges('perfeitos',this)">Jogos perfeitos</button><button class="badge-tab" onclick="filterRetrohubBadges('pontos',this)">Pontos</button><button class="badge-tab" onclick="filterRetrohubBadges('hardcore',this)">Hardcore</button><button class="badge-tab" onclick="filterRetrohubBadges('colecao',this)">Coleção</button><button class="badge-tab" onclick="filterRetrohubBadges('especiais',this)">Especiais</button></div><div class="badge-page-grid">${badges.map(render).join("")}</div></section>`;
   window.scrollTo({top:0,behavior:"smooth"});
 }
