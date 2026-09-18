@@ -1896,6 +1896,44 @@ body.home-modern .ra-footer-notice{margin-top:42px}
   margin-top:42px !important;
 }
 
+
+/* ===== CORREÇÃO: A PRÓPRIA IMAGEM SOME NO FINAL DO HERO ===== */
+.game-page .game-hero{
+  /* O fundo da página aparece por baixo do fade. */
+  -webkit-mask-image:linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 72%,
+    rgba(0,0,0,.92) 78%,
+    rgba(0,0,0,.62) 88%,
+    rgba(0,0,0,.22) 96%,
+    transparent 100%
+  ) !important;
+  mask-image:linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 72%,
+    rgba(0,0,0,.92) 78%,
+    rgba(0,0,0,.62) 88%,
+    rgba(0,0,0,.22) 96%,
+    transparent 100%
+  ) !important;
+  border-bottom:0 !important;
+}
+
+/* Remove o overlay inferior antigo: agora o fade é aplicado ao hero inteiro,
+   inclusive à imagem de fundo, eliminando o corte reto. */
+.game-page .game-hero::after{
+  background:linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(7,14,29,.10) 58%,
+    rgba(7,14,29,.42) 78%,
+    rgba(7,14,29,.82) 100%
+  ) !important;
+  bottom:0 !important;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
