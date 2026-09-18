@@ -2306,6 +2306,127 @@ function getRetrohubRAGameId(game){
 }
 </style>
 
+
+<style id="retrohub-friend-card-redesign-v9">
+/* ===== AMIGOS V9 · card mais compacto e organizado ===== */
+.friends-grid{
+  border:0 !important;
+  background:transparent !important;
+  border-radius:0 !important;
+  overflow:visible !important;
+}
+.friend-card{
+  display:grid !important;
+  grid-template-columns:64px minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:16px !important;
+  min-height:94px !important;
+  padding:14px 18px !important;
+  margin-bottom:10px !important;
+  background:linear-gradient(135deg,#0b162b,#091326) !important;
+  border:1px solid #20375e !important;
+  border-radius:15px !important;
+  transition:border-color .18s ease,background .18s ease,transform .18s ease !important;
+}
+.friend-card:hover{
+  background:linear-gradient(135deg,#0e1b34,#0a162b) !important;
+  border-color:#304d7f !important;
+  transform:translateY(-1px);
+}
+.friend-avatar-wrap,.friend-avatar{
+  width:64px !important;height:64px !important;
+}
+.friend-avatar{
+  border-radius:14px !important;
+  border:1px solid #40598d !important;
+}
+.friend-online-dot{
+  width:13px !important;height:13px !important;
+  right:-2px !important;bottom:-2px !important;
+  border:3px solid #0b162b !important;
+}
+.friend-info{min-width:0 !important}
+.friend-info strong{
+  font-size:16px !important;
+  margin:0 0 5px !important;
+}
+.friend-info small{
+  margin:0 0 7px !important;
+  font-size:12px !important;
+}
+.friend-meta{
+  margin:0 !important;
+  gap:9px !important;
+  align-items:center !important;
+}
+.friend-level{
+  padding:3px 8px !important;
+  background:#142a50 !important;
+  border-color:#284976 !important;
+  color:#b8ccf2 !important;
+}
+.friend-actions{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:10px !important;
+  flex-wrap:nowrap !important;
+  padding-left:18px;
+}
+.friend-chat-btn{
+  height:40px !important;
+  padding:0 15px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:7px !important;
+  background:#17275a !important;
+  border:1px solid #5369df !important;
+  border-radius:10px !important;
+  color:#f2f5ff !important;
+  white-space:nowrap;
+}
+.friend-status{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:6px;
+  white-space:nowrap;
+  color:#55e6a4 !important;
+  font-size:12px !important;
+}
+.friend-status::before{
+  content:"";
+  width:7px;height:7px;border-radius:50%;
+  background:#43e49b;
+}
+.friend-actions .friend-action.danger{
+  height:40px !important;
+  padding:0 13px !important;
+  white-space:nowrap;
+  color:#8fa2c5 !important;
+  background:#0c172a !important;
+  border-color:#293d62 !important;
+}
+.friend-actions .friend-action.danger:hover{
+  color:#ff9cb4 !important;
+  background:#261521 !important;
+  border-color:#6b344b !important;
+}
+@media(max-width:760px){
+  .friend-card{
+    grid-template-columns:56px minmax(0,1fr) !important;
+    gap:12px !important;padding:13px !important;
+  }
+  .friend-avatar-wrap,.friend-avatar{width:56px !important;height:56px !important}
+  .friend-actions{
+    grid-column:1/-1 !important;
+    padding:9px 0 0 68px !important;
+    justify-content:flex-start !important;
+    flex-wrap:wrap !important;
+  }
+}
+</style>
+
 </head>
 
 <body class="dark-mode">
@@ -6154,7 +6275,7 @@ function retrohubFriendCard(profile, relation, mode){
   }else if(mode==="blocked"){
     buttons=`<button class="friend-action secondary" onclick="removeRetrohubFriendship('${relation.id}')">Desbloquear</button>`;
   }else{
-    buttons=`<button class="friend-chat-btn" onclick="openRetrohubChat('${profile.id}')">💬 Conversar</button><span class="friend-status">● Amigo</span><button class="friend-action danger" onclick="removeRetrohubFriendship('${relation.id}')">Remover</button>`;
+    buttons=`<button class="friend-chat-btn" onclick="openRetrohubChat('${profile.id}')">💬 Conversar</button><span class="friend-status">Amigo</span><button class="friend-action danger" onclick="removeRetrohubFriendship('${relation.id}')">Remover</button>`;
   }
   return `<article class="friend-card">
     <div class="friend-avatar-wrap" onclick="openRetrohubPublicProfile('${profile.id}')" title="Ver perfil de @${escapeHTML(username)}"><img class="friend-avatar" src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()"><span class="friend-online-dot" title="Usuário do RetroHub"></span></div>
