@@ -1426,7 +1426,7 @@ button,
 
 
 /* ===== RETROHUB: GAME PAGE PREMIUM V2 ===== */
-.game-hero{position:relative;overflow:hidden;background:linear-gradient(90deg,rgba(5,12,28,.97) 0%,rgba(8,17,36,.88) 38%,rgba(8,17,36,.62) 68%,rgba(8,17,36,.78) 100%),linear-gradient(0deg,rgba(5,10,22,.92) 0%,transparent 55%),var(--game-hero-bg);background-size:cover;background-position:center 35%;background-repeat:no-repeat}
+.game-hero{position:relative;overflow:hidden;background-color:#0b1328;background-size:cover;background-position:center 35%;background-repeat:no-repeat}
 .game-hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 72% 42%,rgba(35,61,102,.10),transparent 34%),linear-gradient(180deg,rgba(3,8,18,.05) 25%,rgba(4,8,18,.72) 100%)}.game-hero>*{position:relative;z-index:1}
 .game-hero-progress.perfect{border-color:#e8c34d;box-shadow:0 0 30px rgba(232,195,77,.15)}.game-perfect-label{display:none;margin-top:10px;padding:7px 9px;border:1px solid #806d28;border-radius:8px;color:#f5d75f;font-size:11px;font-weight:900;text-align:center}.game-hero-progress.perfect .game-perfect-label{display:block}
 .game-content-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px;align-items:start}.game-content-main{min-width:0}.game-sidebar{position:sticky;top:72px;display:grid;gap:12px}.game-side-card{background:#0c152b;border:1px solid #27385e;border-radius:16px;padding:16px}.game-side-card h3{margin:0 0 13px;font-size:14px}.game-side-big{font-size:28px;font-weight:900}.game-side-muted{font-size:11px;color:#8297c5;margin-top:3px}.game-side-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #202e4e;font-size:12px}.game-side-row:last-child{border:0}.game-side-row span{color:#91a2c8}.game-side-row strong{text-align:right}.game-last-achievement{display:grid;grid-template-columns:54px 1fr;gap:10px;align-items:center}.game-last-achievement img{width:54px;height:54px;object-fit:cover;border-radius:8px}.game-last-achievement strong{font-size:12px}.game-last-achievement small{display:block;color:#8297c5;margin-top:4px;font-size:10px}
@@ -4025,7 +4025,7 @@ function openGame(slug, updateHistory = true){
 
   app.innerHTML = `
     <main class="game-page">
-      <section class="game-hero" style="--game-hero-bg:url('${game.banner || game.screenshots?.[0] || getCover(game)}')">
+      <section class="game-hero" style="background-image:linear-gradient(90deg,rgba(5,10,24,.92) 0%,rgba(7,14,31,.72) 42%,rgba(7,14,31,.40) 70%,rgba(7,14,31,.62) 100%),linear-gradient(0deg,rgba(4,8,18,.72) 0%,rgba(4,8,18,.08) 65%),url(&quot;${game.banner || game.screenshots?.[0] || getCover(game)}&quot;);background-size:cover;background-position:center 38%;background-repeat:no-repeat">
         <img class="game-hero-cover" src="${getCover(game)}" alt="${game.title}">
         <div class="game-hero-main">
           <h1>${game.title}</h1>
