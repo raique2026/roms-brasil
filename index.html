@@ -5444,6 +5444,7 @@ retrohubSupabase.auth.onAuthStateChange((_event, session) => {
 
 /* ===== PERFIL COMPLETO RETROHUB ===== */
 async function openFullRetrohubProfile(options = {}){
+  window.retrohubViewingPublicProfile=false;
   if(!retrohubSession?.user){
     openAccountPanel();
     return false;
@@ -5514,7 +5515,7 @@ function fillProfileHighlightSelects(valid,recent,rhBadges){
   if(bs){bs.innerHTML='<option value="">Automática</option>'+rhBadges.filter(b=>b[0]).map(b=>`<option value="${escapeHTML(b[2])}">${b[1]} ${escapeHTML(b[2])}</option>`).join('');bs.value=h.badge||'';}  setTimeout(updateEditorHighlightPreviews,0);
 }
 function renderProfileFeatured(valid,recent,rhBadges,badgeUrl){
-  const h=getProfileHighlights();
+  const h=window.retrohubViewingPublicProfile ? {} : getProfileHighlights();
   let favGame=valid.find(({game})=>game.slug===h.game)?.game || valid[0]?.game;
   let favAch=recent.find(a=>String(a.ID||a.BadgeName||a.Title)===h.achievement) || recent[0];
   let favBadge=rhBadges.find(b=>b[0]&&b[2]===h.badge) || rhBadges.find(b=>b[0]);
@@ -5525,7 +5526,7 @@ function renderProfileFeatured(valid,recent,rhBadges,badgeUrl){
     <div class="profile-featured-card"><div class="profile-featured-emoji">${favBadge?.[1]||"🏅"}</div><div class="profile-featured-copy"><small>Insígnia em destaque</small><strong>${escapeHTML(favBadge?.[2]||"Nenhuma desbloqueada")}</strong><span>${escapeHTML(favBadge?.[5]||"Continue jogando para desbloquear")}</span></div></div>`;
   const hero=document.getElementById("profileHeroFeaturedBadge");
   if(hero && favBadge){hero.hidden=false;hero.innerHTML=`<span class="mini">${favBadge[1]}</span>${escapeHTML(favBadge[2])} · ${escapeHTML(favBadge[5])}`;}
-  fillProfileHighlightSelects(valid,recent,rhBadges);
+  if(!window.retrohubViewingPublicProfile) fillProfileHighlightSelects(valid,recent,rhBadges);
 }
 
 async function renderRetrohubProfilePage(){
@@ -5570,7 +5571,7 @@ function getRetroHubProgression(stats,badges){
   const levelPct=level>=100?100:Math.max(0,Math.min(100,Math.round((xp-prevXP)/(nextXP-prevXP)*100)));
   const titles=[[1,"Novato Retro"],[5,"Explorador"],[10,"Caçador de Conquistas"],[15,"Veterano Retro"],[20,"Colecionador"],[25,"Perfeccionista"],[30,"Guerreiro Hardcore"],[40,"Mestre Retro"],[50,"Elite RetroHub"],[60,"Mestre do PS2"],[75,"Lenda Retro"],[90,"Guardião dos Clássicos"],[100,"Lenda do RetroHub"]];
   const unlockedTitles=titles.filter(t=>level>=t[0]);
-  const saved=localStorage.getItem("retrohub_profile_title");
+  const saved=window.retrohubViewingPublicProfile ? "" : localStorage.getItem("retrohub_profile_title");
   const selected=unlockedTitles.some(t=>t[1]===saved)?saved:unlockedTitles[unlockedTitles.length-1][1];
   let nextGoal=null;
   badges.forEach(b=>{
@@ -5748,7 +5749,7 @@ async function loadRetrohubFullProfile(raUser){
     <div class="profile-progression-top"><div class="profile-progression-level"><div class="profile-level-orb">${progression.level}</div><div><strong>Nível ${progression.level}</strong><small><span data-profile-selected-title>${escapeHTML(progression.selected)}</span> · ${progression.unlockedCount}/100 insígnias</small></div></div><div class="profile-xp-number">${progression.xp.toLocaleString("pt-BR")} XP${progression.level<100?` · próximo nível: ${progression.nextXP.toLocaleString("pt-BR")} XP`:" · Nível máximo"}</div></div>
     <div class="profile-xp-track"><i style="width:${progression.levelPct}%"></i></div>
     <div class="profile-progression-grid">
-      <div class="profile-title-box"><span>🏷️ Título do perfil</span><strong data-profile-selected-title>${escapeHTML(progression.selected)}</strong><small>Novos títulos são liberados conforme seu nível aumenta.</small><select class="profile-title-select" onchange="saveRetroHubProfileTitle(this.value)">${titleOptions}</select></div>
+      <div class="profile-title-box"><span>🏷️ Título do perfil</span><strong data-profile-selected-title>${escapeHTML(progression.selected)}</strong><small>Novos títulos são liberados conforme o nível aumenta.</small>${window.retrohubViewingPublicProfile?"":`<select class="profile-title-select" onchange="saveRetroHubProfileTitle(this.value)">${titleOptions}</select>`}</div>
       <div class="profile-next-goal"><span>🎯 Próxima meta</span><strong>${nextGoal?escapeHTML(nextGoal.name):"Todas as metas concluídas"}</strong><small>${nextGoal?`${escapeHTML(nextGoal.desc)} · ${nextGoal.pct}% concluído`:"Você desbloqueou todas as insígnias disponíveis."}</small>${nextGoal?`<div class="profile-next-goal-track"><i style="width:${nextGoal.pct}%"></i></div>`:""}</div>
     </div>
   </div>`;
@@ -5775,9 +5776,9 @@ async function loadRetrohubFullProfile(raUser){
   <div id="profileFeaturedArea" class="profile-featured-grid"></div>
   <div class="profile-section"><div class="profile-section-head"><h2>💎 Vitrine de conquistas</h2><span>4 conquistas em destaque</span></div>${showcaseHTML?`<div class="profile-showcase-grid">${showcaseHTML}</div>`:`<div class="profile-empty">Suas conquistas mais recentes aparecerão aqui.</div>`}</div>
   <div class="profile-section"><div class="profile-section-head"><h2>🏆 Jogos perfeitos</h2><span>${perfect} concluído${perfect===1?"":"s"} em 100%</span></div>${perfectHTML?`<div class="profile-perfect-grid">${perfectHTML}</div>`:`<div class="profile-empty">Quando você completar um jogo em 100%, ele ganhará destaque aqui.</div>`}</div>
-  <div class="profile-section"><div class="profile-section-head"><h2>🏅 Insígnias RetroHub</h2><span>${rhBadges.filter(b=>b[0]).length} de ${rhBadges.length} desbloqueadas</span></div><div class="profile-retrohub-badges">${rhBadgesHTML}</div><div class="rh-badges-actions"><button class="rh-badges-more" onclick="openRetrohubBadgesPage()">Ver todas as insígnias →</button></div></div>
+  <div class="profile-section"><div class="profile-section-head"><h2>🏅 Insígnias RetroHub</h2><span>${rhBadges.filter(b=>b[0]).length} de ${rhBadges.length} desbloqueadas</span></div><div class="profile-retrohub-badges">${rhBadgesHTML}</div>${window.retrohubViewingPublicProfile?"":`<div class="rh-badges-actions"><button class="rh-badges-more" onclick="openRetrohubBadgesPage()">Ver todas as insígnias →</button></div>`}</div>
 
-  <div class="profile-section"><div class="profile-section-head"><h2>🎮 Meus jogos</h2><span>Progresso no RetroAchievements</span></div><div class="profile-games">${gamesHTML||'<div class="profile-empty">Nenhum jogo compatível encontrado.</div>'}</div></div>`;
+  <div class="profile-section"><div class="profile-section-head"><h2>🎮 ${window.retrohubViewingPublicProfile?"Jogos":"Meus jogos"}</h2><span>Progresso no RetroAchievements</span></div><div class="profile-games">${gamesHTML||'<div class="profile-empty">Nenhum jogo compatível encontrado.</div>'}</div></div>`;
   // Renderiza os destaques somente depois que #profileFeaturedArea existe no DOM.
   // Antes esta função era chamada antes do target.innerHTML, por isso a escolha
   // (ex.: Metroid Fusion) era salva, mas não aparecia visualmente no perfil.
@@ -6046,6 +6047,7 @@ function renderRetrohubFriendsTab(tab){
   const summary=document.getElementById("friendsOnlineSummary"); if(summary) summary.textContent=retrohubFriendCache.friends.length;
 }
 async function openRetrohubFriends(){
+  window.retrohubViewingPublicProfile=false;
   if(!retrohubSession?.user){openAccountPanel();return;}
   closeAccountPanel(); retrohubHideHomeControls();
   const url=location.pathname+location.search+"#friends";
@@ -6140,41 +6142,73 @@ function publicProfileActionHTML(profile,relation){
 async function openRetrohubPublicProfile(userId,pushState=true){
   if(!retrohubSession?.user){openAccountPanel();return}
   if(userId===retrohubSession.user.id){openFullRetrohubProfile();return}
-  closeAccountPanel();retrohubHideHomeControls();
+
+  window.retrohubViewingPublicProfile=true;
+  window.retrohubPublicProfileUserId=userId;
+  closeAccountPanel();
+  retrohubHideHomeControls();
+
   const app=document.getElementById("app");
-  app.innerHTML=`<section class="public-profile-page"><button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button><div class="friends-empty"><div class="friends-empty-icon">👤</div><strong>Carregando perfil...</strong></div></section>`;
+  app.innerHTML=`<section class="profile-page"><div class="profile-section profile-empty">Carregando perfil do jogador...</div></section>`;
+
   try{
     const [{data:profile,error},relation]=await Promise.all([
       retrohubSupabase.from("profiles").select("*").eq("id",userId).single(),
       getRetrohubRelationWith(userId)
     ]);
     if(error)throw error;
-    if(pushState)history.pushState({page:"public-profile",userId},"",location.pathname+location.search+"#profile/"+encodeURIComponent(profile.username||userId));
+
+    if(pushState){
+      history.pushState(
+        {page:"public-profile",userId},
+        "",
+        location.pathname+location.search+"#profile/"+encodeURIComponent(profile.username||userId)
+      );
+    }
+
+    const username=profile.username||"Usuário";
+    const raUser=profile.retroachievements_username||"";
     const avatar=profile.avatar_url||avatarFallback();
-    const cover=profile.cover_url||profile.banner_url||"";
-    const ra=profile.retroachievements_username||"Não conectado";
-    const favorite=profile.favorite_game||profile.favorite_game_title||"Não definido";
-    const badge=profile.featured_badge||profile.favorite_badge||"Nenhuma em destaque";
-    const level=profile.level||1;
-    const xp=profile.xp||0;
-    app.innerHTML=`<section class="public-profile-page">
+    const wallpaper=profile.wallpaper_url||profile.cover_url||profile.banner_url||"";
+    const wallpaperStyle=wallpaper?` style="--profile-wallpaper:url('${escapeHTML(wallpaper).replace(/'/g,"%27")}')"`:"";
+
+    app.innerHTML=`<section class="profile-page">
       <button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button>
-      <div class="public-profile-hero">
-        <div class="public-profile-cover" style="--public-cover:${cover?`url('${escapeHTML(cover)}')`:"linear-gradient(135deg,#152750,#0b1530)"}"></div>
-        <div class="public-profile-content">
-          <img class="public-profile-avatar" src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()">
-          <div class="public-profile-main"><h1>${escapeHTML(profile.username||"Usuário")}</h1><div class="public-profile-handle">@${escapeHTML(profile.username||"usuario")}</div><div class="public-profile-tags"><span class="public-profile-tag">Nível ${escapeHTML(String(level))}</span><span class="public-profile-tag">🎮 RetroHub BR</span>${profile.retroachievements_username?`<span class="public-profile-tag">🏆 RetroAchievements</span>`:""}</div></div>
-          <div class="public-profile-actions">${publicProfileActionHTML(profile,relation)}</div>
+      <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}>
+        <div class="profile-hero-grid">
+          <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
+          <div>
+            <h1 class="profile-page-name">@${escapeHTML(username)}</h1>
+            <div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div>
+            <div class="profile-meta-row"><div class="profile-online">Perfil RetroHub</div></div>
+            <div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div>
+            <div class="profile-level-wrap">
+              <div class="profile-level-line">
+                <div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div>
+                <span id="profileXpText" class="profile-xp-text">0 / 500 XP</span>
+              </div>
+              <div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div>
+            </div>
+          </div>
+          <div class="profile-hero-actions">${publicProfileActionHTML(profile,relation)}</div>
         </div>
       </div>
-      <div class="public-profile-grid">
-        <div class="public-profile-panel"><h2>Visão geral</h2><div class="public-profile-stats"><div class="public-profile-stat"><strong>${escapeHTML(String(level))}</strong><span>NÍVEL</span></div><div class="public-profile-stat"><strong>${escapeHTML(String(xp))}</strong><span>XP RETROHUB</span></div><div class="public-profile-stat"><strong>${relation?.status==="accepted"?"✓":"—"}</strong><span>AMIZADE</span></div></div></div>
-        <div class="public-profile-panel"><h2>Sobre o jogador</h2><div class="public-profile-about"><div class="public-profile-row"><span>RetroAchievements</span><strong>${escapeHTML(String(ra))}</strong></div><div class="public-profile-row"><span>Jogo favorito</span><strong>${escapeHTML(String(favorite))}</strong></div><div class="public-profile-row"><span>Insígnia</span><strong>${escapeHTML(String(badge))}</strong></div></div></div>
+      <div id="profileDashboard">
+        <div class="profile-loading">${raUser?"Carregando conquistas, jogos, insígnias e progresso...":"Este usuário ainda não vinculou o RetroAchievements."}</div>
       </div>
     </section>`;
+
+    if(raUser){
+      await loadRetrohubFullProfile(raUser);
+    }else{
+      const target=document.getElementById("profileDashboard");
+      if(target)target.innerHTML=`<div class="profile-section profile-empty">Quando @${escapeHTML(username)} vincular uma conta do RetroAchievements, o perfil completo aparecerá aqui.</div>`;
+    }
+
     window.scrollTo({top:0,behavior:"auto"});
   }catch(e){
     console.error(e);
+    window.retrohubViewingPublicProfile=false;
     app.innerHTML=`<section class="public-profile-page"><button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button><div class="friends-empty friends-error"><div class="friends-empty-icon">!</div><strong>Perfil indisponível</strong><span>Não foi possível carregar este usuário.</span></div></section>`;
   }
 }
