@@ -2427,6 +2427,10 @@ function getRetrohubRAGameId(game){
 }
 </style>
 
+<style id="retrohub-custom-badge-icons-v10">
+.retrohub-badge-icon-img{width:48px;height:48px;display:block;object-fit:contain;border-radius:10px}
+</style>
+
 </head>
 
 <body class="dark-mode">
@@ -5804,7 +5808,7 @@ function fillProfileHighlightSelects(valid,recent,rhBadges){
   const gs=document.getElementById("favoriteGameSelect"), as=document.getElementById("favoriteAchievementSelect"), bs=document.getElementById("favoriteBadgeSelect");
   if(gs){gs.innerHTML='<option value="">Automático</option>'+valid.map(({game})=>`<option value="${escapeHTML(game.slug)}">${escapeHTML(game.title)}</option>`).join('');gs.value=h.game||'';}
   if(as){as.innerHTML='<option value="">Mais recente</option>'+recent.slice(0,60).map(a=>`<option value="${escapeHTML(String(a.ID||a.BadgeName||a.Title))}">${escapeHTML(a.Title||"Conquista")} — ${escapeHTML(a._game?.title||"")}</option>`).join('');as.value=h.achievement||'';}
-  if(bs){bs.innerHTML='<option value="">Automática</option>'+rhBadges.filter(b=>b[0]).map(b=>`<option value="${escapeHTML(b[2])}">${b[1]} ${escapeHTML(b[2])}</option>`).join('');bs.value=h.badge||'';}  setTimeout(updateEditorHighlightPreviews,0);
+  if(bs){bs.innerHTML='<option value="">Automática</option>'+rhBadges.filter(b=>b[0]).map(b=>`<option value="${escapeHTML(b[2])}">${String(b[1]||"").includes("/")?`<img class="retrohub-badge-icon-img" src="${escapeHTML(b[1])}" alt="">`:escapeHTML(b[1]||"🏅")} ${escapeHTML(b[2])}</option>`).join('');bs.value=h.badge||'';}  setTimeout(updateEditorHighlightPreviews,0);
 }
 function renderProfileFeatured(valid,recent,rhBadges,badgeUrl){
   const h=window.retrohubViewingPublicProfile ? {} : getProfileHighlights();
@@ -5913,7 +5917,7 @@ async function loadRetrohubFullProfile(raUser){
   const recentHTML=recent.slice(0,12).map(a=>`<div class="profile-achievement" title="${escapeHTML(a.Title||"Conquista")}"><img src="${escapeHTML(badgeUrl(a))}" alt=""><strong>${escapeHTML(a.Title||"Conquista")}</strong><small>${a.DateEarnedHardcore?"🔥 Hardcore • ":""}${escapeHTML(profileDateLabel(a))}</small></div>`).join("");
   const perfectHTML=valid.filter(({game,data})=>{const t=Number(data.NumAchievements??game.achievements??0),e=Number(data.NumAwardedToUser??0);return t>0&&e>=t;}).map(({game,data})=>`<div class="profile-perfect-card" onclick="openGame('${escapeHTML(game.slug)}',true)"><span>🏆 PERFEITO</span><img src="${escapeHTML(game.cover)}" alt=""><div>${escapeHTML(game.title)} · ${Number(data.NumAchievements??game.achievements??0)}/ ${Number(data.NumAchievements??game.achievements??0)}</div></div>`).join("");
   const rhBadges=[
-    [earned>=1,"🎯","Primeira conquista","Desbloqueie 1 conquista","conquistas","Comum",()=>[earned,1]],
+    [earned>=1,"images/retrohub-badges/primeira-conquista.png","Primeira conquista","Desbloqueie 1 conquista","conquistas","Comum",()=>[earned,1]],
     [earned>=10,"🥉","Primeiros passos","Alcance 10 conquistas","conquistas","Comum",()=>[earned,10]],
     [earned>=25,"🥈","Caçador iniciante","Alcance 25 conquistas","conquistas","Comum",()=>[earned,25]],
     [earned>=50,"🏆","Caçador de conquistas","Alcance 50 conquistas","conquistas","Comum",()=>[earned,50]],
