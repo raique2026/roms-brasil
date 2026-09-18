@@ -2146,6 +2146,28 @@ function getRetrohubRAGameId(game){
 @media(max-width:760px){.public-profile-page{padding:18px 12px 50px}.public-profile-content{align-items:flex-start;flex-direction:column;justify-content:flex-end}.public-profile-avatar{width:90px;height:90px}.public-profile-actions{width:100%}.public-profile-grid{grid-template-columns:1fr}.public-profile-stats{grid-template-columns:1fr 1fr}.public-profile-main h1{font-size:25px}}
 </style>
 
+
+<style id="retrohub-chat-css">
+.chat-page{max-width:1180px;margin:0 auto;padding:28px 22px 60px}
+.chat-shell{height:min(720px,calc(100vh - 150px));min-height:560px;background:#081226;border:1px solid #22365c;border-radius:20px;overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;box-shadow:0 20px 55px #0005}
+.chat-head{display:flex;align-items:center;gap:13px;padding:15px 18px;border-bottom:1px solid #1e3154;background:#0b1730}
+.chat-head img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #6674ff}
+.chat-head-info{min-width:0;flex:1}.chat-head-info strong{display:block;font-size:17px;color:#fff}.chat-head-info small{color:#82a6e8}
+.chat-back,.chat-profile{border:1px solid #294269;background:#101e39;color:#dbe8ff;border-radius:11px;padding:10px 13px;font-weight:800;cursor:pointer}
+.chat-back:hover,.chat-profile:hover{background:#17294a}
+.chat-messages{overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:10px;background:radial-gradient(circle at 50% 0,#102044 0,#071022 48%,#060d1c 100%)}
+.chat-empty{margin:auto;text-align:center;color:#7795ca;max-width:420px}.chat-empty b{display:block;color:#dce8ff;font-size:18px;margin-bottom:7px}
+.chat-row{display:flex}.chat-row.mine{justify-content:flex-end}.chat-bubble{max-width:min(70%,620px);padding:10px 13px;border-radius:15px 15px 15px 5px;background:#142440;border:1px solid #263e68;color:#edf4ff;line-height:1.42;white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-row.mine .chat-bubble{background:linear-gradient(135deg,#5967ed,#6f62f5);border-color:#7c82ff;border-radius:15px 15px 5px 15px;color:#fff}
+.chat-time{display:block;margin-top:5px;font-size:10px;opacity:.68;text-align:right}
+.chat-compose{display:flex;gap:10px;padding:14px;border-top:1px solid #1e3154;background:#0b1730}
+.chat-compose textarea{flex:1;resize:none;min-height:46px;max-height:120px;border:1px solid #294269;background:#071226;color:#fff;border-radius:13px;padding:12px 14px;font:inherit;outline:none}
+.chat-compose textarea:focus{border-color:#6c73ff;box-shadow:0 0 0 3px #6c73ff1c}
+.chat-send{min-width:110px;border:0;border-radius:12px;background:linear-gradient(135deg,#6672ff,#765cff);color:#fff;font-weight:900;cursor:pointer;padding:0 18px}.chat-send:hover{filter:brightness(1.08)}
+.friend-chat-btn{border:1px solid #5265d9;background:#17265a;color:#dfe5ff;border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}.friend-chat-btn:hover{background:#253a83}
+@media(max-width:700px){.chat-page{padding:12px}.chat-shell{height:calc(100vh - 100px);min-height:500px;border-radius:14px}.chat-profile{display:none}.chat-messages{padding:14px}.chat-bubble{max-width:86%}.chat-send{min-width:76px}.chat-compose{padding:10px}}
+</style>
+
 </head>
 
 <body class="dark-mode">
@@ -5983,7 +6005,7 @@ function retrohubFriendCard(profile, relation, mode){
   }else if(mode==="blocked"){
     buttons=`<button class="friend-action secondary" onclick="removeRetrohubFriendship('${relation.id}')">Desbloquear</button>`;
   }else{
-    buttons=`<span class="friend-status">● Amigo</span><button class="friend-action danger" onclick="removeRetrohubFriendship('${relation.id}')">Remover</button>`;
+    buttons=`<button class="friend-chat-btn" onclick="openRetrohubChat('${profile.id}')">💬 Conversar</button><span class="friend-status">● Amigo</span><button class="friend-action danger" onclick="removeRetrohubFriendship('${relation.id}')">Remover</button>`;
   }
   return `<article class="friend-card">
     <div class="friend-avatar-wrap" onclick="openRetrohubPublicProfile('${profile.id}')" title="Ver perfil de @${escapeHTML(username)}"><img class="friend-avatar" src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()"><span class="friend-online-dot" title="Usuário do RetroHub"></span></div>
@@ -6134,7 +6156,7 @@ function publicProfileActionHTML(profile,relation){
   const uid=retrohubSession.user.id;
   if(profile.id===uid)return `<button class="friend-action" onclick="openFullRetrohubProfile()">Meu perfil</button>`;
   if(!relation)return `<button class="friend-action" onclick="sendRetrohubFriendRequestFromProfile('${profile.id}')">＋ Adicionar amigo</button><button class="friend-action secondary" onclick="blockRetrohubUserFromProfile('${profile.id}')">Bloquear</button>`;
-  if(relation.status==="accepted")return `<button class="friend-action secondary">✓ Amigos</button><button class="friend-action danger" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Remover amigo</button>`;
+  if(relation.status==="accepted")return `<button class="friend-action" onclick="openRetrohubChat('${profile.id}')">💬 Conversar</button><button class="friend-action secondary">✓ Amigos</button><button class="friend-action danger" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Remover amigo</button>`;
   if(relation.status==="blocked")return `<button class="friend-action secondary" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Desbloquear</button>`;
   if(relation.receiver_id===uid)return `<button class="friend-action" onclick="acceptRetrohubFriendRequestFromProfile('${relation.id}','${profile.id}')">✓ Aceitar pedido</button><button class="friend-action secondary" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Recusar</button>`;
   return `<button class="friend-action secondary">Pedido enviado</button><button class="friend-action danger" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Cancelar</button>`;
@@ -6216,6 +6238,128 @@ async function sendRetrohubFriendRequestFromProfile(id){await sendRetrohubFriend
 async function acceptRetrohubFriendRequestFromProfile(id,userId){await acceptRetrohubFriendRequest(id);await openRetrohubPublicProfile(userId,false)}
 async function removeRetrohubFriendshipFromProfile(id){await removeRetrohubFriendship(id);openRetrohubFriends()}
 async function blockRetrohubUserFromProfile(id){await blockRetrohubUser(id);await openRetrohubPublicProfile(id,false)}
+</script>
+
+
+<script id="retrohub-chat-js">
+/* ===== RETROHUB BR · CHAT ENTRE AMIGOS V1 ===== */
+let retrohubChatFriend=null;
+let retrohubChatTimer=null;
+let retrohubChatLastSignature="";
+
+function stopRetrohubChatPolling(){
+  if(retrohubChatTimer){clearInterval(retrohubChatTimer);retrohubChatTimer=null}
+}
+function retrohubChatDate(value){
+  try{return new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(new Date(value))}
+  catch{return ""}
+}
+async function verifyRetrohubAcceptedFriend(otherId){
+  const rel=await getRetrohubRelationWith(otherId);
+  return !!(rel&&rel.status==="accepted");
+}
+async function openRetrohubChat(friendId,pushState=true){
+  if(!retrohubSession?.user){openAccountPanel();return}
+  if(!friendId||friendId===retrohubSession.user.id)return;
+  stopRetrohubChatPolling();
+  retrohubHideHomeControls();
+
+  const app=document.getElementById("app");
+  app.innerHTML=`<section class="chat-page"><div class="friends-empty">Abrindo conversa...</div></section>`;
+
+  try{
+    const [accepted,{data:profile,error}]=await Promise.all([
+      verifyRetrohubAcceptedFriend(friendId),
+      retrohubSupabase.from("profiles").select("id,username,avatar_url,retroachievements_username").eq("id",friendId).single()
+    ]);
+    if(error)throw error;
+    if(!accepted)throw new Error("CHAT_NOT_FRIEND");
+
+    retrohubChatFriend=profile;
+    retrohubChatLastSignature="";
+    if(pushState)history.pushState({page:"chat",friendId},"",location.pathname+location.search+"#chat/"+encodeURIComponent(friendId));
+
+    const avatar=retrohubSocialAvatar(profile.avatar_url);
+    app.innerHTML=`<section class="chat-page">
+      <div class="chat-shell">
+        <header class="chat-head">
+          <button class="chat-back" onclick="openRetrohubFriends()">←</button>
+          <img src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()">
+          <div class="chat-head-info"><strong>@${escapeHTML(profile.username||"Usuário")}</strong><small>Seu amigo no RetroHub BR</small></div>
+          <button class="chat-profile" onclick="openRetrohubPublicProfile('${profile.id}')">Ver perfil</button>
+        </header>
+        <div id="retrohubChatMessages" class="chat-messages"><div class="chat-empty"><b>Carregando mensagens...</b></div></div>
+        <form class="chat-compose" onsubmit="sendRetrohubChatMessage(event)">
+          <textarea id="retrohubChatInput" maxlength="1000" rows="1" placeholder="Escreva uma mensagem..." onkeydown="retrohubChatKeydown(event)"></textarea>
+          <button id="retrohubChatSend" class="chat-send" type="submit">Enviar</button>
+        </form>
+      </div>
+    </section>`;
+
+    await loadRetrohubChatMessages(true);
+    retrohubChatTimer=setInterval(()=>loadRetrohubChatMessages(false),3000);
+    document.getElementById("retrohubChatInput")?.focus();
+  }catch(e){
+    console.error(e);
+    app.innerHTML=`<section class="chat-page"><button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button><div class="friends-empty friends-error"><div class="friends-empty-icon">!</div><strong>Não foi possível abrir o chat</strong><span>${e?.message==="CHAT_NOT_FRIEND"?"O chat só está disponível entre amigos aceitos.":"Verifique se a tabela de mensagens foi criada no Supabase."}</span></div></section>`;
+  }
+}
+async function loadRetrohubChatMessages(forceScroll=false){
+  if(!retrohubChatFriend||!retrohubSession?.user)return;
+  const uid=retrohubSession.user.id, fid=retrohubChatFriend.id;
+  const {data,error}=await retrohubSupabase.from("messages")
+    .select("id,sender_id,receiver_id,content,created_at")
+    .or(`and(sender_id.eq.${uid},receiver_id.eq.${fid}),and(sender_id.eq.${fid},receiver_id.eq.${uid})`)
+    .order("created_at",{ascending:true})
+    .limit(300);
+  if(error){console.error(error);return}
+  const rows=data||[];
+  const sig=rows.length?`${rows.length}:${rows[rows.length-1].id}`:"0";
+  if(sig===retrohubChatLastSignature&&!forceScroll)return;
+  retrohubChatLastSignature=sig;
+
+  const box=document.getElementById("retrohubChatMessages");if(!box)return;
+  const nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<120;
+  box.innerHTML=rows.length?rows.map(m=>{
+    const mine=m.sender_id===uid;
+    return `<div class="chat-row ${mine?"mine":""}"><div class="chat-bubble">${escapeHTML(m.content||"")}<span class="chat-time">${retrohubChatDate(m.created_at)}</span></div></div>`;
+  }).join(""):`<div class="chat-empty"><b>Comece a conversa 👋</b>Envie a primeira mensagem para @${escapeHTML(retrohubChatFriend.username||"seu amigo")}.</div>`;
+  if(forceScroll||nearBottom)box.scrollTop=box.scrollHeight;
+}
+async function sendRetrohubChatMessage(event){
+  event.preventDefault();
+  if(!retrohubChatFriend||!retrohubSession?.user)return;
+  const input=document.getElementById("retrohubChatInput");
+  const button=document.getElementById("retrohubChatSend");
+  const content=(input?.value||"").trim();
+  if(!content)return;
+  if(content.length>1000){alert("A mensagem pode ter no máximo 1000 caracteres.");return}
+  if(button)button.disabled=true;
+  const {error}=await retrohubSupabase.from("messages").insert({
+    sender_id:retrohubSession.user.id,
+    receiver_id:retrohubChatFriend.id,
+    content
+  });
+  if(button)button.disabled=false;
+  if(error){
+    console.error(error);
+    alert(error.code==="42501"?"O Supabase bloqueou o envio. Execute o SQL do chat que acompanha esta versão.":"Não foi possível enviar a mensagem.");
+    return;
+  }
+  input.value="";
+  retrohubChatLastSignature="";
+  await loadRetrohubChatMessages(true);
+  input.focus();
+}
+function retrohubChatKeydown(event){
+  if(event.key==="Enter"&&!event.shiftKey){
+    event.preventDefault();
+    event.target.form?.requestSubmit();
+  }
+}
+window.addEventListener("hashchange",()=>{
+  if(!location.hash.startsWith("#chat/"))stopRetrohubChatPolling();
+});
 </script>
 
 </body>
