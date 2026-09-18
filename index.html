@@ -1426,8 +1426,8 @@ button,
 
 
 /* ===== RETROHUB: GAME PAGE PREMIUM V2 ===== */
-.game-hero{position:relative;overflow:hidden;background:linear-gradient(100deg,rgba(6,11,24,.97),rgba(11,20,42,.90) 58%,rgba(17,28,55,.78)),var(--game-hero-bg);background-size:cover;background-position:center}
-.game-hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 45%,rgba(4,8,18,.55))}.game-hero>*{position:relative;z-index:1}
+.game-hero{position:relative;overflow:hidden;background:linear-gradient(90deg,rgba(5,12,28,.97) 0%,rgba(8,17,36,.88) 38%,rgba(8,17,36,.62) 68%,rgba(8,17,36,.78) 100%),linear-gradient(0deg,rgba(5,10,22,.92) 0%,transparent 55%),var(--game-hero-bg);background-size:cover;background-position:center 35%;background-repeat:no-repeat}
+.game-hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 72% 42%,rgba(35,61,102,.10),transparent 34%),linear-gradient(180deg,rgba(3,8,18,.05) 25%,rgba(4,8,18,.72) 100%)}.game-hero>*{position:relative;z-index:1}
 .game-hero-progress.perfect{border-color:#e8c34d;box-shadow:0 0 30px rgba(232,195,77,.15)}.game-perfect-label{display:none;margin-top:10px;padding:7px 9px;border:1px solid #806d28;border-radius:8px;color:#f5d75f;font-size:11px;font-weight:900;text-align:center}.game-hero-progress.perfect .game-perfect-label{display:block}
 .game-content-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px;align-items:start}.game-content-main{min-width:0}.game-sidebar{position:sticky;top:72px;display:grid;gap:12px}.game-side-card{background:#0c152b;border:1px solid #27385e;border-radius:16px;padding:16px}.game-side-card h3{margin:0 0 13px;font-size:14px}.game-side-big{font-size:28px;font-weight:900}.game-side-muted{font-size:11px;color:#8297c5;margin-top:3px}.game-side-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #202e4e;font-size:12px}.game-side-row:last-child{border:0}.game-side-row span{color:#91a2c8}.game-side-row strong{text-align:right}.game-last-achievement{display:grid;grid-template-columns:54px 1fr;gap:10px;align-items:center}.game-last-achievement img{width:54px;height:54px;object-fit:cover;border-radius:8px}.game-last-achievement strong{font-size:12px}.game-last-achievement small{display:block;color:#8297c5;margin-top:4px;font-size:10px}
 .game-achievement-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 12px;padding:10px;background:#0b1428;border:1px solid #263657;border-radius:12px}.game-filter{border:1px solid #344568;background:#101b34;color:#aebddd;border-radius:8px;padding:8px 11px;font-size:11px;font-weight:900;cursor:pointer}.game-filter.active,.game-filter:hover{background:#294171;color:#fff}.game-ach-search{margin-left:auto;min-width:190px;border:1px solid #344568;background:#081123;color:#fff;border-radius:8px;padding:9px 11px;outline:none}.game-achievement-panel .guide-achievement{cursor:pointer;transition:.18s}.game-achievement-panel .guide-achievement:hover{transform:translateY(-2px);border-color:#536da8;background:#101d38}.game-achievement-panel .guide-achievement.hidden-by-filter{display:none!important}.game-achievement-panel .guide-achievement.is-hardcore{border-color:#6d5d28}.game-achievement-panel .guide-achievement.is-hardcore:after{content:"HARDCORE";position:absolute;right:8px;top:8px;color:#f1c44b;font-size:8px;font-weight:900}.game-achievement-panel .guide-achievement{position:relative}.game-achievement-panel .guide-achievement.expanded{grid-column:span 2;border-color:#6b80bd}.game-achievement-panel .guide-achievement.expanded p{font-size:13px}.game-achievement-panel .guide-achievement.expanded .guide-official-name{color:#9db2e8}
@@ -2018,12 +2018,12 @@ const games = [
     year: "2005",
     language: "Português",
     region: "NTSC-U/C",
-    size: "2,74 GB",
+    size: "Edite o tamanho",
     developer: "Team Ico / SCE Japan Studio",
     publisher: "Sony Computer Entertainment",
     genre: "Ação / Aventura",
     format: "ISO",
-    translation: "Tremiterra",
+    translation: "Não informado",
 
     retroAchievements: true,
     achievements: 94,
@@ -2058,10 +2058,9 @@ const games = [
     banner: "banners/shadow-of-the-colossus.jpg",
     description: "Shadow of the Colossus acompanha Wander em uma jornada pelas Terras Proibidas para derrotar dezesseis colossos e tentar restaurar a vida de Mono. A aventura combina exploração, escalada e batalhas gigantescas em um mundo melancólico e monumental.",
     screenshots: [
-      "screenshots/shadow-of-the-colossus/screenshot-01.png",
-      "screenshots/shadow-of-the-colossus/screenshot-02.png",
-      "screenshots/shadow-of-the-colossus/screenshot-03.png",
-      "screenshots/shadow-of-the-colossus/screenshot-04.png"
+      "screenshots/shadow-of-the-colossus/screenshot-01.jpg",
+      "screenshots/shadow-of-the-colossus/screenshot-02.jpg",
+      "screenshots/shadow-of-the-colossus/screenshot-03.jpg"
     ],
     download: "#"
   },
@@ -4026,7 +4025,7 @@ function openGame(slug, updateHistory = true){
 
   app.innerHTML = `
     <main class="game-page">
-      <section class="game-hero" style="--game-hero-bg:url('${game.screenshots?.[0] || getCover(game)}')">
+      <section class="game-hero" style="--game-hero-bg:url('${game.banner || game.screenshots?.[0] || getCover(game)}')">
         <img class="game-hero-cover" src="${getCover(game)}" alt="${game.title}">
         <div class="game-hero-main">
           <h1>${game.title}</h1>
