@@ -1833,22 +1833,52 @@ body.home-modern .ra-footer-notice{margin-top:42px}
   background:#081022;
 }
 
-/* ===== FUNDO DO HERO — BANNER DO PRÓPRIO JOGO ===== */
+/* ===== HERO: CAPA DO PRÓPRIO JOGO AMPLIADA + DESFOCADA ===== */
 .game-page .game-hero{
-  background-image:
-    linear-gradient(90deg,
-      rgba(5,10,24,.96) 0%,
-      rgba(7,15,32,.86) 38%,
-      rgba(8,17,36,.64) 70%,
-      rgba(7,14,30,.78) 100%
-    ),
-    var(--game-hero-bg) !important;
-  background-size:cover !important;
-  background-position:center center !important;
-  background-repeat:no-repeat !important;
+  position:relative !important;
+  isolation:isolate;
+  overflow:hidden !important;
+  background:#071020 !important;
 }
+
+/* A mesma capa 2:3 vira o fundo, ampliada para preencher a faixa horizontal. */
+.game-page .game-hero::before{
+  content:"";
+  position:absolute;
+  z-index:-2;
+  inset:-32px;
+  background-image:var(--game-hero-bg);
+  background-size:cover;
+  background-position:center 35%;
+  background-repeat:no-repeat;
+  filter:blur(18px);
+  transform:scale(1.08);
+  opacity:.68;
+}
+
+/* Degradê mantém título/descrição legíveis e integra o fundo com a página. */
 .game-page .game-hero::after{
-  background:linear-gradient(180deg,rgba(3,8,18,.05) 35%,rgba(3,8,18,.72) 100%) !important;
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,
+      rgba(5,10,24,.93) 0%,
+      rgba(5,10,24,.80) 36%,
+      rgba(6,13,28,.58) 68%,
+      rgba(6,13,28,.76) 100%
+    ),
+    linear-gradient(0deg,
+      rgba(4,8,18,.82) 0%,
+      rgba(4,8,18,.08) 58%
+    );
+}
+
+.game-page .game-hero > *{
+  position:relative;
+  z-index:1;
 }
 
 </style>
@@ -4044,7 +4074,7 @@ function openGame(slug, updateHistory = true){
 
   app.innerHTML = `
     <main class="game-page">
-      <section class="game-hero" style="--game-hero-bg:url('${getBanner(game)}')">
+      <section class="game-hero" style="--game-hero-bg:url('${getCover(game)}')">
         <img class="game-hero-cover" src="${getCover(game)}" alt="${game.title}">
         <div class="game-hero-main">
           <h1>${game.title}</h1>
