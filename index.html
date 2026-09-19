@@ -2363,6 +2363,48 @@ header nav,
   }
 }
 
+
+/* ===== FIX DEFINITIVO: ABA APOIE ACIMA DE TODO O SITE ===== */
+#supportOverlay.support-overlay,
+.support-overlay{
+  position:fixed !important;
+  inset:0 !important;
+  width:100vw !important;
+  height:100vh !important;
+  z-index:2147483646 !important;
+  isolation:isolate !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  padding:26px 16px !important;
+  box-sizing:border-box !important;
+  background:rgba(3,8,18,.82) !important;
+  backdrop-filter:blur(8px) !important;
+  -webkit-backdrop-filter:blur(8px) !important;
+}
+
+/* O card APOIE fica acima do fundo escurecido */
+#supportOverlay .support-page,
+#supportOverlay .support-page-premium{
+  position:relative !important;
+  z-index:2147483647 !important;
+  margin:0 auto !important;
+}
+
+/* Enquanto APOIE estiver aberto, nenhum header/banner/menu pode passar por cima */
+body.retrohub-support-open header,
+body.retrohub-support-open .site-header,
+body.retrohub-support-open .topbar,
+body.retrohub-support-open #topBar,
+body.retrohub-support-open #messageNotifyWrap,
+body.retrohub-support-open #messageNotifyPopover{
+  z-index:auto !important;
+}
+
+/* Evita rolagem da página por trás da janela */
+body.retrohub-support-open{
+  overflow:hidden !important;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -7479,11 +7521,13 @@ openAccountPanel=function(){
 </div>
 <script id="retrohub-support-page-js">
 function openSupportPage(){
+  document.body.classList.add("retrohub-support-open");
   const overlay=document.getElementById("supportOverlay");
   if(overlay){overlay.classList.add("open");document.body.style.overflow="hidden";}
   setTimeout(()=>{if(typeof loadRetrohubPatreonStatus==="function")loadRetrohubPatreonStatus()},0);
 }
 function closeSupportPage(){
+  document.body.classList.remove("retrohub-support-open");
   const overlay=document.getElementById("supportOverlay");
   if(overlay)overlay.classList.remove("open");
   document.body.style.overflow="";
@@ -7550,6 +7594,25 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSupportPage()})
   window.addEventListener("load",applyGameHeaderLayout);
   const obs=new MutationObserver(()=>applyGameHeaderLayout());
   obs.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<script id="retrohub-support-layer-fix">
+(function(){
+  function syncSupportLayer(){
+    const overlay=document.getElementById("supportOverlay");
+    if(!overlay)return;
+    const visible=overlay.classList.contains("show") ||
+                  overlay.classList.contains("active") ||
+                  getComputedStyle(overlay).display!=="none";
+    document.body.classList.toggle("retrohub-support-open",visible);
+  }
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"){
+      setTimeout(syncSupportLayer,0);
+    }
+  });
 })();
 </script>
 
