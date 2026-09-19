@@ -2405,6 +2405,14 @@ body.retrohub-support-open{
   overflow:hidden !important;
 }
 
+
+/* Insígnias Patreon RetroHub BR */
+.support-medal-image{width:92px;min-width:92px;height:92px;display:flex;align-items:center;justify-content:center;margin:-4px 0 0 -4px}
+.support-medal-image img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 10px rgba(65,145,255,.18))}
+.support-level:first-child .support-medal-image img{filter:drop-shadow(0 0 10px rgba(255,137,52,.22))}
+.support-level:last-child .support-medal-image img{filter:drop-shadow(0 0 12px rgba(255,190,40,.25))}
+@media(max-width:700px){.support-medal-image{width:76px;min-width:76px;height:76px}}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -7438,7 +7446,7 @@ async function loadRetrohubPatreonStatus(){
     const amount=Number(data.currently_entitled_amount_cents||0)/100;
     details.textContent=tiers.length?`Nível: ${tiers.join(", ")}${amount?` · R$ ${amount.toFixed(2).replace(".",",")}`:""}`:"Conta vinculada ao RetroHub BR.";
     const active=data.patron_status==="active_patron";
-    status.textContent=active?"Apoiador ativo":"Conta conectada";
+    status.textContent=active?"Apoio ativo":"Conta conectada";
     status.className="patreon-status"+(active?" active":"");
     btn.textContent="Reconectar Patreon";
     btn.classList.add("secondary");
@@ -7476,29 +7484,29 @@ openAccountPanel=function(){
 
     <div class="support-levels">
       <article class="support-level">
-        <div class="support-medal">🥉</div>
+        <div class="support-medal support-medal-image"><img src="images/aliado-retro.png" alt="Insígnia Aliado Retro"></div>
         <div>
           <small>NÍVEL 1</small>
-          <h3>Apoiador</h3>
+          <h3>Aliado Retro</h3>
           <p>Receba uma insígnia exclusiva no seu perfil enquanto sua assinatura estiver ativa.</p>
         </div>
       </article>
 
       <article class="support-level featured">
         <div class="support-level-tag">POPULAR</div>
-        <div class="support-medal">🥈</div>
+        <div class="support-medal support-medal-image"><img src="images/guardiao-retro.png" alt="Insígnia Guardião Retro"></div>
         <div>
           <small>NÍVEL 2</small>
-          <h3>Apoiador Plus</h3>
+          <h3>Guardião Retro</h3>
           <p>Uma insígnia especial para destacar ainda mais seu apoio ao RetroHub BR.</p>
         </div>
       </article>
 
       <article class="support-level">
-        <div class="support-medal">🥇</div>
+        <div class="support-medal support-medal-image"><img src="images/lenda-retro.png" alt="Insígnia Lenda Retro"></div>
         <div>
           <small>NÍVEL 3</small>
-          <h3>Apoiador Premium</h3>
+          <h3>Lenda Retro</h3>
           <p>A maior insígnia de apoiador para quem ajuda o projeto no nível mais alto.</p>
         </div>
       </article>
