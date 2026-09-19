@@ -1976,6 +1976,33 @@ body.home-modern .ra-footer-notice{margin-top:42px}
 .patreon-connect.secondary{background:#202c49}.patreon-connect:disabled{opacity:.55;cursor:wait}
 @media(max-width:620px){.patreon-card{grid-template-columns:1fr}.patreon-connect{width:100%}}
 
+
+/* ===== APOIE · RETROHUB BR ===== */
+.support-overlay{position:fixed;inset:0;z-index:10080;background:rgba(4,8,18,.82);backdrop-filter:blur(9px);display:none;align-items:center;justify-content:center;padding:20px}
+.support-overlay.open{display:flex}
+.support-page{width:min(760px,100%);max-height:90vh;overflow:auto;background:linear-gradient(180deg,#11182a,#0b1120);border:1px solid #283657;border-radius:22px;box-shadow:0 28px 90px rgba(0,0,0,.5);padding:30px}
+.support-close{float:right;border:1px solid #33415f;background:#151e32;color:#fff;width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:20px}
+.support-kicker{font-size:12px;font-weight:900;letter-spacing:.12em;color:#ff6570;text-transform:uppercase}
+.support-page h2{font-size:28px;margin:8px 0 10px;color:#fff}
+.support-page>p{color:#aab5cf;line-height:1.65;margin:0 0 22px}
+.support-box{padding:20px;border:1px solid #323d5c;border-radius:16px;background:#10182a}
+.support-box h3{margin:0 0 7px;color:#fff}.support-box p{margin:0;color:#9eabc7;line-height:1.55;font-size:13px}
+.support-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.support-patreon-btn{border:0;border-radius:11px;padding:12px 17px;background:#ff424d;color:#fff;font-weight:900;cursor:pointer}
+.support-patreon-btn.secondary{background:#202c49}
+.support-badge{display:inline-flex;margin-top:12px;padding:7px 10px;border-radius:999px;background:#1c2643;color:#cbd5ea;font-size:11px;font-weight:900}
+.support-badge.active{background:rgba(54,217,139,.12);border:1px solid rgba(54,217,139,.28);color:#74e6aa}
+
+
+/* APOIE no menu principal */
+.nav-apoie{
+  color:#ff424d !important;
+  font-weight:900 !important;
+}
+.nav-apoie:hover{
+  color:#ff6670 !important;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -2620,20 +2647,7 @@ function getRetrohubRAGameId(game){
             <label>Usuário do RetroAchievements<input id="profileRAInput" maxlength="50" pattern="[A-Za-z0-9_-]+" placeholder="Ex.: raiquesantos"></label>
           </div>
         </section>
-
-        <section class="profile-editor-section">
-          <div class="profile-editor-section-head"><span class="profile-editor-section-icon">❤️</span><div><h3>Patreon</h3><p>Vincule sua assinatura do Patreon à sua conta RetroHub BR.</p></div></div>
-          <div class="patreon-card">
-            <div>
-              <h4 id="patreonName">Patreon não conectado</h4>
-              <p id="patreonDetails">Conecte sua conta para o RetroHub identificar automaticamente sua assinatura e seu nível.</p>
-              <span id="patreonStatus" class="patreon-status">Não conectado</span>
-            </div>
-            <button id="patreonConnectButton" class="patreon-connect" type="button" onclick="connectRetrohubPatreon()">Conectar Patreon</button>
-          </div>
-        </section>
-
-        <section class="profile-editor-section">
+<section class="profile-editor-section">
           <div class="profile-editor-section-head"><span class="profile-editor-section-icon">🖼️</span><div><h3>Capa do perfil</h3><p>Escolha uma imagem para o fundo do seu perfil.</p></div></div>
           <div id="wallpaperPreview" class="wallpaper-preview profile-editor-wallpaper">Nenhuma capa selecionada</div>
           <div class="profile-editor-cover-actions">
@@ -3706,6 +3720,7 @@ function renderFilters(){
       >
         EMULADORES
       </button>
+          <a class="nav-apoie" href="#apoie" onclick="event.preventDefault();openSupportPage()">APOIE</a>
     </div>
 
   `;
@@ -6942,7 +6957,7 @@ async function retrohubPatreonAuthHeader(){
 
 async function connectRetrohubPatreon(){
   if(!retrohubSession?.user){openAccountPanel();return}
-  const btn=document.getElementById("patreonConnectButton");
+  const btn=document.getElementById("supportPatreonButton");
   if(btn){btn.disabled=true;btn.textContent="Abrindo Patreon..."}
   try{
     const headers=await retrohubPatreonAuthHeader();
@@ -6958,10 +6973,10 @@ async function connectRetrohubPatreon(){
 }
 
 async function loadRetrohubPatreonStatus(){
-  const name=document.getElementById("patreonName");
-  const details=document.getElementById("patreonDetails");
-  const status=document.getElementById("patreonStatus");
-  const btn=document.getElementById("patreonConnectButton");
+  const name=document.getElementById("supportPatreonName");
+  const details=document.getElementById("supportPatreonDetails");
+  const status=document.getElementById("supportPatreonStatus");
+  const btn=document.getElementById("supportPatreonButton");
   if(!name||!details||!status||!btn)return;
   if(!retrohubSession?.user){
     name.textContent="Patreon não conectado";details.textContent="Entre na sua conta RetroHub para conectar o Patreon.";
@@ -7004,6 +7019,39 @@ openAccountPanel=function(){
   _retrohubOriginalOpenAccountPanel();
   setTimeout(loadRetrohubPatreonStatus,0);
 };
+</script>
+
+
+<div id="supportOverlay" class="support-overlay" onclick="if(event.target===this)closeSupportPage()">
+  <div class="support-page">
+    <button class="support-close" type="button" onclick="closeSupportPage()" aria-label="Fechar">×</button>
+    <div class="support-kicker">Apoie o projeto</div>
+    <h2>❤️ Apoie o RetroHub BR</h2>
+    <p>Seu apoio ajuda a manter o RetroHub BR online e a continuar melhorando o projeto, adicionando recursos e novidades para a comunidade.</p>
+    <div class="support-box">
+      <h3 id="supportPatreonName">Conecte sua conta Patreon</h3>
+      <p id="supportPatreonDetails">Entre na sua conta RetroHub BR e conecte o Patreon para identificarmos sua assinatura e seu nível de apoio.</p>
+      <span id="supportPatreonStatus" class="support-badge">Não conectado</span>
+      <div class="support-actions">
+        <button id="supportPatreonButton" class="support-patreon-btn" type="button" onclick="connectRetrohubPatreon()">Conectar com Patreon</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script id="retrohub-support-page-js">
+function openSupportPage(){
+  const overlay=document.getElementById("supportOverlay");
+  if(overlay){overlay.classList.add("open");document.body.style.overflow="hidden";}
+  setTimeout(()=>{if(typeof loadRetrohubPatreonStatus==="function")loadRetrohubPatreonStatus()},0);
+}
+function closeSupportPage(){
+  const overlay=document.getElementById("supportOverlay");
+  if(overlay)overlay.classList.remove("open");
+  document.body.style.overflow="";
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSupportPage()});
 </script>
 
 </body>
