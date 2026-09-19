@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidade | RetroHub BR</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:#070b14;
+      color:#d9e2f2;
+      font-family:Arial,sans-serif;
+      line-height:1.7;
+    }
+    main{
+      width:min(900px,calc(100% - 32px));
+      margin:60px auto;
+      background:#0d1424;
+      border:1px solid #1e2b45;
+      border-radius:18px;
+      padding:40px;
+    }
+    h1,h2{color:#fff}
+    h1{margin-top:0}
+    h2{margin-top:32px}
+    a{color:#7c8cff}
+    .muted{color:#8995aa}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Política de Privacidade</h1>
+  <p class="muted">RetroHub BR</p>
+
+  <p>
+    Esta Política de Privacidade explica como o RetroHub BR trata
+    informações fornecidas pelos usuários ao utilizar o site e seus
+    recursos de conta e integração com serviços externos.
+  </p>
+
+  <h2>1. Informações da conta</h2>
+  <p>
+    O RetroHub BR pode armazenar informações necessárias para o
+    funcionamento da conta do usuário, como nome de perfil, avatar,
+    preferências e dados relacionados aos recursos da comunidade.
+  </p>
+
+  <h2>2. Integração com Patreon</h2>
+  <p>
+    Quando o usuário optar por conectar sua conta do Patreon, o
+    RetroHub BR poderá receber informações autorizadas pelo próprio
+    usuário por meio da API do Patreon.
+  </p>
+
+  <p>
+    Essas informações poderão ser utilizadas para identificar a conta
+    conectada, verificar benefícios ou status de apoiador e liberar
+    recursos correspondentes dentro do RetroHub BR.
+  </p>
+
+  <h2>3. Autorização</h2>
+  <p>
+    A conexão com serviços externos somente ocorre após autorização
+    do usuário. O RetroHub BR não solicita a senha da conta Patreon.
+  </p>
+
+  <h2>4. Uso das informações</h2>
+  <p>
+    As informações são utilizadas para fornecer e manter os recursos
+    do site, personalizar a experiência do usuário, administrar
+    funcionalidades da comunidade e validar benefícios de apoiadores.
+  </p>
+
+  <h2>5. Compartilhamento</h2>
+  <p>
+    O RetroHub BR não vende informações pessoais dos usuários.
+    Informações poderão ser processadas por serviços utilizados para
+    operar o site, quando necessário para seu funcionamento.
+  </p>
+
+  <h2>6. Segurança</h2>
+  <p>
+    São adotadas medidas razoáveis para proteger as informações
+    utilizadas pelo site. Nenhum sistema conectado à internet,
+    entretanto, pode garantir segurança absoluta.
+  </p>
+
+  <h2>7. Serviços externos</h2>
+  <p>
+    O RetroHub BR pode utilizar serviços externos, incluindo Patreon,
+    Supabase e Vercel. O uso desses serviços também pode estar sujeito
+    às respectivas políticas de privacidade.
+  </p>
+
+  <h2>8. Alterações</h2>
+  <p>
+    Esta política poderá ser atualizada quando novos recursos forem
+    adicionados ou quando houver alterações na forma como o RetroHub
+    BR opera.
+  </p>
+
+  <h2>9. Contato</h2>
+  <p>
+    Dúvidas relacionadas à privacidade podem ser encaminhadas pelos
+    canais oficiais disponibilizados pelo RetroHub BR.
+  </p>
+
+  <p><a href="/">← Voltar ao RetroHub BR</a></p>
+</main>
+</body>
+</html>
