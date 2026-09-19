@@ -2287,6 +2287,82 @@ header,
   overflow:visible !important;
 }
 
+
+/* ===== FIX DEFINITIVO: PAINEL "NOVAS MENSAGENS" ===== */
+header{
+  position:relative !important;
+  z-index:50000 !important;
+  overflow:visible !important;
+}
+header nav,
+#topBar,
+#messageNotifyWrap{
+  overflow:visible !important;
+}
+#messageNotifyWrap{
+  position:relative !important;
+  z-index:50002 !important;
+}
+#messageBell{
+  position:relative !important;
+  z-index:50003 !important;
+}
+#messageNotifyPopover{
+  position:fixed !important;
+  z-index:2147483000 !important;
+  width:350px !important;
+  max-width:calc(100vw - 24px) !important;
+  max-height:min(470px,calc(100vh - 90px)) !important;
+  overflow:auto !important;
+  margin:0 !important;
+  transform:none !important;
+  isolation:isolate !important;
+  box-shadow:0 22px 70px rgba(0,0,0,.78) !important;
+}
+
+
+/* ===== CABEÇALHO CORRETO NAS PÁGINAS DOS JOGOS ===== */
+.game-detail-header-fixed{
+  width:min(1274px,calc(100% - 40px)) !important;
+  max-width:1274px !important;
+  margin:0 auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:0 !important;
+}
+
+.game-detail-header-fixed .game-header-brand{
+  margin-right:auto !important;
+  flex:0 0 auto !important;
+}
+
+.game-detail-header-fixed .game-header-account{
+  margin-left:auto !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:12px !important;
+  flex:0 0 auto !important;
+}
+
+.game-detail-header-fixed #messageNotifyWrap{
+  margin:0 !important;
+  flex:0 0 auto !important;
+}
+
+.game-detail-header-fixed .profile-trigger,
+.game-detail-header-fixed .profile-button,
+.game-detail-header-fixed .profile-btn{
+  margin:0 !important;
+  flex:0 0 auto !important;
+}
+
+@media(max-width:700px){
+  .game-detail-header-fixed{
+    width:calc(100% - 24px) !important;
+  }
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -7086,17 +7162,52 @@ async function updateRetrohubMessageNotifications(){
     </div>`;
   }).join(""):`<div class="message-pop-empty">Nenhuma mensagem nova.</div>`;
 }
+function positionRetrohubMessagePopover(){
+  const pop=document.getElementById("messageNotifyPopover");
+  const bell=document.getElementById("messageBell");
+  if(!pop||!bell)return;
+
+  const r=bell.getBoundingClientRect();
+  const panelWidth=Math.min(350,window.innerWidth-24);
+  let left=r.right-panelWidth;
+
+  if(left<12) left=12;
+  if(left+panelWidth>window.innerWidth-12) left=window.innerWidth-panelWidth-12;
+
+  pop.style.left=left+"px";
+  pop.style.right="auto";
+  pop.style.top=(r.bottom+10)+"px";
+}
+
 function toggleRetrohubMessageNotifications(event){
   event?.stopPropagation();
-  const pop=document.getElementById("messageNotifyPopover"),bell=document.getElementById("messageBell");
+  const pop=document.getElementById("messageNotifyPopover");
+  const bell=document.getElementById("messageBell");
   const open=!pop?.classList.contains("show");
-  pop?.classList.toggle("show",open);bell?.classList.toggle("active",open);
-  if(open)updateRetrohubMessageNotifications();
+
+  if(open) positionRetrohubMessagePopover();
+
+  pop?.classList.toggle("show",open);
+  bell?.classList.toggle("active",open);
+
+  if(open) updateRetrohubMessageNotifications();
 }
 document.addEventListener("click",()=>{
   document.getElementById("messageNotifyPopover")?.classList.remove("show");
   document.getElementById("messageBell")?.classList.remove("active");
 });
+
+window.addEventListener("resize",()=>{
+  if(document.getElementById("messageNotifyPopover")?.classList.contains("show")){
+    positionRetrohubMessagePopover();
+  }
+});
+window.addEventListener("scroll",()=>{
+  if(document.getElementById("messageNotifyPopover")?.classList.contains("show")){
+    positionRetrohubMessagePopover();
+  }
+},{passive:true});
+
 async function openRetrohubChatFromNotification(friendId){
   document.getElementById("messageNotifyPopover")?.classList.remove("show");
   await openRetrohubFloatingChat(friendId);
@@ -7382,6 +7493,65 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSupportPage()})
 
 
 
+
+
+<script id="retrohub-game-header-final-fix">
+(function(){
+  function applyGameHeaderLayout(){
+    const notify=document.getElementById("messageNotifyWrap");
+    if(!notify)return;
+
+    const candidates=[...document.querySelectorAll("a,button,div,span")];
+    const brand=candidates.find(el=>{
+      const txt=(el.textContent||"").replace(/\s+/g," ").trim();
+      return txt==="RETROHUB BR" && el.getBoundingClientRect().width>80;
+    });
+    if(!brand)return;
+
+    let brandNode=brand.closest("a")||brand;
+    let row=notify.parentElement;
+
+    // Find the compact row that contains both the brand and account controls.
+    for(let i=0;i<5 && row;i++,row=row.parentElement){
+      if(row.contains(brandNode) && row.contains(notify)) break;
+    }
+    if(!row || !row.contains(brandNode) || !row.contains(notify))return;
+
+    // Only modify compact/internal headers, not the full home navigation.
+    const rowText=(row.textContent||"").replace(/\s+/g," ");
+    if(/INÍCIO|JOGOS|GÊNEROS|DUBLADOS|GUIAS|EMULADORES/.test(rowText))return;
+
+    row.classList.add("game-detail-header-fixed");
+    brandNode.classList.add("game-header-brand");
+
+    // Group notification + profile/X controls at the right without changing click handlers.
+    let account=row.querySelector(":scope > .game-header-account");
+    if(!account){
+      account=document.createElement("div");
+      account.className="game-header-account";
+
+      const children=[...row.children];
+      const notifyTop=children.find(c=>c===notify || c.contains(notify));
+      const profileTop=children.find(c=>{
+        if(c===brandNode || c.contains(brandNode) || c===notifyTop)return false;
+        const t=(c.textContent||"").replace(/\s+/g," ").trim();
+        return /Perfil/i.test(t);
+      });
+
+      if(notifyTop){
+        row.insertBefore(account,notifyTop);
+        account.appendChild(notifyTop);
+        if(profileTop) account.appendChild(profileTop);
+      }
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded",applyGameHeaderLayout);
+  window.addEventListener("load",applyGameHeaderLayout);
+  const obs=new MutationObserver(()=>applyGameHeaderLayout());
+  obs.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 
 </body>
 </html>
