@@ -2468,6 +2468,78 @@ body.retrohub-support-open{
 
 </style>
 
+<script id="retrohub-supporter-profile-system">
+var RETROHUB_SUPPORT_TIERS=window.RETROHUB_SUPPORT_TIERS||{
+  aliado:{rank:1,title:"Aliado Retro",badge:"images/aliado-retro.png",accent:"#ff8a3d"},
+  guardiao:{rank:2,title:"Guardião Retro",badge:"images/guardiao-retro.png",accent:"#31a8ff"},
+  lenda:{rank:3,title:"Lenda Retro",badge:"images/lenda-retro.png",accent:"#f3bd39"}
+};
+window.RETROHUB_SUPPORT_TIERS=RETROHUB_SUPPORT_TIERS;
+var retrohubSupporter=window.retrohubSupporter||{tier:null,rank:0,active:false};
+
+function retrohubTierFromProfile(profile){
+  const key=String(profile?.supporter_tier||"").toLowerCase();
+  return RETROHUB_SUPPORT_TIERS[key]||null;
+}
+function supporterRank(){return retrohubSupporter?.rank||0}
+function supporterCan(min){return supporterRank()>=min}
+
+async function syncRetrohubSupporter(){
+  if(!retrohubSession?.user){retrohubSupporter={tier:null,rank:0,active:false};return retrohubSupporter}
+  try{
+    const {data}=await retrohubSupabase.auth.getSession();
+    const token=data?.session?.access_token;
+    if(!token) return retrohubSupporter;
+    const r=await fetch("/api/patreon/sync",{method:"POST",headers:{Authorization:`Bearer ${token}`}});
+    const j=await r.json();
+    if(r.ok){
+      const def=RETROHUB_SUPPORT_TIERS[j.tier]||null;
+      retrohubSupporter={tier:j.tier||null,rank:def?.rank||0,active:!!j.active};
+      if(retrohubProfile) retrohubProfile.supporter_tier=j.tier||null;
+    }
+  }catch(e){console.warn("Falha ao sincronizar Patreon:",e)}
+  return retrohubSupporter;
+}
+function supporterBadgeHTML(profile){
+  const tier=retrohubTierFromProfile(profile);
+  if(!tier)return "";
+  return `<div class="supporter-profile-badge" style="--support-accent:${tier.accent}"><img src="${tier.badge}" alt=""><span>${tier.title}</span></div>`;
+}
+function supporterProfileAttrs(profile){
+  const tier=retrohubTierFromProfile(profile);
+  const accent=profile?.profile_custom_color||profile?.profile_accent||tier?.accent||"#6b5cff";
+  const themed=tier?" supporter-themed":"";
+  const effect=tier?.rank>=3 && ["glow","particles","pulse"].includes(profile?.profile_effect)?` effect-${profile.profile_effect}`:"";
+  return {cls:themed+effect,style:` style="--support-accent:${escapeHTML(accent)}"`,tier};
+}
+function supporterAvatarClass(profile){
+  const tier=retrohubTierFromProfile(profile);
+  if(!tier||tier.rank<3)return "";
+  const b=["neon","energy","gold"].includes(profile?.avatar_border)?profile.avatar_border:"none";
+  return b==="none"?"":` border-${b}`;
+}
+async function refreshSupporterEditor(){
+  if(!retrohubSession?.user)return;
+  await syncRetrohubSupporter();
+  const tier=RETROHUB_SUPPORT_TIERS[retrohubSupporter.tier]||null;
+  const pill=document.getElementById("supporterTierEditorBadge");
+  if(pill){
+    pill.textContent=tier?`✓ ${tier.title} ativo`:"Patreon sem nível ativo";
+    pill.classList.toggle("active",!!tier);
+  }
+  const username=document.getElementById("profileUsernameInput");
+  if(username){username.value=retrohubProfile?.username||"";username.disabled=!supporterCan(2)}
+  const preset=document.getElementById("profileAccentPreset");
+  if(preset){preset.value=retrohubProfile?.profile_accent||"";preset.disabled=!supporterCan(1)}
+  const custom=document.getElementById("profileCustomColor");
+  if(custom){custom.value=retrohubProfile?.profile_custom_color||"#6b5cff";custom.disabled=!supporterCan(2)}
+  const border=document.getElementById("profileAvatarBorder");
+  if(border){border.value=retrohubProfile?.avatar_border||"none";border.disabled=!supporterCan(3)}
+  const effect=document.getElementById("profileEffect");
+  if(effect){effect.value=retrohubProfile?.profile_effect||"none";effect.disabled=!supporterCan(3)}
+  document.querySelectorAll("#supporterCustomizationSection label").forEach(el=>el.classList.remove("support-locked"));
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 function syncProfileEditorRAHeader(){const h=document.getElementById("profileRAHeader"),i=document.getElementById("profileRAInput");if(h)h.textContent=i&&i.value?`RetroAchievements · ${i.value}`:"RetroAchievements";}
 document.addEventListener("input",e=>{if(e.target&&e.target.id==="profileRAInput")syncProfileEditorRAHeader();});
@@ -6484,7 +6556,8 @@ async function renderRetrohubProfilePage(){
   const avatar=retrohubProfile?.avatar_url||avatarFallback();
   const wallpaper=retrohubProfile?.wallpaper_url||"";
   const wallpaperStyle=wallpaper?` style="--profile-wallpaper:url('${escapeHTML(wallpaper).replace(/'/g,"%27")}')"`:"";
-  const supportAttrs=supporterProfileAttrs(profile);\n    app.innerHTML=`<section class="profile-page${supportAttrs.cls}"${supportAttrs.style}>
+  const supportAttrs=supporterProfileAttrs(profile);
+    app.innerHTML=`<section class="profile-page${supportAttrs.cls}"${supportAttrs.style}>
     <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}><div class="profile-hero-grid">
       <img class="profile-page-avatar${supporterAvatarClass(retrohubProfile)}" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
       <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1>${supporterBadgeHTML(profile)}${supporterBadgeHTML(retrohubProfile)}<div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
@@ -7802,77 +7875,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSupportPage()})
 </script>
 
 
-<script id="retrohub-supporter-profile-system">
-const RETROHUB_SUPPORT_TIERS={
-  aliado:{rank:1,title:"Aliado Retro",badge:"images/aliado-retro.png",accent:"#ff8a3d"},
-  guardiao:{rank:2,title:"Guardião Retro",badge:"images/guardiao-retro.png",accent:"#31a8ff"},
-  lenda:{rank:3,title:"Lenda Retro",badge:"images/lenda-retro.png",accent:"#f3bd39"}
-};
-let retrohubSupporter={tier:null,rank:0,active:false};
 
-function retrohubTierFromProfile(profile){
-  const key=String(profile?.supporter_tier||"").toLowerCase();
-  return RETROHUB_SUPPORT_TIERS[key]||null;
-}
-function supporterRank(){return retrohubSupporter?.rank||0}
-function supporterCan(min){return supporterRank()>=min}
-
-async function syncRetrohubSupporter(){
-  if(!retrohubSession?.user){retrohubSupporter={tier:null,rank:0,active:false};return retrohubSupporter}
-  try{
-    const {data}=await retrohubSupabase.auth.getSession();
-    const token=data?.session?.access_token;
-    if(!token) return retrohubSupporter;
-    const r=await fetch("/api/patreon/sync",{method:"POST",headers:{Authorization:`Bearer ${token}`}});
-    const j=await r.json();
-    if(r.ok){
-      const def=RETROHUB_SUPPORT_TIERS[j.tier]||null;
-      retrohubSupporter={tier:j.tier||null,rank:def?.rank||0,active:!!j.active};
-      if(retrohubProfile) retrohubProfile.supporter_tier=j.tier||null;
-    }
-  }catch(e){console.warn("Falha ao sincronizar Patreon:",e)}
-  return retrohubSupporter;
-}
-function supporterBadgeHTML(profile){
-  const tier=retrohubTierFromProfile(profile);
-  if(!tier)return "";
-  return `<div class="supporter-profile-badge" style="--support-accent:${tier.accent}"><img src="${tier.badge}" alt=""><span>${tier.title}</span></div>`;
-}
-function supporterProfileAttrs(profile){
-  const tier=retrohubTierFromProfile(profile);
-  const accent=profile?.profile_custom_color||profile?.profile_accent||tier?.accent||"#6b5cff";
-  const themed=tier?" supporter-themed":"";
-  const effect=tier?.rank>=3 && ["glow","particles","pulse"].includes(profile?.profile_effect)?` effect-${profile.profile_effect}`:"";
-  return {cls:themed+effect,style:` style="--support-accent:${escapeHTML(accent)}"`,tier};
-}
-function supporterAvatarClass(profile){
-  const tier=retrohubTierFromProfile(profile);
-  if(!tier||tier.rank<3)return "";
-  const b=["neon","energy","gold"].includes(profile?.avatar_border)?profile.avatar_border:"none";
-  return b==="none"?"":` border-${b}`;
-}
-async function refreshSupporterEditor(){
-  if(!retrohubSession?.user)return;
-  await syncRetrohubSupporter();
-  const tier=RETROHUB_SUPPORT_TIERS[retrohubSupporter.tier]||null;
-  const pill=document.getElementById("supporterTierEditorBadge");
-  if(pill){
-    pill.textContent=tier?`✓ ${tier.title} ativo`:"Patreon sem nível ativo";
-    pill.classList.toggle("active",!!tier);
-  }
-  const username=document.getElementById("profileUsernameInput");
-  if(username){username.value=retrohubProfile?.username||"";username.disabled=!supporterCan(2)}
-  const preset=document.getElementById("profileAccentPreset");
-  if(preset){preset.value=retrohubProfile?.profile_accent||"";preset.disabled=!supporterCan(1)}
-  const custom=document.getElementById("profileCustomColor");
-  if(custom){custom.value=retrohubProfile?.profile_custom_color||"#6b5cff";custom.disabled=!supporterCan(2)}
-  const border=document.getElementById("profileAvatarBorder");
-  if(border){border.value=retrohubProfile?.avatar_border||"none";border.disabled=!supporterCan(3)}
-  const effect=document.getElementById("profileEffect");
-  if(effect){effect.value=retrohubProfile?.profile_effect||"none";effect.disabled=!supporterCan(3)}
-  document.querySelectorAll("#supporterCustomizationSection label").forEach(el=>el.classList.remove("support-locked"));
-}
-</script>
 
 </body>
 </html>
