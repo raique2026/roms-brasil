@@ -1818,7 +1818,39 @@ body.home-modern .logo{font-size:23px}
 .home-platform-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.home-platform-card{min-height:105px;padding:18px;border:1px solid #263858;border-radius:14px;background:linear-gradient(135deg,#111d34,#0c1426);cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;transition:.2s}.home-platform-card:hover{transform:translateY(-3px);border-color:#4f6895;background:linear-gradient(135deg,#172744,#101b31)}.home-platform-card strong{font-size:18px}.home-platform-card span{font-size:11px;color:#8798b7;margin-top:5px}
 .home-continue{display:none}.home-continue.show{display:block}.home-continue-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.home-progress-card{display:grid;grid-template-columns:74px 1fr;gap:13px;padding:11px;border:1px solid #263858;border-radius:13px;background:#0d1628;cursor:pointer}.home-progress-card img{width:74px;height:96px;object-fit:contain;background:#090f1d;border-radius:7px}.home-progress-title{font-weight:900;font-size:14px;margin:4px 0 6px}.home-progress-meta{font-size:11px;color:#8ea0c1;margin-bottom:10px}.home-progress-track{height:7px;background:#202d49;border-radius:99px;overflow:hidden}.home-progress-fill{height:100%;background:linear-gradient(90deg,#6959f5,#36d98b)}.home-progress-percent{font-size:11px;color:#7fe2b0;font-weight:900;margin-top:6px}
 .latest-card{border-color:#223451;background:#0d1628}.latest-info{padding:11px 12px 13px}.latest-meta{display:flex;gap:5px;flex-wrap:wrap}.latest-chip{padding:4px 6px;border-radius:5px;background:#17233a;color:#aebbd2;font-size:10px}.latest-chip.ra{color:#f0c95c}
+
 body.home-modern .ra-footer-notice{margin-top:42px}
+
+/* ===== RODAPÉ RETROHUB BR ===== */
+.site-footer{
+  margin:18px 0 20px;
+  padding:22px 16px;
+  border-top:1px solid #202946;
+  text-align:center;
+  color:#8f99b4;
+  font-size:13px;
+}
+.site-footer-links{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.site-footer-links a{
+  color:#aebddd;
+  text-decoration:none;
+  font-weight:700;
+  transition:color .2s ease;
+}
+.site-footer-links a:hover{color:#6959f5}
+.site-footer-links span{color:#46516f}
+.site-footer-copy{
+  color:#6f7b99;
+  font-size:12px;
+}
+
 .retrohub-picks-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.retrohub-pick-card{position:relative;height:230px;overflow:hidden;border-radius:16px;border:1px solid #263858;background:#0d1628;cursor:pointer;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.retrohub-pick-card:hover{transform:translateY(-5px);border-color:#526d9f;box-shadow:0 18px 38px rgba(0,0,0,.28)}.retrohub-pick-card>img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .35s ease}.retrohub-pick-card:hover>img{transform:scale(1.035)}.retrohub-pick-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,8,17,.04) 20%,rgba(4,8,17,.94) 88%)}.retrohub-pick-info{position:absolute;z-index:2;left:16px;right:16px;bottom:15px}.retrohub-pick-info>span{display:inline-block;padding:4px 7px;border-radius:5px;background:rgba(17,31,53,.88);font-size:10px;color:#c8d5e8}.retrohub-pick-info h3{margin:7px 0 4px;font-size:18px}.retrohub-pick-meta{font-size:11px;color:#aebbd2;margin-bottom:10px}.retrohub-pick-info button{padding:7px 11px;border-radius:7px;background:#6959f5;color:#fff;font-size:11px;font-weight:900;cursor:pointer}.retrohub-pick-info button:hover{background:#7b6dff}
 @media(max-width:900px){.home-achievement-grid,.home-platform-grid,.retrohub-picks-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.home-achievement-grid,.home-platform-grid,.home-continue-grid,.retrohub-picks-grid{grid-template-columns:1fr}.home-section-head{align-items:flex-start;flex-direction:column}.home-achievement-card>img{height:175px}}
@@ -4348,6 +4380,17 @@ function renderHome(){
       <span>🏆 <strong>Conquistas via RetroAchievements</strong> · Disponíveis em jogos compatíveis.</span>
       <button class="ra-footer-more" type="button" onclick="event.stopPropagation();openRaInfoModal()">Saiba mais ›</button>
     </div>
+
+    <footer class="site-footer">
+      <div class="site-footer-links">
+        <a href="termos.html">Termos de Serviço</a>
+        <span>•</span>
+        <a href="privacidade.html">Política de Privacidade</a>
+      </div>
+      <div class="site-footer-copy">
+        © 2026 RetroHub BR. Todos os direitos reservados.
+      </div>
+    </footer>
 
     ` : ""}
 
