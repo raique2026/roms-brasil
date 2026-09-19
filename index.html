@@ -2031,6 +2031,89 @@ nav .nav-apoie,
   color:#ff6670 !important;
 }
 
+
+/* ===== NOVA TELA APOIE ===== */
+.support-page-premium{
+  width:min(940px,96vw);
+  padding:34px;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 85% 0%,rgba(255,66,77,.13),transparent 32%),
+    linear-gradient(180deg,#11192c 0%,#0b1221 100%);
+  border:1px solid #2b3959;
+}
+.support-hero{max-width:760px;margin-bottom:25px}
+.support-hero .support-kicker{color:#ff5a65;font-size:12px;font-weight:1000;letter-spacing:.14em}
+.support-hero h2{font-size:31px;line-height:1.15;margin:9px 0 10px}
+.support-hero h2 span{color:#37d989}
+.support-hero p{font-size:14px;color:#aab5cf;line-height:1.65;margin:0}
+.support-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
+.support-level{position:relative;min-height:158px;padding:18px;border:1px solid #2a3857;border-radius:16px;background:rgba(13,22,39,.86);display:flex;gap:13px;transition:.2s ease}
+.support-level:hover{transform:translateY(-2px);border-color:#455678}
+.support-level.featured{border-color:rgba(255,66,77,.55);box-shadow:inset 0 0 0 1px rgba(255,66,77,.08)}
+.support-level-tag{position:absolute;right:12px;top:10px;font-size:9px;font-weight:1000;letter-spacing:.1em;color:#ff6972}
+.support-medal{font-size:28px;line-height:1}
+.support-level small{font-size:9px;color:#7f8da9;font-weight:1000;letter-spacing:.12em}
+.support-level h3{font-size:16px;margin:4px 0 7px;color:#fff}
+.support-level p{font-size:11px;line-height:1.5;color:#97a5c1;margin:0}
+.support-connect-panel{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px;border:1px solid #344361;border-radius:17px;background:linear-gradient(135deg,rgba(255,66,77,.07),rgba(16,25,43,.9))}
+.support-connect-copy{display:flex;align-items:flex-start;gap:14px;min-width:0}
+.support-connect-icon{width:42px;height:42px;flex:0 0 42px;border-radius:12px;background:#ff424d;color:#fff;display:grid;place-items:center;font-weight:1000;font-size:20px}
+.support-connect-panel h3{margin:0 0 5px;font-size:16px;color:#fff}
+.support-connect-panel p{margin:0;color:#9eabc7;font-size:12px;line-height:1.5}
+.support-patreon-btn{padding:13px 18px;box-shadow:0 8px 24px rgba(255,66,77,.15)}
+.support-note{text-align:center;color:#7785a3;font-size:10px;margin-top:14px}
+@media(max-width:760px){
+  .support-page-premium{padding:22px}
+  .support-levels{grid-template-columns:1fr}
+  .support-connect-panel{align-items:stretch;flex-direction:column}
+  .support-patreon-btn{width:100%}
+  .support-hero h2{font-size:25px}
+}
+
+
+/* ===== CORREÇÃO DO X DA JANELA APOIE ===== */
+.support-close{
+  position:relative !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:40px !important;
+  height:40px !important;
+  padding:0 !important;
+  line-height:1 !important;
+  font-size:0 !important;
+  border-radius:11px !important;
+}
+.support-close-x{
+  position:relative;
+  display:block;
+  width:15px;
+  height:15px;
+}
+.support-close-x::before,
+.support-close-x::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:15px;
+  height:2px;
+  border-radius:999px;
+  background:#fff;
+  transform-origin:center;
+}
+.support-close-x::before{
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+.support-close-x::after{
+  transform:translate(-50%,-50%) rotate(-45deg);
+}
+.support-close:hover{
+  background:#1d2942 !important;
+  border-color:#496083 !important;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -7056,23 +7139,60 @@ openAccountPanel=function(){
 
 
 <div id="supportOverlay" class="support-overlay" onclick="if(event.target===this)closeSupportPage()">
-  <div class="support-page">
-    <button class="support-close" type="button" onclick="closeSupportPage()" aria-label="Fechar">×</button>
-    <div class="support-kicker">Apoie o projeto</div>
-    <h2>❤️ Apoie o RetroHub BR</h2>
-    <p>Seu apoio ajuda a manter o RetroHub BR online e a continuar melhorando o projeto, adicionando recursos e novidades para a comunidade.</p>
-    <div class="support-box">
-      <h3 id="supportPatreonName">Conecte sua conta Patreon</h3>
-      <p id="supportPatreonDetails">Entre na sua conta RetroHub BR e conecte o Patreon para identificarmos sua assinatura e seu nível de apoio.</p>
-      <span id="supportPatreonStatus" class="support-badge">Não conectado</span>
-      <div class="support-actions">
-        <button id="supportPatreonButton" class="support-patreon-btn" type="button" onclick="connectRetrohubPatreon()">Conectar com Patreon</button>
-      </div>
+  <div class="support-page support-page-premium">
+    <button class="support-close" type="button" onclick="closeSupportPage()" aria-label="Fechar"><span class="support-close-x" aria-hidden="true"></span></button>
+
+    <div class="support-hero">
+      <div class="support-kicker">❤️ APOIE O PROJETO</div>
+      <h2>Faça parte de quem mantém o <span>RetroHub BR</span> vivo.</h2>
+      <p>Seu apoio ajuda a manter o projeto online, desenvolver novos recursos e trazer cada vez mais conteúdo para a comunidade.</p>
     </div>
+
+    <div class="support-levels">
+      <article class="support-level">
+        <div class="support-medal">🥉</div>
+        <div>
+          <small>NÍVEL 1</small>
+          <h3>Apoiador</h3>
+          <p>Receba uma insígnia exclusiva no seu perfil enquanto sua assinatura estiver ativa.</p>
+        </div>
+      </article>
+
+      <article class="support-level featured">
+        <div class="support-level-tag">POPULAR</div>
+        <div class="support-medal">🥈</div>
+        <div>
+          <small>NÍVEL 2</small>
+          <h3>Apoiador Plus</h3>
+          <p>Uma insígnia especial para destacar ainda mais seu apoio ao RetroHub BR.</p>
+        </div>
+      </article>
+
+      <article class="support-level">
+        <div class="support-medal">🥇</div>
+        <div>
+          <small>NÍVEL 3</small>
+          <h3>Apoiador Premium</h3>
+          <p>A maior insígnia de apoiador para quem ajuda o projeto no nível mais alto.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="support-connect-panel">
+      <div class="support-connect-copy">
+        <div class="support-connect-icon">P</div>
+        <div>
+          <h3 id="supportPatreonName">Já apoia pelo Patreon?</h3>
+          <p id="supportPatreonDetails">Conecte sua conta Patreon ao RetroHub BR para identificarmos automaticamente sua assinatura e sua insígnia.</p>
+          <span id="supportPatreonStatus" class="support-badge">Não conectado</span>
+        </div>
+      </div>
+      <button id="supportPatreonButton" class="support-patreon-btn" type="button" onclick="connectRetrohubPatreon()">Conectar com Patreon</button>
+    </div>
+
+    <div class="support-note">✓ A insígnia ficará ativa enquanto sua assinatura correspondente estiver válida.</div>
   </div>
 </div>
-
-
 <script id="retrohub-support-page-js">
 function openSupportPage(){
   const overlay=document.getElementById("supportOverlay");
