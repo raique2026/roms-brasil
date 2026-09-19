@@ -2114,6 +2114,69 @@ nav .nav-apoie,
   border-color:#496083 !important;
 }
 
+
+/* ===== CABEÇALHO DAS PÁGINAS DE JOGOS ===== */
+body.game-page .site-header .header-inner,
+body.game-page header .header-inner,
+.game-detail-page .site-header .header-inner,
+.game-detail-page header .header-inner,
+.game-page-header .header-inner{
+  width:min(1274px,calc(100% - 40px)) !important;
+  max-width:1274px !important;
+  margin:0 auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:24px !important;
+}
+
+body.game-page .site-header .header-actions,
+body.game-page header .header-actions,
+.game-detail-page .site-header .header-actions,
+.game-detail-page header .header-actions,
+.game-page-header .header-actions{
+  margin-left:auto !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+/* Fallback para o cabeçalho compacto da página interna */
+.game-detail-header,
+.game-header-top{
+  width:min(1274px,calc(100% - 40px)) !important;
+  max-width:1274px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+}
+
+.game-detail-header > :first-child,
+.game-header-top > :first-child{
+  margin-right:auto !important;
+}
+
+.game-detail-header .profile-button,
+.game-detail-header .profile-btn,
+.game-header-top .profile-button,
+.game-header-top .profile-btn{
+  margin-left:10px !important;
+}
+
+@media(max-width:700px){
+  body.game-page .site-header .header-inner,
+  body.game-page header .header-inner,
+  .game-detail-page .site-header .header-inner,
+  .game-detail-page header .header-inner,
+  .game-page-header .header-inner,
+  .game-detail-header,
+  .game-header-top{
+    width:calc(100% - 24px) !important;
+  }
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -7205,6 +7268,38 @@ function closeSupportPage(){
   document.body.style.overflow="";
 }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSupportPage()});
+</script>
+
+
+<script id="retrohub-game-header-layout-fix">
+(function(){
+  function fixGameHeader(){
+    const brandEls=[...document.querySelectorAll("a,button,div,span")].filter(el=>{
+      const t=(el.textContent||"").replace(/\s+/g," ").trim();
+      return t==="RETROHUB BR";
+    });
+    for(const brand of brandEls){
+      let row=brand.parentElement;
+      for(let i=0;i<4 && row;i++,row=row.parentElement){
+        const text=(row.textContent||"");
+        const hasProfile=/Perfil/i.test(text);
+        const rect=row.getBoundingClientRect();
+        if(hasProfile && rect.height>35 && rect.height<120){
+          row.classList.add("game-detail-header");
+          const brandClickable=brand.closest("a,button")||brand;
+          if(brandClickable && !brandClickable.dataset.homeFixed){
+            brandClickable.dataset.homeFixed="1";
+            brandClickable.style.cursor="pointer";
+          }
+          return;
+        }
+      }
+    }
+  }
+  document.addEventListener("DOMContentLoaded",fixGameHeader);
+  const observer=new MutationObserver(()=>fixGameHeader());
+  observer.observe(document.documentElement,{childList:true,subtree:true});
+})();
 </script>
 
 </body>
