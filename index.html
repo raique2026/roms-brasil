@@ -2413,6 +2413,35 @@ body.retrohub-support-open{
 .support-level:last-child .support-medal-image img{filter:drop-shadow(0 0 12px rgba(255,190,40,.25))}
 @media(max-width:700px){.support-medal-image{width:76px;min-width:76px;height:76px}}
 
+
+/* ===== BENEFÍCIOS DOS NÍVEIS RETROHUB ===== */
+.support-tier-benefits{
+  list-style:none;
+  padding:0;
+  margin:14px 0 0;
+  display:grid;
+  gap:8px;
+}
+.support-tier-benefits li{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  color:#b8c3dc;
+  font-size:13px;
+  line-height:1.35;
+}
+.support-tier-benefits li::before{
+  content:"✓";
+  color:#35e6a1;
+  font-weight:900;
+  flex:0 0 auto;
+}
+.support-tier-note{
+  margin-top:12px;
+  color:#7f8daa;
+  font-size:11px;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -7488,7 +7517,7 @@ openAccountPanel=function(){
         <div>
           <small>NÍVEL 1</small>
           <h3>Aliado Retro</h3>
-          <p>Receba uma insígnia exclusiva no seu perfil enquanto sua assinatura estiver ativa.</p>
+          <p>GIF no avatar • Cores especiais no perfil • Insígnia exclusiva Aliado Retro.</p>
         </div>
       </article>
 
@@ -7498,7 +7527,7 @@ openAccountPanel=function(){
         <div>
           <small>NÍVEL 2</small>
           <h3>Guardião Retro</h3>
-          <p>Uma insígnia especial para destacar ainda mais seu apoio ao RetroHub BR.</p>
+          <p>Tudo do Aliado Retro • Tema personalizado • Troca de nome de usuário a qualquer momento.</p>
         </div>
       </article>
 
@@ -7507,7 +7536,7 @@ openAccountPanel=function(){
         <div>
           <small>NÍVEL 3</small>
           <h3>Lenda Retro</h3>
-          <p>A maior insígnia de apoiador para quem ajuda o projeto no nível mais alto.</p>
+          <p>Tudo dos níveis anteriores • Banner animado • Efeitos exclusivos • Borda especial no avatar.</p>
         </div>
       </article>
     </div>
@@ -7621,6 +7650,65 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSupportPage()})
       setTimeout(syncSupportLayer,0);
     }
   });
+})();
+</script>
+
+
+<script id="retrohub-patreon-benefits-ui">
+(function(){
+  const plans = {
+    "Aliado Retro": [
+      "Avatar animado em GIF",
+      "Cores especiais no perfil",
+      "Insígnia exclusiva Aliado Retro"
+    ],
+    "Guardião Retro": [
+      "Todos os benefícios do Aliado Retro",
+      "Cor/tema principal personalizado",
+      "Troca de nome de usuário a qualquer momento",
+      "Insígnia exclusiva Guardião Retro"
+    ],
+    "Lenda Retro": [
+      "Todos os benefícios anteriores",
+      "Banner animado no perfil",
+      "Efeitos visuais exclusivos",
+      "Borda especial no avatar",
+      "Insígnia exclusiva Lenda Retro"
+    ]
+  };
+
+  function enhance(){
+    const all=[...document.querySelectorAll("div,article,section")];
+    Object.entries(plans).forEach(([name, benefits])=>{
+      const title=[...document.querySelectorAll("h1,h2,h3,h4,strong,b")].find(
+        el => (el.textContent||"").trim()===name
+      );
+      if(!title) return;
+
+      let card=title.parentElement;
+      for(let i=0;i<4 && card;i++,card=card.parentElement){
+        const txt=(card.textContent||"");
+        if(txt.includes(name) && /NÍVEL\s*[123]/i.test(txt)) break;
+      }
+      if(!card || card.querySelector(".support-tier-benefits")) return;
+
+      const ul=document.createElement("ul");
+      ul.className="support-tier-benefits";
+      benefits.forEach(item=>{
+        const li=document.createElement("li");
+        li.textContent=item;
+        ul.appendChild(li);
+      });
+      const note=document.createElement("div");
+      note.className="support-tier-note";
+      note.textContent="Benefícios ativos enquanto a assinatura correspondente estiver válida.";
+      card.appendChild(ul);
+      card.appendChild(note);
+    });
+  }
+  document.addEventListener("DOMContentLoaded",enhance);
+  window.addEventListener("load",enhance);
+  new MutationObserver(enhance).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
 
