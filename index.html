@@ -1966,6 +1966,16 @@ body.home-modern .ra-footer-notice{margin-top:42px}
   bottom:0 !important;
 }
 
+
+/* ===== RETROHUB BR · PATREON ===== */
+.patreon-card{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:16px;border:1px solid #3a3157;border-radius:14px;background:linear-gradient(135deg,#17162a,#11182c)}
+.patreon-card h4{margin:0 0 5px;font-size:15px}.patreon-card p{margin:0;color:#9eabc7;font-size:12px;line-height:1.5}
+.patreon-status{display:inline-flex;align-items:center;gap:7px;margin-top:9px;padding:6px 9px;border-radius:999px;background:#1c2643;color:#cbd5ea;font-size:11px;font-weight:900}
+.patreon-status.active{background:rgba(54,217,139,.12);color:#74e6aa;border:1px solid rgba(54,217,139,.28)}
+.patreon-connect{border:0;border-radius:10px;padding:11px 15px;background:#ff424d;color:#fff;font-weight:900;cursor:pointer;white-space:nowrap}
+.patreon-connect.secondary{background:#202c49}.patreon-connect:disabled{opacity:.55;cursor:wait}
+@media(max-width:620px){.patreon-card{grid-template-columns:1fr}.patreon-connect{width:100%}}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -2608,6 +2618,18 @@ function getRetrohubRAGameId(game){
           <div class="profile-editor-section-head"><span class="profile-editor-section-icon">👤</span><div><h3>Informações do perfil</h3><p>Dados principais da sua conta pública.</p></div></div>
           <div class="profile-editor-fields profile-editor-fields-single">
             <label>Usuário do RetroAchievements<input id="profileRAInput" maxlength="50" pattern="[A-Za-z0-9_-]+" placeholder="Ex.: raiquesantos"></label>
+          </div>
+        </section>
+
+        <section class="profile-editor-section">
+          <div class="profile-editor-section-head"><span class="profile-editor-section-icon">❤️</span><div><h3>Patreon</h3><p>Vincule sua assinatura do Patreon à sua conta RetroHub BR.</p></div></div>
+          <div class="patreon-card">
+            <div>
+              <h4 id="patreonName">Patreon não conectado</h4>
+              <p id="patreonDetails">Conecte sua conta para o RetroHub identificar automaticamente sua assinatura e seu nível.</p>
+              <span id="patreonStatus" class="patreon-status">Não conectado</span>
+            </div>
+            <button id="patreonConnectButton" class="patreon-connect" type="button" onclick="connectRetrohubPatreon()">Conectar Patreon</button>
           </div>
         </section>
 
@@ -6907,6 +6929,81 @@ function retrohubFloatingChatKeydown(event){
 /* A partir desta versão, qualquer botão antigo que chamava openRetrohubChat()
    abre a janela flutuante, sem trocar a página atual. */
 window.openRetrohubChat=openRetrohubFloatingChat;
+</script>
+
+
+<script id="retrohub-patreon-js">
+/* ===== RETROHUB BR · PATREON OAUTH ===== */
+async function retrohubPatreonAuthHeader(){
+  const {data,error}=await retrohubSupabase.auth.getSession();
+  if(error||!data?.session?.access_token) throw new Error("LOGIN_REQUIRED");
+  return {Authorization:`Bearer ${data.session.access_token}`};
+}
+
+async function connectRetrohubPatreon(){
+  if(!retrohubSession?.user){openAccountPanel();return}
+  const btn=document.getElementById("patreonConnectButton");
+  if(btn){btn.disabled=true;btn.textContent="Abrindo Patreon..."}
+  try{
+    const headers=await retrohubPatreonAuthHeader();
+    const response=await fetch("/api/patreon/login",{method:"POST",headers});
+    const data=await response.json();
+    if(!response.ok||!data.url) throw new Error(data.error||"Não foi possível iniciar a conexão.");
+    location.href=data.url;
+  }catch(error){
+    console.error(error);
+    alert(error.message==="LOGIN_REQUIRED"?"Entre na sua conta RetroHub primeiro.":"Não foi possível abrir o Patreon.");
+    if(btn){btn.disabled=false;btn.textContent="Conectar Patreon"}
+  }
+}
+
+async function loadRetrohubPatreonStatus(){
+  const name=document.getElementById("patreonName");
+  const details=document.getElementById("patreonDetails");
+  const status=document.getElementById("patreonStatus");
+  const btn=document.getElementById("patreonConnectButton");
+  if(!name||!details||!status||!btn)return;
+  if(!retrohubSession?.user){
+    name.textContent="Patreon não conectado";details.textContent="Entre na sua conta RetroHub para conectar o Patreon.";
+    status.textContent="Não conectado";status.className="patreon-status";btn.textContent="Conectar Patreon";return;
+  }
+  try{
+    const headers=await retrohubPatreonAuthHeader();
+    const response=await fetch("/api/patreon/status",{headers});
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error||"STATUS_ERROR");
+    if(!data.connected){
+      name.textContent="Patreon não conectado";details.textContent="Conecte sua conta para identificar automaticamente sua assinatura.";
+      status.textContent="Não conectado";status.className="patreon-status";btn.textContent="Conectar Patreon";return;
+    }
+    name.textContent=data.full_name||"Conta Patreon conectada";
+    const tiers=(data.tiers||[]).map(t=>t.title).filter(Boolean);
+    const amount=Number(data.currently_entitled_amount_cents||0)/100;
+    details.textContent=tiers.length?`Nível: ${tiers.join(", ")}${amount?` · R$ ${amount.toFixed(2).replace(".",",")}`:""}`:"Conta vinculada ao RetroHub BR.";
+    const active=data.patron_status==="active_patron";
+    status.textContent=active?"Apoiador ativo":"Conta conectada";
+    status.className="patreon-status"+(active?" active":"");
+    btn.textContent="Reconectar Patreon";
+    btn.classList.add("secondary");
+  }catch(error){console.error("Patreon status:",error)}
+}
+
+(function handlePatreonReturn(){
+  const params=new URLSearchParams(location.search);
+  const result=params.get("patreon");
+  if(!result)return;
+  if(result==="conectado") setTimeout(()=>{loadRetrohubPatreonStatus();alert("Patreon conectado ao seu perfil RetroHub BR!");},700);
+  if(result==="erro") setTimeout(()=>alert("Não foi possível concluir a conexão com o Patreon."),300);
+  params.delete("patreon");
+  const clean=location.pathname+(params.toString()?`?${params}`:"")+location.hash;
+  history.replaceState(history.state,"",clean);
+})();
+
+const _retrohubOriginalOpenAccountPanel=openAccountPanel;
+openAccountPanel=function(){
+  _retrohubOriginalOpenAccountPanel();
+  setTimeout(loadRetrohubPatreonStatus,0);
+};
 </script>
 
 </body>
