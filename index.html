@@ -2003,6 +2003,34 @@ body.home-modern .ra-footer-notice{margin-top:42px}
   color:#ff6670 !important;
 }
 
+
+/* CORREÇÃO: APOIE alinhado ao lado de EMULADORES */
+nav .nav-apoie,
+.nav .nav-apoie,
+.nav-links .nav-apoie,
+.header-nav .nav-apoie,
+.nav-apoie{
+  display:inline-flex !important;
+  width:auto !important;
+  flex:0 0 auto !important;
+  align-items:center !important;
+  margin:0 !important;
+  padding:0 !important;
+  color:#ff424d !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+
+
+/* APOIE como item próprio do menu, ao lado de EMULADORES */
+.main-menu-item .main-menu-btn.nav-apoie{
+  color:#ff424d !important;
+  font-weight:900 !important;
+}
+.main-menu-item .main-menu-btn.nav-apoie:hover{
+  color:#ff6670 !important;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -3720,7 +3748,12 @@ function renderFilters(){
       >
         EMULADORES
       </button>
-          <a class="nav-apoie" href="#apoie" onclick="event.preventDefault();openSupportPage()">APOIE</a>
+    </div>
+
+    <div class="main-menu-item">
+      <button class="main-menu-btn nav-apoie" onclick="openSupportPage()">
+        APOIE
+      </button>
     </div>
 
   `;
