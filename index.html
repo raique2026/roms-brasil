@@ -2177,6 +2177,116 @@ body.game-page header .header-actions,
   }
 }
 
+
+/* ===== CORREÇÃO DO SINO / NOTIFICAÇÕES ===== */
+.notification-btn,
+.notifications-btn,
+.notification-button,
+.bell-btn,
+.header-bell,
+#notificationBtn{
+  position:relative !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  min-width:42px !important;
+  min-height:42px !important;
+  padding:0 !important;
+  margin:0 !important;
+  line-height:1 !important;
+  border-radius:12px !important;
+  overflow:visible !important;
+}
+
+.notification-btn svg,
+.notifications-btn svg,
+.notification-button svg,
+.bell-btn svg,
+.header-bell svg,
+#notificationBtn svg{
+  display:block !important;
+  width:18px !important;
+  height:18px !important;
+  flex:none !important;
+  margin:0 !important;
+  transform:none !important;
+}
+
+/* contador fica preso no canto do sino */
+.notification-btn .badge,
+.notification-btn .notification-badge,
+.notifications-btn .badge,
+.notifications-btn .notification-badge,
+.notification-button .badge,
+.notification-button .notification-badge,
+.bell-btn .badge,
+.bell-btn .notification-badge,
+.header-bell .badge,
+.header-bell .notification-badge,
+#notificationBtn .badge,
+#notificationBtn .notification-badge{
+  position:absolute !important;
+  top:-5px !important;
+  right:-5px !important;
+  margin:0 !important;
+  z-index:3 !important;
+}
+
+/* painel de notificações não deve ser deformado pelo layout do cabeçalho */
+.notifications-panel,
+.notification-panel,
+.notifications-dropdown,
+.notification-dropdown{
+  width:min(380px,calc(100vw - 24px)) !important;
+  max-width:380px !important;
+  flex:none !important;
+}
+
+
+/* ===== NOTIFICAÇÕES SEMPRE ACIMA DO CONTEÚDO ===== */
+.site-header,
+header,
+.header,
+.topbar,
+.header-inner,
+.header-actions{
+  overflow:visible !important;
+}
+
+/* O menu de mensagens deve sobrepor banner, perfil e página do jogo */
+.notifications-panel,
+.notification-panel,
+.notifications-dropdown,
+.notification-dropdown,
+#notificationsPanel,
+#notificationPanel{
+  position:absolute !important;
+  z-index:99999 !important;
+  isolation:isolate;
+}
+
+/* O botão/contêiner do sino cria a referência correta para o dropdown */
+.notification-btn,
+.notifications-btn,
+.notification-button,
+.bell-btn,
+.header-bell,
+#notificationBtn{
+  z-index:100001 !important;
+}
+
+.notification-wrapper,
+.notifications-wrapper,
+.notification-container,
+.notifications-container{
+  position:relative !important;
+  z-index:100000 !important;
+  overflow:visible !important;
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -7271,36 +7381,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSupportPage()})
 </script>
 
 
-<script id="retrohub-game-header-layout-fix">
-(function(){
-  function fixGameHeader(){
-    const brandEls=[...document.querySelectorAll("a,button,div,span")].filter(el=>{
-      const t=(el.textContent||"").replace(/\s+/g," ").trim();
-      return t==="RETROHUB BR";
-    });
-    for(const brand of brandEls){
-      let row=brand.parentElement;
-      for(let i=0;i<4 && row;i++,row=row.parentElement){
-        const text=(row.textContent||"");
-        const hasProfile=/Perfil/i.test(text);
-        const rect=row.getBoundingClientRect();
-        if(hasProfile && rect.height>35 && rect.height<120){
-          row.classList.add("game-detail-header");
-          const brandClickable=brand.closest("a,button")||brand;
-          if(brandClickable && !brandClickable.dataset.homeFixed){
-            brandClickable.dataset.homeFixed="1";
-            brandClickable.style.cursor="pointer";
-          }
-          return;
-        }
-      }
-    }
-  }
-  document.addEventListener("DOMContentLoaded",fixGameHeader);
-  const observer=new MutationObserver(()=>fixGameHeader());
-  observer.observe(document.documentElement,{childList:true,subtree:true});
-})();
-</script>
+
 
 </body>
 </html>
