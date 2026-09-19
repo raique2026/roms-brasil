@@ -3218,6 +3218,59 @@ function getRetrohubRAGameId(game){
 
 const games = [
   {
+    slug: "the-simpsons-hit-and-run",
+    title: "The Simpsons: Hit & Run",
+    platform: "PS2",
+    year: "2003",
+    language: "Inglês",
+    region: "NTSC-U/C",
+    size: "Edite o tamanho",
+    developer: "Radical Entertainment",
+    publisher: "Vivendi Universal Games / Fox Interactive",
+    genre: "Ação / Aventura / Mundo aberto",
+    format: "ISO",
+    translation: "Não informado",
+
+    retroAchievements: true,
+    achievements: 69,
+    achievementPoints: 620,
+    supportedHashes: 1,
+    hardcoreSupport: true,
+    recommendedEmulator: "PCSX2",
+    retroAchievementsUrl: "https://retroachievements.org/game/19010",
+    retroAchievementsGameId: 19010,
+    retroHashesUrl: "https://retroachievements.org/game/19010/hashes",
+    achievementBadge: "images/badges/the-simpsons-hit-and-run.png",
+    achievementBadgeText: "Complete o conjunto de conquistas de The Simpsons: Hit & Run para conquistar esta insígnia",
+
+    achievementGuide: {
+      available: true,
+      difficulty: "Média / Alta",
+      estimatedTime: "20–30 horas",
+      playthroughs: "1 + limpeza",
+      missables: "Desafios específicos e condições especiais de algumas conquistas",
+      summary: "Guia em português para as 69 conquistas do conjunto base de The Simpsons: Hit & Run no RetroAchievements. O conjunto soma 620 pontos e cobre as sete fases, missões, veículos, roupas, corridas, cartas, gags, vespas e desafios especiais.",
+      steps: [
+        { title: "1. Complete as sete fases", text: "Avance normalmente pela campanha e conclua todas as missões principais dos sete níveis. Evite cheats que deem vantagem, pois o conjunto do RetroAchievements bloqueia esse tipo de recurso em várias conquistas." },
+        { title: "2. Veículos e roupas", text: "Junte moedas durante a campanha para comprar os veículos e roupas de cada nível. Destrua caixas, máquinas e outros objetos do cenário para aumentar sua reserva de moedas." },
+        { title: "3. Corridas e conteúdo secundário", text: "Conclua as corridas de cada nível e trabalhe nos objetivos opcionais. Aproveite para liberar veículos adicionais e reduzir o volume de limpeza no final." },
+        { title: "4. Colecionáveis", text: "Faça a limpeza das cartas, gags, vespas e demais colecionáveis. Use a lista de conquistas do RetroHub para acompanhar o que ainda falta em cada nível." },
+        { title: "5. Desafios especiais e maestria", text: "Finalize as conquistas com condições específicas, veículos obrigatórios ou restrições próprias. Depois confira a lista bloqueada do RetroAchievements até completar as 69 conquistas." }
+      ],
+      achievements: []
+    },
+
+    cover: "images/the-simpsons-hit-and-run.jpg",
+    banner: "banners/the-simpsons-hit-and-run.jpg",
+    description: "The Simpsons: Hit & Run leva Springfield para uma aventura de ação e exploração com direção, missões e humor da série. Homer, Bart, Lisa, Marge e Apu investigam acontecimentos estranhos pela cidade enquanto o jogador explora sete níveis, participa de corridas, coleta itens e desbloqueia veículos e roupas.",
+    screenshots: [
+      "screenshots/the-simpsons-hit-and-run/screenshot-01.jpg",
+      "screenshots/the-simpsons-hit-and-run/screenshot-02.jpg",
+      "screenshots/the-simpsons-hit-and-run/screenshot-03.jpg"
+    ],
+    download: "#"
+  },
+  {
     slug: "shadow-of-the-colossus",
     title: "Shadow of the Colossus",
     platform: "PS2",
@@ -7908,5 +7961,200 @@ window.addEventListener('load',()=>setTimeout(syncHero,600));
 }
 </style>
 
+
+<style id="retrohub-friends-redesign-2026">
+/* Friends page — visual redesign, existing functionality preserved */
+#friendsPage{
+  max-width:1460px!important;
+  margin:0 auto!important;
+  padding:34px 34px 70px!important;
+  color:#eef5ff;
+}
+#friendsPage .friends-page-head{
+  position:relative!important;
+  min-height:150px!important;
+  padding:28px 30px!important;
+  overflow:hidden!important;
+  border-bottom:1px solid #203a5c!important;
+  background:
+    radial-gradient(circle at 65% 30%,rgba(38,110,190,.22),transparent 34%),
+    linear-gradient(100deg,#071223 0%,#08172a 54%,#06111f 100%)!important;
+}
+#friendsPage .friends-page-head:after{
+  content:"JOGOS QUE MARCAM GERAÇÕES";
+  position:absolute;right:155px;top:48px;
+  width:190px;color:#2587d8;font-size:20px;font-weight:900;
+  line-height:1.05;letter-spacing:1px;transform:rotate(-4deg);opacity:.42;
+  pointer-events:none
+}
+#friendsPage .friends-page-title-icon{
+  width:76px!important;height:76px!important;border-radius:18px!important;
+  font-size:34px!important;background:linear-gradient(145deg,#6347ff,#8a45ff)!important;
+  box-shadow:0 10px 28px rgba(109,69,255,.28)!important
+}
+#friendsPage .friends-page-head h1{font-size:36px!important;letter-spacing:-.7px!important}
+#friendsPage .friends-page-head p{font-size:17px!important;color:#94add0!important}
+#friendsPage .friends-count{font-size:14px!important}
+#friendsPage .friends-back-btn{
+  position:absolute!important;right:28px!important;top:24px!important;
+  min-height:48px!important;padding:0 20px!important;border-radius:12px!important;
+  border:1px solid #29496f!important;background:#09172a!important;color:#f2f6ff!important;
+  font-weight:800!important
+}
+
+/* Search row */
+#friendsPage .friends-search-wrap{
+  margin:34px 0 26px!important;
+  display:grid!important;
+  grid-template-columns:minmax(340px,620px) 150px minmax(150px,200px) minmax(180px,230px)!important;
+  gap:12px!important;align-items:stretch!important
+}
+#friendsPage .friends-search-wrap input{
+  height:58px!important;border-radius:13px!important;
+  border:1px solid #24486f!important;background:#07162a!important;
+  color:#fff!important;font-size:15px!important;padding-left:48px!important
+}
+#friendsPage .friends-search-wrap button{
+  min-height:58px!important;border-radius:13px!important;
+  background:linear-gradient(135deg,#5d4bff,#7857ff)!important;
+  box-shadow:0 8px 24px rgba(102,79,255,.18)!important
+}
+
+/* Tabs */
+#friendsPage .friends-tabs{
+  display:flex!important;gap:18px!important;margin:0 0 24px!important;
+  padding:10px 0 18px!important;border-bottom:1px solid #203a5c!important
+}
+#friendsPage .friends-tab{
+  min-height:48px!important;padding:0 22px!important;border:1px solid #1d395b!important;
+  border-radius:13px!important;background:#081629!important;color:#8eabd4!important;
+  font-weight:800!important
+}
+#friendsPage .friends-tab.active{
+  color:#fff!important;border-color:#8c54ff!important;
+  background:linear-gradient(145deg,#171b3d,#121c3d)!important;
+  box-shadow:0 0 0 1px #8c54ff inset,0 0 18px rgba(132,73,255,.15)!important
+}
+
+/* Friend cards */
+#friendsPage .friend-card{
+  min-height:138px!important;padding:22px 24px!important;margin-bottom:14px!important;
+  border:1px solid #1d5484!important;border-radius:16px!important;
+  background:linear-gradient(100deg,#08182d,#071426)!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.12)!important
+}
+#friendsPage .friend-card img,
+#friendsPage .friend-avatar{
+  width:78px!important;height:78px!important;border-radius:14px!important;
+  border:1px solid #3d6192!important;object-fit:cover!important
+}
+#friendsPage .friend-name{font-size:20px!important;font-weight:900!important}
+#friendsPage .friend-card button{
+  min-height:48px!important;border-radius:12px!important;font-weight:800!important
+}
+
+/* Enhance known action buttons without changing handlers */
+#friendsPage button[onclick*="chat" i],
+#friendsPage button[onclick*="message" i]{
+  background:linear-gradient(135deg,#4337ce,#6249ff)!important;
+  border:1px solid #796bff!important;color:white!important
+}
+#friendsPage button[onclick*="remove" i]{
+  background:#10172a!important;border:1px solid #ff405d!important;color:#ff6278!important
+}
+
+/* Extra visual controls are intentionally display-only; existing search remains authoritative. */
+#friendsPage .rh-friends-tools{
+  display:flex;gap:12px;align-items:center;margin:-84px 0 26px auto;width:max-content;
+  pointer-events:none
+}
+#friendsPage .rh-tool{
+  min-width:170px;height:58px;padding:8px 14px;border:1px solid #285a8b;border-radius:13px;
+  background:#07162a;color:#dce8fa;display:flex;flex-direction:column;justify-content:center;
+  font-size:12px
+}
+#friendsPage .rh-tool b{font-size:14px;margin-top:3px;color:#fff}
+#friendsPage .rh-view{min-width:100px;flex-direction:row;gap:16px;align-items:center;font-size:22px}
+
+@media(max-width:1050px){
+  #friendsPage .friends-search-wrap{grid-template-columns:1fr 150px!important}
+  #friendsPage .rh-friends-tools{display:none}
+}
+@media(max-width:700px){
+  #friendsPage{padding:16px 12px 50px!important}
+  #friendsPage .friends-page-head{min-height:175px!important;padding:20px!important}
+  #friendsPage .friends-page-head:after{display:none}
+  #friendsPage .friends-page-head h1{font-size:28px!important}
+  #friendsPage .friends-search-wrap{grid-template-columns:1fr!important}
+  #friendsPage .friends-tabs{overflow-x:auto!important;gap:8px!important}
+  #friendsPage .friends-tab{white-space:nowrap!important}
+  #friendsPage .friend-card{padding:16px!important}
+}
+</style>
+<script id="retrohub-friends-redesign-helper">
+(function(){
+  function enhanceFriends(){
+    const page=document.getElementById('friendsPage');
+    if(!page || page.dataset.rhRedesigned) return;
+    page.dataset.rhRedesigned='1';
+    const search=page.querySelector('.friends-search-wrap');
+    if(search){
+      const tools=document.createElement('div');
+      tools.className='rh-friends-tools';
+      tools.innerHTML='<div class="rh-tool">Status<b>Todos⌄</b></div><div class="rh-tool">Ordenar por<b>↕ Mais recentes⌄</b></div><div class="rh-tool rh-view">▦ <b>☷</b></div>';
+      search.insertAdjacentElement('afterend',tools);
+    }
+  }
+  document.addEventListener('DOMContentLoaded',enhanceFriends);
+  window.addEventListener('load',enhanceFriends);
+  new MutationObserver(enhanceFriends).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
+
+<style id="retrohub-friends-redesign-v3-correct">
+.friends-page{max-width:1460px!important;margin:0 auto!important;padding:0 34px 70px!important;color:#eef5ff}
+.friends-head{position:relative!important;min-height:175px!important;margin:0 0 32px!important;padding:34px 30px!important;align-items:flex-start!important;overflow:hidden!important;border-bottom:1px solid #203a5c!important;background:radial-gradient(circle at 66% 35%,rgba(36,107,188,.28),transparent 31%),linear-gradient(100deg,#071223,#08182b 55%,#06111f)!important}
+.friends-head:after{content:"JOGOS\A QUE MARCAM\A GERAÇÕES";white-space:pre;position:absolute;right:165px;top:44px;color:#2788d5;font-size:22px;font-weight:900;line-height:1.02;transform:rotate(-5deg);opacity:.38;pointer-events:none}
+.friends-title-row{position:relative;z-index:2!important;align-items:center!important}
+.friends-title-icon{width:76px!important;height:76px!important;border-radius:18px!important;font-size:34px!important;background:linear-gradient(145deg,#6347ff,#8a45ff)!important;box-shadow:0 10px 28px rgba(109,69,255,.28)!important}
+.friends-head h1{font-size:38px!important;letter-spacing:-.8px!important;margin-bottom:8px!important}
+.friends-head p{font-size:18px!important;color:#91a9ce!important}
+.friends-summary{font-size:15px!important;margin-top:9px!important}
+.friends-profile-btn{position:absolute!important;right:28px!important;top:28px!important;z-index:3;min-height:50px!important;padding:0 22px!important;border-radius:12px!important;border:1px solid #29496f!important;background:#09172a!important;color:#f2f6ff!important;font-weight:900!important}
+
+.friends-search{display:grid!important;grid-template-columns:minmax(360px,620px) 160px!important;gap:12px!important;margin:0 0 28px!important;max-width:800px!important}
+.friends-search-box{height:60px!important;border-radius:14px!important;border:1px solid #24486f!important;background:#07162a!important}
+.friends-search-box input{height:100%!important;font-size:16px!important;padding-left:52px!important}
+.friends-search-icon{font-size:24px!important;left:18px!important;color:#78a8ef!important}
+.friends-search>button{height:60px!important;border-radius:14px!important;font-size:16px!important;background:linear-gradient(135deg,#5d4bff,#7857ff)!important;box-shadow:0 8px 24px rgba(102,79,255,.2)!important}
+
+.friends-tabs{display:flex!important;gap:18px!important;margin:0 0 26px!important;padding:12px 0 20px!important;border-bottom:1px solid #203a5c!important}
+.friends-tab{min-height:54px!important;padding:0 25px!important;border:1px solid #1d395b!important;border-radius:14px!important;background:#081629!important;color:#91add7!important;font-size:15px!important}
+.friends-tab.active{color:#fff!important;border-color:#8c54ff!important;background:linear-gradient(145deg,#171b3d,#121c3d)!important;box-shadow:0 0 0 1px #8c54ff inset,0 0 20px rgba(132,73,255,.16)!important}
+.friends-count{background:#174873!important}
+
+.friends-grid{display:block!important;background:transparent!important;border:0!important;margin-top:0!important}
+.friend-card{display:grid!important;grid-template-columns:78px minmax(0,1fr) auto!important;align-items:center!important;gap:20px!important;min-height:138px!important;padding:22px 24px!important;margin-bottom:14px!important;border:1px solid #1d5484!important;border-radius:16px!important;background:linear-gradient(100deg,#08182d,#071426)!important;box-shadow:0 10px 30px rgba(0,0,0,.12)!important}
+.friend-card:hover{background:linear-gradient(100deg,#0a1d36,#09182c)!important}
+.friend-avatar-wrap,.friend-avatar{width:78px!important;height:78px!important}
+.friend-avatar{border-radius:14px!important;border:1px solid #3d6192!important}
+.friend-info strong{font-size:20px!important;font-weight:900!important;color:#fff!important}
+.friend-info small{font-size:14px!important;color:#83a0ca!important;margin-top:5px!important}
+.friend-meta{margin-top:8px!important}
+.friend-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:12px!important;margin:0!important}
+.friend-actions .friend-action{min-height:50px!important;padding:0 20px!important;border-radius:12px!important;font-size:14px!important}
+.friend-actions .primary,.friend-actions button:first-child{background:linear-gradient(135deg,#4337ce,#6249ff)!important;border:1px solid #796bff!important;color:#fff!important;box-shadow:0 7px 20px rgba(85,66,240,.18)!important}
+.friend-actions .danger,.friend-actions button:last-child{background:#10172a!important;border:1px solid #ff405d!important;color:#ff6278!important}
+.friend-status{font-size:13px!important;color:#4ce8a1!important}
+
+@media(max-width:900px){
+ .friends-head:after{display:none}.friend-card{grid-template-columns:68px minmax(0,1fr)!important}.friend-avatar-wrap,.friend-avatar{width:68px!important;height:68px!important}.friend-actions{grid-column:1/-1!important;justify-content:flex-start!important;padding-left:88px!important}
+}
+@media(max-width:650px){
+ .friends-page{padding:0 12px 50px!important}.friends-head{min-height:190px!important;padding:24px 18px!important}.friends-head h1{font-size:30px!important}.friends-title-icon{width:58px!important;height:58px!important}.friends-profile-btn{right:14px!important;top:118px!important}.friends-search{grid-template-columns:1fr!important}.friends-tabs{overflow-x:auto!important;gap:8px!important}.friends-tab{white-space:nowrap!important}.friend-card{padding:16px!important}.friend-actions{padding-left:0!important}
+}
+</style>
+<style>.rh-friends-tools{display:none!important}</style>
 </body>
 </html>
