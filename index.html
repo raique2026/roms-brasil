@@ -2442,6 +2442,30 @@ body.retrohub-support-open{
   font-size:11px;
 }
 
+
+/* ===== PERFIL DE APOIADOR ===== */
+.supporter-custom-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.supporter-custom-grid label{display:grid;gap:6px;color:#aeb9d1;font-size:12px;font-weight:800}
+.supporter-custom-grid select,.supporter-custom-grid input{width:100%;box-sizing:border-box;border:1px solid #34415f;background:#0c1428;color:#fff;border-radius:10px;padding:11px}
+.supporter-custom-grid input[type=color]{height:43px;padding:5px}
+.supporter-custom-grid small,.support-feature-hint{color:#7f8daa;font-size:10px;line-height:1.4}
+.supporter-editor-tier{display:inline-flex;align-items:center;gap:8px;margin:0 0 14px;padding:8px 11px;border:1px solid #33415f;border-radius:999px;background:#111b31;color:#b9c7e6;font-size:11px;font-weight:900}
+.supporter-editor-tier.active{border-color:rgba(54,217,139,.35);color:#72e5aa;background:rgba(54,217,139,.08)}
+.support-locked{opacity:.48;filter:saturate(.5);pointer-events:none}
+.supporter-profile-badge{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:5px 9px 5px 6px;border:1px solid color-mix(in srgb,var(--support-accent,#6b5cff) 45%,#33415f);border-radius:999px;background:rgba(9,16,31,.78);font-size:11px;font-weight:900;color:#fff}
+.supporter-profile-badge img{width:27px;height:27px;object-fit:contain;filter:drop-shadow(0 0 7px color-mix(in srgb,var(--support-accent,#6b5cff) 55%,transparent))}
+.profile-page.supporter-themed .profile-hero{border-color:color-mix(in srgb,var(--support-accent,#6b5cff) 55%,#26395f);box-shadow:0 0 32px color-mix(in srgb,var(--support-accent,#6b5cff) 18%,transparent)}
+.profile-page.supporter-themed .profile-level{border-color:color-mix(in srgb,var(--support-accent,#6b5cff) 40%,#33415f)}
+.profile-page-avatar.border-neon{box-shadow:0 0 0 3px #fff,0 0 0 6px var(--support-accent,#6b5cff),0 0 25px var(--support-accent,#6b5cff)}
+.profile-page-avatar.border-energy{box-shadow:0 0 0 3px var(--support-accent,#6b5cff),0 0 18px var(--support-accent,#6b5cff),0 0 38px color-mix(in srgb,var(--support-accent,#6b5cff) 65%,transparent)}
+.profile-page-avatar.border-gold{box-shadow:0 0 0 3px #ffd45c,0 0 22px rgba(255,190,44,.65)}
+.profile-page.effect-glow .profile-hero:after{content:"";position:absolute;inset:-1px;border-radius:20px;pointer-events:none;box-shadow:inset 0 0 45px color-mix(in srgb,var(--support-accent,#6b5cff) 22%,transparent)}
+.profile-page.effect-pulse .profile-page-avatar{animation:supportPulse 2.2s ease-in-out infinite}
+.profile-page.effect-particles .profile-hero:after{content:"✦  ·  ✧   ·  ✦   ·  ✧";position:absolute;right:28px;top:22px;color:var(--support-accent,#6b5cff);letter-spacing:13px;opacity:.55;pointer-events:none;animation:supportFloat 3s ease-in-out infinite}
+@keyframes supportPulse{50%{filter:drop-shadow(0 0 13px var(--support-accent,#6b5cff))}}
+@keyframes supportFloat{50%{transform:translateY(-7px);opacity:.85}}
+@media(max-width:650px){.supporter-custom-grid{grid-template-columns:1fr}}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -3075,22 +3099,67 @@ function getRetrohubRAGameId(game){
         <div class="profile-editor-identity-copy">
           <div id="profileUsername" class="profile-username">@usuário</div>
           <div class="profile-editor-ra-line">🎮 <span id="profileRAHeader">RetroAchievements</span></div>
-          <label class="profile-editor-small-btn" style="cursor:pointer">📷 Alterar foto<input id="avatarInput" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="uploadRetrohubAvatar(event)"></label>
+          <label class="profile-editor-small-btn" style="cursor:pointer">📷 Alterar foto<input id="avatarInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden onchange="uploadRetrohubAvatar(event)"></label>
         </div>
       </div>
 
       <form class="profile-editor-form" onsubmit="saveRetrohubProfile(event)">
         <section class="profile-editor-section">
           <div class="profile-editor-section-head"><span class="profile-editor-section-icon">👤</span><div><h3>Informações do perfil</h3><p>Dados principais da sua conta pública.</p></div></div>
-          <div class="profile-editor-fields profile-editor-fields-single">
+          <div class="profile-editor-fields">
+            <label>Nome de usuário
+              <input id="profileUsernameInput" maxlength="24" pattern="[A-Za-z0-9_]+" placeholder="Seu nome no RetroHub">
+              <small id="usernameSupportHint" class="support-feature-hint">Guardião Retro ou Lenda Retro: troca de nome liberada.</small>
+            </label>
             <label>Usuário do RetroAchievements<input id="profileRAInput" maxlength="50" pattern="[A-Za-z0-9_-]+" placeholder="Ex.: raiquesantos"></label>
           </div>
+        </section>
+
+        <section class="profile-editor-section" id="supporterCustomizationSection">
+          <div class="profile-editor-section-head"><span class="profile-editor-section-icon">✨</span><div><h3>Personalização de apoiador</h3><p>Recursos liberados automaticamente conforme seu nível ativo no Patreon.</p></div></div>
+          <div id="supporterTierEditorBadge" class="supporter-editor-tier">Verificando assinatura...</div>
+          <div class="supporter-custom-grid">
+            <label>Cor especial
+              <select id="profileAccentPreset">
+                <option value="">Padrão RetroHub</option>
+                <option value="#ff7a32">Retro Bronze</option>
+                <option value="#31a8ff">Retro Blue</option>
+                <option value="#9b6cff">Arcade Purple</option>
+                <option value="#35d995">Pixel Green</option>
+                <option value="#ff4f69">Neon Red</option>
+              </select>
+              <small>Aliado Retro ou superior</small>
+            </label>
+            <label>Cor personalizada
+              <input id="profileCustomColor" type="color" value="#6b5cff">
+              <small>Guardião Retro ou superior</small>
+            </label>
+            <label>Borda do avatar
+              <select id="profileAvatarBorder">
+                <option value="none">Padrão</option>
+                <option value="neon">Neon</option>
+                <option value="energy">Energia</option>
+                <option value="gold">Dourada</option>
+              </select>
+              <small>Lenda Retro</small>
+            </label>
+            <label>Efeito do perfil
+              <select id="profileEffect">
+                <option value="none">Nenhum</option>
+                <option value="glow">Glow</option>
+                <option value="particles">Partículas</option>
+                <option value="pulse">Energia pulsante</option>
+              </select>
+              <small>Lenda Retro</small>
+            </label>
+          </div>
+          <div class="support-feature-hint">GIF no avatar: Aliado+ • Tema personalizado: Guardião+ • GIF no banner, borda e efeitos: Lenda Retro.</div>
         </section>
 <section class="profile-editor-section">
           <div class="profile-editor-section-head"><span class="profile-editor-section-icon">🖼️</span><div><h3>Capa do perfil</h3><p>Escolha uma imagem para o fundo do seu perfil.</p></div></div>
           <div id="wallpaperPreview" class="wallpaper-preview profile-editor-wallpaper">Nenhuma capa selecionada</div>
           <div class="profile-editor-cover-actions">
-            <label class="profile-editor-small-btn primary" style="cursor:pointer">🖼 Alterar capa<input id="wallpaperInput" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="uploadRetrohubWallpaper(event)"></label>
+            <label class="profile-editor-small-btn primary" style="cursor:pointer">🖼 Alterar capa<input id="wallpaperInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden onchange="uploadRetrohubWallpaper(event)"></label>
             <button class="profile-editor-small-btn danger-ghost" type="button" onclick="removeRetrohubWallpaper()">🗑 Remover</button>
           </div>
         </section>
@@ -5987,6 +6056,7 @@ function handleAccountButton(){
 function openAccountPanel(){
   document.getElementById("accountModal").hidden = false;
   refreshRetrohubAccountUI();
+  setTimeout(()=>{if(typeof refreshSupporterEditor==="function")refreshSupporterEditor()},0);
 }
 function closeAccountPanel(){ document.getElementById("accountModal").hidden = true; }
 
@@ -6099,6 +6169,8 @@ function refreshRetrohubAccountUI(){
   if(btnText) btnText.textContent = "Perfil";
   const profileUsernameEl = document.getElementById("profileUsername");
   if(profileUsernameEl) profileUsernameEl.textContent = "@" + username;
+  const profileUsernameInput=document.getElementById("profileUsernameInput");
+  if(profileUsernameInput) profileUsernameInput.value=username;
   // profileEmail foi removido do novo editor. Nunca tente escrever em um elemento inexistente.
   const profileEmailEl = document.getElementById("profileEmail");
   if(profileEmailEl) profileEmailEl.textContent = retrohubSession.user.email || "";
@@ -6148,6 +6220,12 @@ async function saveRetrohubProfile(event){
     return setAccountMessage("profileMessage","Usuário do RetroAchievements inválido.");
   }
 
+  const usernameInput=(document.getElementById("profileUsernameInput")?.value||"").trim();
+  if(supporterCan(2) && !/^[A-Za-z0-9_]{3,24}$/.test(usernameInput)){
+    if(submit) submit.disabled=false;
+    return setAccountMessage("profileMessage","Nome de usuário inválido. Use 3 a 24 letras, números ou _.");
+  }
+
   const highlights = {
     game: document.getElementById("favoriteGameSelect")?.value || "",
     achievement: document.getElementById("favoriteAchievementSelect")?.value || "",
@@ -6159,7 +6237,16 @@ async function saveRetrohubProfile(event){
 
     const { data, error } = await retrohubSupabase
       .from("profiles")
-      .update({ retroachievements_username: ra || null })
+      .update({
+        retroachievements_username: ra || null,
+        ...(supporterCan(2)?{username:(document.getElementById("profileUsernameInput")?.value||username).trim()}:{}),
+        ...(supporterCan(1)?{profile_accent:document.getElementById("profileAccentPreset")?.value||null}:{}),
+        ...(supporterCan(2)?{profile_custom_color:document.getElementById("profileCustomColor")?.value||null}:{}),
+        ...(supporterCan(3)?{
+          avatar_border:document.getElementById("profileAvatarBorder")?.value||"none",
+          profile_effect:document.getElementById("profileEffect")?.value||"none"
+        }:{})
+      })
       .eq("id", retrohubSession.user.id)
       .select()
       .single();
@@ -6202,7 +6289,8 @@ async function uploadRetrohubAvatar(event){
   const file = event.target.files?.[0];
   if(!file || !retrohubSession?.user) return;
   if(file.size > 5 * 1024 * 1024) return setAccountMessage("profileMessage","A imagem deve ter no máximo 5 MB.");
-  if(!["image/jpeg","image/png","image/webp"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG ou WebP.");
+  if(!["image/jpeg","image/png","image/webp","image/gif"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG, WebP ou GIF.");
+  if(file.type==="image/gif" && !supporterCan(1)) return setAccountMessage("profileMessage","Avatar GIF é exclusivo para Aliado Retro ou superior.");
 
   const localPreview=URL.createObjectURL(file);
   const avatarEl=document.getElementById("profileAvatar"); if(avatarEl){ avatarEl.classList.remove("avatar-empty"); avatarEl.src=localPreview; }
@@ -6226,7 +6314,8 @@ async function uploadRetrohubWallpaper(event){
   const file=event.target.files?.[0];
   if(!file||!retrohubSession?.user) return;
   if(file.size>8*1024*1024) return setAccountMessage("profileMessage","O papel de parede deve ter no máximo 8 MB.");
-  if(!["image/jpeg","image/png","image/webp"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG ou WebP.");
+  if(!["image/jpeg","image/png","image/webp","image/gif"].includes(file.type)) return setAccountMessage("profileMessage","Use PNG, JPG, WebP ou GIF.");
+  if(file.type==="image/gif" && !supporterCan(3)) return setAccountMessage("profileMessage","Banner GIF é exclusivo para Lenda Retro.");
   const localPreview=URL.createObjectURL(file);
   const wp=document.getElementById("wallpaperPreview"); if(wp){wp.style.backgroundImage=`linear-gradient(rgba(8,13,27,.28),rgba(8,13,27,.28)),url("${localPreview}")`;wp.textContent="";}
   setAccountMessage("profileMessage","Enviando papel de parede...",true);
@@ -6387,7 +6476,7 @@ async function renderRetrohubProfilePage(){
   if(q){ q.style.display="none"; q.closest(".search-wrap")?.style.setProperty("display","none"); }
   if(filters) filters.style.display="none";
   if(!retrohubSession?.user){
-    app.innerHTML=`<section class="profile-page"><div class="profile-section profile-empty">Entre na sua conta para visualizar seu perfil.</div></section>`;
+    app.innerHTML=`<section class="profile-page${supporterProfileAttrs(retrohubProfile).cls}"${supporterProfileAttrs(retrohubProfile).style}><div class="profile-section profile-empty">Entre na sua conta para visualizar seu perfil.</div></section>`;
     return;
   }
   const username=retrohubProfile?.username||retrohubSession.user.user_metadata?.username||"Perfil";
@@ -6395,10 +6484,10 @@ async function renderRetrohubProfilePage(){
   const avatar=retrohubProfile?.avatar_url||avatarFallback();
   const wallpaper=retrohubProfile?.wallpaper_url||"";
   const wallpaperStyle=wallpaper?` style="--profile-wallpaper:url('${escapeHTML(wallpaper).replace(/'/g,"%27")}')"`:"";
-  app.innerHTML=`<section class="profile-page">
+  const supportAttrs=supporterProfileAttrs(profile);\n    app.innerHTML=`<section class="profile-page${supportAttrs.cls}"${supportAttrs.style}>
     <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}><div class="profile-hero-grid">
-      <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
-      <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1><div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
+      <img class="profile-page-avatar${supporterAvatarClass(retrohubProfile)}" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
+      <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1>${supporterBadgeHTML(profile)}${supporterBadgeHTML(retrohubProfile)}<div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
       <div class="profile-hero-actions"><button class="account-secondary" onclick="openRetrohubFriends()">👥 Amigos</button><button class="account-secondary" onclick="openAccountPanel()">✏️ Editar perfil</button></div>
     </div></div>
     <div id="profileDashboard"><div class="profile-loading">${raUser?"Carregando suas conquistas...":"Vincule seu usuário do RetroAchievements em Editar perfil para sincronizar suas conquistas."}</div></div>
@@ -7027,7 +7116,7 @@ async function openRetrohubPublicProfile(userId,pushState=true){
       <button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button>
       <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}>
         <div class="profile-hero-grid">
-          <img class="profile-page-avatar" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
+          <img class="profile-page-avatar${supporterAvatarClass(profile)}" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
           <div>
             <h1 class="profile-page-name">@${escapeHTML(username)}</h1>
             <div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div>
@@ -7710,6 +7799,79 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSupportPage()})
   window.addEventListener("load",enhance);
   new MutationObserver(enhance).observe(document.documentElement,{childList:true,subtree:true});
 })();
+</script>
+
+
+<script id="retrohub-supporter-profile-system">
+const RETROHUB_SUPPORT_TIERS={
+  aliado:{rank:1,title:"Aliado Retro",badge:"images/aliado-retro.png",accent:"#ff8a3d"},
+  guardiao:{rank:2,title:"Guardião Retro",badge:"images/guardiao-retro.png",accent:"#31a8ff"},
+  lenda:{rank:3,title:"Lenda Retro",badge:"images/lenda-retro.png",accent:"#f3bd39"}
+};
+let retrohubSupporter={tier:null,rank:0,active:false};
+
+function retrohubTierFromProfile(profile){
+  const key=String(profile?.supporter_tier||"").toLowerCase();
+  return RETROHUB_SUPPORT_TIERS[key]||null;
+}
+function supporterRank(){return retrohubSupporter?.rank||0}
+function supporterCan(min){return supporterRank()>=min}
+
+async function syncRetrohubSupporter(){
+  if(!retrohubSession?.user){retrohubSupporter={tier:null,rank:0,active:false};return retrohubSupporter}
+  try{
+    const {data}=await retrohubSupabase.auth.getSession();
+    const token=data?.session?.access_token;
+    if(!token) return retrohubSupporter;
+    const r=await fetch("/api/patreon/sync",{method:"POST",headers:{Authorization:`Bearer ${token}`}});
+    const j=await r.json();
+    if(r.ok){
+      const def=RETROHUB_SUPPORT_TIERS[j.tier]||null;
+      retrohubSupporter={tier:j.tier||null,rank:def?.rank||0,active:!!j.active};
+      if(retrohubProfile) retrohubProfile.supporter_tier=j.tier||null;
+    }
+  }catch(e){console.warn("Falha ao sincronizar Patreon:",e)}
+  return retrohubSupporter;
+}
+function supporterBadgeHTML(profile){
+  const tier=retrohubTierFromProfile(profile);
+  if(!tier)return "";
+  return `<div class="supporter-profile-badge" style="--support-accent:${tier.accent}"><img src="${tier.badge}" alt=""><span>${tier.title}</span></div>`;
+}
+function supporterProfileAttrs(profile){
+  const tier=retrohubTierFromProfile(profile);
+  const accent=profile?.profile_custom_color||profile?.profile_accent||tier?.accent||"#6b5cff";
+  const themed=tier?" supporter-themed":"";
+  const effect=tier?.rank>=3 && ["glow","particles","pulse"].includes(profile?.profile_effect)?` effect-${profile.profile_effect}`:"";
+  return {cls:themed+effect,style:` style="--support-accent:${escapeHTML(accent)}"`,tier};
+}
+function supporterAvatarClass(profile){
+  const tier=retrohubTierFromProfile(profile);
+  if(!tier||tier.rank<3)return "";
+  const b=["neon","energy","gold"].includes(profile?.avatar_border)?profile.avatar_border:"none";
+  return b==="none"?"":` border-${b}`;
+}
+async function refreshSupporterEditor(){
+  if(!retrohubSession?.user)return;
+  await syncRetrohubSupporter();
+  const tier=RETROHUB_SUPPORT_TIERS[retrohubSupporter.tier]||null;
+  const pill=document.getElementById("supporterTierEditorBadge");
+  if(pill){
+    pill.textContent=tier?`✓ ${tier.title} ativo`:"Patreon sem nível ativo";
+    pill.classList.toggle("active",!!tier);
+  }
+  const username=document.getElementById("profileUsernameInput");
+  if(username){username.value=retrohubProfile?.username||"";username.disabled=!supporterCan(2)}
+  const preset=document.getElementById("profileAccentPreset");
+  if(preset){preset.value=retrohubProfile?.profile_accent||"";preset.disabled=!supporterCan(1)}
+  const custom=document.getElementById("profileCustomColor");
+  if(custom){custom.value=retrohubProfile?.profile_custom_color||"#6b5cff";custom.disabled=!supporterCan(2)}
+  const border=document.getElementById("profileAvatarBorder");
+  if(border){border.value=retrohubProfile?.avatar_border||"none";border.disabled=!supporterCan(3)}
+  const effect=document.getElementById("profileEffect");
+  if(effect){effect.value=retrohubProfile?.profile_effect||"none";effect.disabled=!supporterCan(3)}
+  document.querySelectorAll("#supporterCustomizationSection label").forEach(el=>el.classList.remove("support-locked"));
+}
 </script>
 
 </body>
