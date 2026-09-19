@@ -6128,7 +6128,7 @@ function handleAccountButton(){
 function openAccountPanel(){
   document.getElementById("accountModal").hidden = false;
   refreshRetrohubAccountUI();
-  setTimeout(()=>{if(typeof refreshSupporterEditor==="function")refreshSupporterEditor()},0);
+  setTimeout(()=>{if(typeof refreshSupporterEditor==="function")refreshSupporterEditor().catch(console.warn)},50);
 }
 function closeAccountPanel(){ document.getElementById("accountModal").hidden = true; }
 
@@ -6556,11 +6556,11 @@ async function renderRetrohubProfilePage(){
   const avatar=retrohubProfile?.avatar_url||avatarFallback();
   const wallpaper=retrohubProfile?.wallpaper_url||"";
   const wallpaperStyle=wallpaper?` style="--profile-wallpaper:url('${escapeHTML(wallpaper).replace(/'/g,"%27")}')"`:"";
-  const supportAttrs=supporterProfileAttrs(profile);
-    app.innerHTML=`<section class="profile-page${supportAttrs.cls}"${supportAttrs.style}>
+  const supportAttrs=supporterProfileAttrs(retrohubProfile);
+  app.innerHTML=`<section class="profile-page${supportAttrs.cls}"${supportAttrs.style}>
     <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}><div class="profile-hero-grid">
       <img class="profile-page-avatar${supporterAvatarClass(retrohubProfile)}" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
-      <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1>${supporterBadgeHTML(profile)}${supporterBadgeHTML(retrohubProfile)}<div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
+      <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1>${supporterBadgeHTML(retrohubProfile)}<div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
       <div class="profile-hero-actions"><button class="account-secondary" onclick="openRetrohubFriends()">👥 Amigos</button><button class="account-secondary" onclick="openAccountPanel()">✏️ Editar perfil</button></div>
     </div></div>
     <div id="profileDashboard"><div class="profile-loading">${raUser?"Carregando suas conquistas...":"Vincule seu usuário do RetroAchievements em Editar perfil para sincronizar suas conquistas."}</div></div>
