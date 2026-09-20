@@ -8592,5 +8592,77 @@ async function deleteGameComment(id,gameSlug){
 }
 </style>
 
+
+<style id="retrohub-featured-badge-card-fix-v2">
+.profile-page .profile-featured-card{
+  min-width:0;
+  overflow:hidden;
+}
+.profile-page .profile-featured-card .profile-featured-emoji,
+.profile-page .profile-featured-card .profile-featured-icon{
+  width:58px!important;
+  height:58px!important;
+  min-width:58px!important;
+  flex:0 0 58px!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden!important;
+  border-radius:12px!important;
+  object-fit:contain!important;
+}
+.profile-page .profile-featured-card .profile-featured-icon{
+  padding:6px!important;
+  box-sizing:border-box!important;
+}
+.profile-page .profile-featured-copy{
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.profile-page .profile-featured-copy strong,
+.profile-page .profile-featured-copy span{
+  max-width:100%!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+</style>
+
+<script id="retrohub-featured-badge-card-fix-js">
+(function(){
+  function looksLikeImagePath(value){
+    const s=String(value||"").trim();
+    return /^(?:https?:\/\/|\/|\.?\.?\/|images\/|assets\/|badges\/)/i.test(s) &&
+           /\.(?:png|jpe?g|webp|gif|svg)(?:[?#].*)?$/i.test(s);
+  }
+
+  function repairFeaturedBadgeCards(root=document){
+    root.querySelectorAll(".profile-featured-card").forEach(card=>{
+      const emoji=card.querySelector(".profile-featured-emoji");
+      if(!emoji) return;
+
+      const raw=(emoji.textContent||"").trim();
+      if(!looksLikeImagePath(raw)) return;
+
+      const img=document.createElement("img");
+      img.className="profile-featured-icon";
+      img.src=raw;
+      img.alt="Insígnia em destaque";
+      img.loading="lazy";
+      emoji.replaceWith(img);
+    });
+  }
+
+  window.repairRetrohubFeaturedBadgeCards=repairFeaturedBadgeCards;
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",()=>repairFeaturedBadgeCards());
+  }else{
+    repairFeaturedBadgeCards();
+  }
+
+  const observer=new MutationObserver(()=>repairFeaturedBadgeCards());
+  observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
 </html>
