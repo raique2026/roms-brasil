@@ -8396,5 +8396,98 @@ async function deleteGameComment(id,gameSlug){
   </div>
 </div>
 
+
+<style id="retrohub-profile-overlap-fix">
+/* Corrige sobreposição de textos/insígnia/nível no cabeçalho do perfil */
+.profile-hero,
+.retrohub-profile-hero,
+.rh-profile-hero{
+  min-height:270px!important;
+  height:auto!important;
+  overflow:hidden!important;
+}
+.profile-hero-content,
+.retrohub-profile-hero-content,
+.rh-profile-hero-content{
+  min-height:230px!important;
+  height:auto!important;
+  align-items:flex-start!important;
+}
+.profile-hero-info,
+.profile-info,
+.retrohub-profile-info,
+.rh-profile-info{
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:8px!important;
+}
+.profile-hero-info > *,
+.profile-info > *,
+.retrohub-profile-info > *,
+.rh-profile-info > *{
+  position:relative!important;
+  top:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  right:auto!important;
+  transform:none!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+.profile-hero .profile-badge,
+.profile-hero .featured-badge,
+.profile-hero [id*="Badge"],
+.retrohub-profile-hero .profile-badge,
+.rh-profile-hero .profile-badge{
+  max-width:330px!important;
+  white-space:normal!important;
+  line-height:1.3!important;
+}
+.profile-level,
+.profile-xp,
+.profile-xp-wrap,
+.retrohub-profile-level,
+.retrohub-profile-xp,
+.rh-profile-level,
+.rh-profile-xp{
+  width:100%!important;
+  max-width:450px!important;
+  clear:both!important;
+}
+
+/* Correção específica para os elementos reais usados no perfil RetroHub */
+#profileHeroFeaturedBadge{
+  display:flex!important;
+  align-items:center!important;
+  min-height:28px!important;
+  height:auto!important;
+  max-width:360px!important;
+  margin:4px 0 2px!important;
+  line-height:1.25!important;
+  white-space:normal!important;
+  overflow:visible!important;
+}
+#profileHeroFeaturedBadge img{
+  flex:0 0 auto!important;
+  width:28px!important;
+  height:28px!important;
+  object-fit:contain!important;
+}
+#profileHeroFeaturedBadge + *,
+#profileHeroLevel,
+#profileHeroXp,
+#profileHeroXP{
+  position:relative!important;
+  clear:both!important;
+  margin-top:5px!important;
+}
+
+@media(max-width:700px){
+  .profile-hero,.retrohub-profile-hero,.rh-profile-hero{min-height:330px!important}
+}
+</style>
+
 </body>
 </html>
