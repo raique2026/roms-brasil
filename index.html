@@ -8335,13 +8335,66 @@ async function submitGameComment(event,gameSlug){
   const chars=document.getElementById("gameCommentChars");if(chars)chars.textContent="0";
   await loadGameComments(gameSlug);
 }
-async function deleteGameComment(id,gameSlug){
-  if(!confirm("Excluir este comentário?"))return;
+let rhPendingDeleteComment=null;
+
+function openDeleteCommentModal(id,gameSlug){
+  rhPendingDeleteComment={id,gameSlug};
+  const modal=document.getElementById("rhDeleteCommentModal");
+  if(modal) modal.hidden=false;
+}
+
+function closeDeleteCommentModal(){
+  const modal=document.getElementById("rhDeleteCommentModal");
+  if(modal) modal.hidden=true;
+  rhPendingDeleteComment=null;
+}
+
+async function confirmDeleteGameComment(){
+  if(!rhPendingDeleteComment)return;
+  const {id,gameSlug}=rhPendingDeleteComment;
+  const btn=document.getElementById("rhDeleteCommentConfirm");
+  if(btn){btn.disabled=true;btn.textContent="Excluindo...";}
   const {error}=await retrohubSupabase.from("game_comments").delete().eq("id",id);
-  if(error){console.error(error);alert("Não foi possível excluir o comentário.");return}
+  if(btn){btn.disabled=false;btn.textContent="Excluir";}
+  if(error){
+    console.error(error);
+    alert("Não foi possível excluir o comentário.");
+    return;
+  }
+  closeDeleteCommentModal();
   await loadGameComments(gameSlug);
 }
+
+async function deleteGameComment(id,gameSlug){
+  openDeleteCommentModal(id,gameSlug);
+}
 </script>
+
+
+<style id="rh-delete-comment-modal-css">
+.rh-delete-modal{position:fixed;inset:0;z-index:100000;background:rgba(2,7,18,.72);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px}
+.rh-delete-modal[hidden]{display:none!important}
+.rh-delete-dialog{width:min(410px,100%);background:#0d1729;border:1px solid #2b4264;border-radius:18px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.6);animation:rhDeleteIn .16s ease}
+.rh-delete-dialog h3{margin:0 0 8px;font-size:20px;color:#fff}
+.rh-delete-dialog p{margin:0;color:#94a8c8;font-size:14px;line-height:1.55}
+.rh-delete-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+.rh-delete-cancel,.rh-delete-confirm{border-radius:10px;padding:10px 17px;font-weight:800;cursor:pointer}
+.rh-delete-cancel{background:#17243a;border:1px solid #304765;color:#dce8fa}
+.rh-delete-confirm{background:#9b2945;border:1px solid #c33b5c;color:#fff}
+.rh-delete-confirm:hover{background:#b93252}
+.rh-delete-confirm:disabled{opacity:.6;cursor:not-allowed}
+@keyframes rhDeleteIn{from{opacity:0;transform:scale(.96) translateY(6px)}to{opacity:1;transform:none}}
+</style>
+<div class="rh-delete-modal" id="rhDeleteCommentModal" hidden onclick="if(event.target===this)closeDeleteCommentModal()">
+  <div class="rh-delete-dialog" role="dialog" aria-modal="true" aria-labelledby="rhDeleteCommentTitle">
+    <h3 id="rhDeleteCommentTitle">Excluir comentário?</h3>
+    <p>Tem certeza que deseja excluir este comentário? Essa ação não poderá ser desfeita.</p>
+    <div class="rh-delete-actions">
+      <button class="rh-delete-cancel" type="button" onclick="closeDeleteCommentModal()">Cancelar</button>
+      <button class="rh-delete-confirm" id="rhDeleteCommentConfirm" type="button" onclick="confirmDeleteGameComment()">Excluir</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
