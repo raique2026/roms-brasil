@@ -6546,7 +6546,7 @@ function renderProfileFeatured(valid,recent,rhBadges,badgeUrl){
   if(area) area.innerHTML=`
     <div class="profile-featured-card">${favGame?`<img class="profile-featured-icon" src="${escapeHTML(favGame.cover)}" alt="">`:`<div class="profile-featured-emoji">🎮</div>`}<div class="profile-featured-copy"><small>Jogo favorito</small><strong>${escapeHTML(favGame?.title||"Escolha um jogo")}</strong><span>${favGame?"Em destaque no seu perfil":"Defina em Editar perfil"}</span></div></div>
     <div class="profile-featured-card">${favAch?`<img class="profile-featured-icon" src="${escapeHTML(badgeUrl(favAch))}" alt="">`:`<div class="profile-featured-emoji">🏆</div>`}<div class="profile-featured-copy"><small>Conquista favorita</small><strong>${escapeHTML(favAch?.Title||"Escolha uma conquista")}</strong><span>${escapeHTML(favAch?`${favAch._game?.title||""} · ${Number(favAch.Points||0)} pts`:"Defina em Editar perfil")}</span></div></div>
-    <div class="profile-featured-card"><div class="profile-featured-emoji">${favBadge?.[1]||"🏅"}</div><div class="profile-featured-copy"><small>Insígnia em destaque</small><strong>${escapeHTML(favBadge?.[2]||"Nenhuma desbloqueada")}</strong><span>${escapeHTML(favBadge?.[5]||"Continue jogando para desbloquear")}</span></div></div>`;
+    <div class="profile-featured-card">${favBadge && /^(?:https?:\\/\\/|\\/|images\\/|assets\\/|badges\\/)/i.test(String(favBadge[1]||""))?`<img class="profile-featured-icon" src="${escapeHTML(favBadge[1])}" alt="">`:`<div class="profile-featured-emoji">${favBadge?.[1]||"🏅"}</div>`}<div class="profile-featured-copy"><small>Insígnia em destaque</small><strong>${escapeHTML(favBadge?.[2]||"Nenhuma desbloqueada")}</strong><span>${escapeHTML(favBadge?.[5]||"Continue jogando para desbloquear")}</span></div></div>`;
   const hero=document.getElementById("profileHeroFeaturedBadge");
   if(hero && favBadge){
     const badgeVisual = /^(?:https?:\/\/|\/|images\/|assets\/|badges\/)/i.test(String(favBadge[1]||""))
@@ -6577,7 +6577,7 @@ async function renderRetrohubProfilePage(){
   app.innerHTML=`<section class="profile-page${supportAttrs.cls}"${supportAttrs.style}>
     <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}><div class="profile-hero-grid">
       <img class="profile-page-avatar${supporterAvatarClass(retrohubProfile)}" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
-      <div><h1 class="profile-page-name">@${escapeHTML(username)}</h1>${supporterBadgeHTML(retrohubProfile)}<div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
+      <div class="profile-hero-main"><h1 class="profile-page-name">@${escapeHTML(username)}</h1>${supporterBadgeHTML(retrohubProfile)}<div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
       <div class="profile-hero-actions"><button class="account-secondary" onclick="openRetrohubFriends()">👥 Amigos</button><button class="account-secondary" onclick="openAccountPanel()">✏️ Editar perfil</button></div>
     </div></div>
     <div id="profileDashboard"><div class="profile-loading">${raUser?"Carregando suas conquistas...":"Vincule seu usuário do RetroAchievements em Editar perfil para sincronizar suas conquistas."}</div></div>
@@ -7207,7 +7207,7 @@ async function openRetrohubPublicProfile(userId,pushState=true){
       <div class="profile-hero ${wallpaper?"has-wallpaper":""}"${wallpaperStyle}>
         <div class="profile-hero-grid">
           <img class="profile-page-avatar${supporterAvatarClass(profile)}" src="${escapeHTML(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src=avatarFallback()">
-          <div>
+          <div class="profile-hero-main">
             <h1 class="profile-page-name">@${escapeHTML(username)}</h1>
             <div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div>
             <div class="profile-meta-row"><div class="profile-online">Perfil RetroHub</div></div>
@@ -8403,159 +8403,192 @@ async function deleteGameComment(id,gameSlug){
 </div>
 
 
-<style id="retrohub-profile-overlap-fix">
-/* Corrige sobreposição de textos/insígnia/nível no cabeçalho do perfil */
-.profile-hero,
-.retrohub-profile-hero,
-.rh-profile-hero{
-  min-height:270px!important;
-  height:auto!important;
-  overflow:hidden!important;
+
+<style id="retrohub-profile-stable-v1">
+/* ===== RETROHUB PERFIL — BASE ESTÁVEL ===== */
+.profile-page .profile-hero{
+  position:relative;
+  min-height:250px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
 }
-.profile-hero-content,
-.retrohub-profile-hero-content,
-.rh-profile-hero-content{
-  min-height:230px!important;
-  height:auto!important;
-  align-items:flex-start!important;
+.profile-page .profile-hero-grid{
+  position:relative;
+  z-index:1;
+  width:100%;
+  display:grid;
+  grid-template-columns:132px minmax(0,1fr) auto;
+  gap:24px;
+  align-items:center;
+  padding:30px 32px;
 }
-.profile-hero-info,
-.profile-info,
-.retrohub-profile-info,
-.rh-profile-info{
-  min-width:0!important;
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:flex-start!important;
-  gap:8px!important;
+.profile-page .profile-page-avatar{
+  width:132px;
+  height:132px;
+  min-width:132px;
+  display:block;
+  align-self:center;
 }
-.profile-hero-info > *,
-.profile-info > *,
-.retrohub-profile-info > *,
-.rh-profile-info > *{
-  position:relative!important;
-  top:auto!important;
-  bottom:auto!important;
-  left:auto!important;
-  right:auto!important;
-  transform:none!important;
-  margin-top:0!important;
-  margin-bottom:0!important;
+.profile-page .profile-hero-main{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
 }
-.profile-hero .profile-badge,
-.profile-hero .featured-badge,
-.profile-hero [id*="Badge"],
-.retrohub-profile-hero .profile-badge,
-.rh-profile-hero .profile-badge{
-  max-width:330px!important;
-  white-space:normal!important;
-  line-height:1.3!important;
+.profile-page .profile-page-name{
+  margin:0 0 7px;
+  line-height:1.08;
 }
-.profile-level,
-.profile-xp,
-.profile-xp-wrap,
-.retrohub-profile-level,
-.retrohub-profile-xp,
-.rh-profile-level,
-.rh-profile-xp{
-  width:100%!important;
-  max-width:450px!important;
-  clear:both!important;
+.profile-page .profile-page-ra{
+  margin:0;
+  line-height:1.35;
+}
+.profile-page .profile-meta-row{
+  margin:11px 0 0;
+}
+.profile-page .profile-online{
+  margin:0;
 }
 
-/* Correção específica para os elementos reais usados no perfil RetroHub */
-#profileHeroFeaturedBadge{
-  display:flex!important;
-  align-items:center!important;
-  min-height:28px!important;
-  height:auto!important;
-  max-width:360px!important;
-  margin:4px 0 2px!important;
-  line-height:1.25!important;
-  white-space:normal!important;
-  overflow:visible!important;
+/* Insígnia em destaque */
+.profile-page #profileHeroFeaturedBadge{
+  width:fit-content;
+  max-width:min(100%,390px);
+  min-height:40px;
+  margin:12px 0 10px;
+  padding:5px 9px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  border:1px solid rgba(113,137,190,.22);
+  border-radius:10px;
+  background:rgba(7,17,34,.58);
+  overflow:hidden;
 }
-#profileHeroFeaturedBadge img{
-  flex:0 0 auto!important;
-  width:28px!important;
-  height:28px!important;
-  object-fit:contain!important;
+.profile-page #profileHeroFeaturedBadge[hidden]{display:none}
+.profile-page #profileHeroFeaturedBadge .mini{
+  width:30px;
+  height:30px;
+  min-width:30px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  overflow:hidden;
+  border-radius:7px;
 }
-#profileHeroFeaturedBadge + *,
-#profileHeroLevel,
-#profileHeroXp,
-#profileHeroXP{
-  position:relative!important;
-  clear:both!important;
-  margin-top:5px!important;
+.profile-page #profileHeroFeaturedBadge .mini img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+}
+.profile-page #profileHeroFeaturedBadge .profile-hero-badge-copy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  line-height:1.15;
+}
+.profile-page #profileHeroFeaturedBadge .profile-hero-badge-copy b{
+  font-size:11px;
+  color:#f4f7ff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.profile-page #profileHeroFeaturedBadge .profile-hero-badge-copy small{
+  font-size:9px;
+  color:#91a5c7;
+  text-transform:uppercase;
 }
 
-@media(max-width:700px){
-  .profile-hero,.retrohub-profile-hero,.rh-profile-hero{min-height:330px!important}
+/* Nível e XP têm sua própria linha; não disputam espaço com a insígnia */
+.profile-page .profile-level-wrap{
+  width:100%;
+  max-width:470px;
+  margin:0;
+  padding:0;
 }
-</style>
+.profile-page .profile-level-line{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:0 0 8px;
+}
+.profile-page #profileLevelPill,
+.profile-page #profileXpText{
+  position:static;
+  transform:none;
+  margin:0;
+  line-height:1.25;
+  white-space:nowrap;
+}
+.profile-page #profileLevelPill{
+  display:inline-flex;
+  width:auto;
+  padding:0;
+  border:0;
+  background:transparent;
+}
+.profile-page .profile-xp-track{
+  width:100%;
+  height:8px;
+  margin:0;
+}
 
+/* Ações ficam independentes do conteúdo central */
+.profile-page .profile-hero-actions{
+  align-self:start;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  min-width:145px;
+}
+.profile-page .profile-hero-actions button{
+  width:100%;
+}
 
-<style id="retrohub-profile-hero-definitive-fix">
-/* Correção real do cabeçalho: o primeiro badge usa uma imagem, não texto */
-.profile-hero-grid>div:nth-child(2){
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:flex-start!important;
-  min-width:0!important;
+/* Cards de destaque nunca imprimem caminho de imagem como texto */
+.profile-page .profile-featured-icon{
+  flex:0 0 70px;
 }
-#profileHeroFeaturedBadge.profile-hero-featured-badge{
-  display:flex!important;
-  align-items:center!important;
-  gap:9px!important;
-  width:auto!important;
-  max-width:390px!important;
-  min-height:38px!important;
-  margin:10px 0 9px!important;
-  padding:5px 9px!important;
-  box-sizing:border-box!important;
-  border:1px solid rgba(113,137,190,.22)!important;
-  border-radius:10px!important;
-  background:rgba(7,17,34,.56)!important;
-  line-height:normal!important;
+
+/* Responsividade previsível */
+@media(max-width:820px){
+  .profile-page .profile-hero-grid{
+    grid-template-columns:110px minmax(0,1fr);
+    padding:24px;
+  }
+  .profile-page .profile-page-avatar{
+    width:110px;height:110px;min-width:110px;
+  }
+  .profile-page .profile-hero-actions{
+    grid-column:1/-1;
+    width:100%;
+    min-width:0;
+    flex-direction:row;
+  }
+  .profile-page .profile-hero-actions button{width:auto}
 }
-#profileHeroFeaturedBadge[hidden]{display:none!important}
-#profileHeroFeaturedBadge .mini{
-  width:30px!important;height:30px!important;min-width:30px!important;
-  padding:0!important;display:grid!important;place-items:center!important;
-  overflow:hidden!important;border-radius:7px!important;
-}
-#profileHeroFeaturedBadge .mini img{
-  display:block!important;width:100%!important;height:100%!important;
-  object-fit:contain!important;margin:0!important;
-}
-#profileHeroFeaturedBadge .profile-hero-badge-copy{
-  display:flex!important;flex-direction:column!important;gap:2px!important;
-  min-width:0!important;line-height:1.15!important;
-}
-#profileHeroFeaturedBadge .profile-hero-badge-copy b{
-  color:#f4f7ff!important;font-size:11px!important;white-space:nowrap!important;
-}
-#profileHeroFeaturedBadge .profile-hero-badge-copy small{
-  color:#91a5c7!important;font-size:9px!important;text-transform:uppercase!important;
-}
-.profile-hero-grid .profile-level-wrap{
-  position:relative!important;
-  width:100%!important;max-width:470px!important;
-  margin:0!important;padding:0!important;clear:both!important;
-}
-.profile-hero-grid .profile-level-line{
-  position:relative!important;display:flex!important;align-items:center!important;
-  justify-content:space-between!important;gap:18px!important;
-  width:100%!important;margin:0 0 8px!important;
-}
-.profile-hero-grid #profileLevelPill,
-.profile-hero-grid #profileXpText{
-  position:static!important;transform:none!important;margin:0!important;
-  line-height:1.25!important;white-space:nowrap!important;
-}
-.profile-hero-grid .profile-xp-track{
-  position:relative!important;width:100%!important;margin:0!important;
+@media(max-width:560px){
+  .profile-page .profile-hero-grid{
+    grid-template-columns:1fr;
+    gap:16px;
+    padding:22px 18px;
+    text-align:center;
+  }
+  .profile-page .profile-page-avatar{
+    width:104px;height:104px;min-width:104px;margin:auto;
+  }
+  .profile-page .profile-hero-main{align-items:center}
+  .profile-page .profile-meta-row{justify-content:center}
+  .profile-page .profile-level-wrap{max-width:100%}
+  .profile-page .profile-level-line{gap:10px}
+  .profile-page .profile-hero-actions{justify-content:center}
 }
 </style>
 
