@@ -1614,6 +1614,8 @@ function openEmulator(slug, updateHistory = true){
 
 function goHome(updateHistory = true){
 
+  resetHomeSEO();
+
   clearInterval(featuredTimer);
 
   currentPlatform = "Todos";
@@ -2040,6 +2042,44 @@ function getRandomRecommendations(currentSlug, limit = 5){
   );
 }
 
+function updateGameSEO(game){
+  if(!game) return;
+  const platform = game.platform || "Jogo retrô";
+  const title = game.title + " (" + platform + ") | RetroHub BR";
+  const description = "Confira detalhes, conquistas, guia e informações de " + game.title + " para " + platform + " no RetroHub BR.";
+  const url = "https://retrohubbr.com/game/" + encodeURIComponent(game.slug);
+  document.title = title;
+  const setMeta = (selector, value) => {
+    const el = document.querySelector(selector);
+    if(el) el.setAttribute("content", value);
+  };
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[property="og:url"]', url);
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', description);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if(canonical) canonical.setAttribute("href", url);
+}
+function resetHomeSEO(){
+  const title = "RetroHub BR | Jogos Retrô, Guias e Conquistas";
+  const description = "RetroHub BR: descubra jogos retrô, guias, conquistas, emuladores e conteúdos em português para fãs de videogames clássicos.";
+  document.title = title;
+  const setMeta = (selector, value) => {
+    const el = document.querySelector(selector);
+    if(el) el.setAttribute("content", value);
+  };
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', "Jogos retrô, guias, conquistas, emuladores e conteúdos em português.");
+  setMeta('meta[property="og:url"]', "https://retrohubbr.com/");
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', "Jogos retrô, guias, conquistas, emuladores e conteúdos em português.");
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if(canonical) canonical.setAttribute("href", "https://retrohubbr.com/");
+}
+
 function openGame(slug, updateHistory = true){
 
   clearInterval(featuredTimer);
@@ -2073,6 +2113,8 @@ function openGame(slug, updateHistory = true){
       "/game/" + encodeURIComponent(slug)
     );
   }
+
+  updateGameSEO(game);
 
   q.style.display = "none";
   q.closest(".search-wrap")?.style.setProperty("display", "none");
