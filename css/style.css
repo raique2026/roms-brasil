@@ -3475,3 +3475,22 @@ body.retrohub-support-open{
   overflow:hidden!important;
   text-overflow:ellipsis!important;
 }
+
+/* ===== RetroHub V11: notificações ===== */
+.retrohub-notification-wrap{position:relative;display:inline-flex;align-items:center}
+.retrohub-notification-bell{position:relative;width:42px;height:42px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.04);color:#fff;cursor:pointer;display:grid;place-items:center}
+.retrohub-notification-bell:hover{background:rgba(255,255,255,.08)}
+.retrohub-notification-bell-icon{font-size:18px;line-height:1}
+.retrohub-notification-count{position:absolute;right:-5px;top:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#ef4444;color:#fff;font-size:11px;font-weight:800;line-height:19px;text-align:center;border:2px solid #07111f}
+.retrohub-notification-panel{position:absolute;right:0;top:50px;width:min(370px,calc(100vw - 24px));max-height:480px;overflow:auto;background:#0c1728;border:1px solid rgba(255,255,255,.12);border-radius:16px;box-shadow:0 22px 60px rgba(0,0,0,.45);z-index:99999}
+.retrohub-notification-head{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#0c1728;border-bottom:1px solid rgba(255,255,255,.08);z-index:1}
+.retrohub-notification-head strong{font-size:15px}
+.retrohub-notification-head button{border:0;background:transparent;color:#aebbd0;font-size:24px;cursor:pointer}
+.retrohub-notification-list{padding:8px}
+.retrohub-notification-item{width:100%;display:grid;grid-template-columns:36px 1fr;gap:10px;text-align:left;border:0;background:transparent;color:#fff;padding:11px;border-radius:12px;cursor:pointer}
+.retrohub-notification-item:hover{background:rgba(255,255,255,.06)}
+.retrohub-notification-item strong{display:block;font-size:13px;margin-bottom:3px}
+.retrohub-notification-item small{display:block;color:#9cabc0;font-size:12px;line-height:1.35}
+.retrohub-notification-type{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.06);display:grid;place-items:center}
+.retrohub-notification-empty{padding:24px 14px;text-align:center;color:#91a0b5;font-size:13px}
+@media(max-width:640px){.retrohub-notification-panel{position:fixed;right:12px;left:12px;top:68px;width:auto}}
