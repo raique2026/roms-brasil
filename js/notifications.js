@@ -27,7 +27,7 @@
     wrap.innerHTML=`
       <button id="retrohubNotificationBell" class="retrohub-notification-bell" type="button"
         aria-label="Notificações" title="Notificações">
-        <span class="retrohub-notification-bell-icon">🔔</span>
+        <span class="retrohub-notification-bell-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 22a2.5 2.5 0 0 0 2.35-1.65h-4.7A2.5 2.5 0 0 0 12 22Zm7-6.5-1.5-1.8V9a5.5 5.5 0 0 0-4.5-5.4V3a1 1 0 1 0-2 0v.6A5.5 5.5 0 0 0 6.5 9v4.7L5 15.5V18h14v-2.5ZM7.4 16l1.1-1.3V9a3.5 3.5 0 1 1 7 0v5.7l1.1 1.3H7.4Z"/></svg></span>
         <span id="retrohubNotificationCount" class="retrohub-notification-count" hidden>0</span>
       </button>
       <div id="retrohubNotificationPanel" class="retrohub-notification-panel" hidden>
