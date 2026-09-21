@@ -1,0 +1,77 @@
+/*
+ * RetroHub BR — Visualizador de screenshots
+ * Módulo isolado da V9.
+ */
+
+function openScreenshot(slug,index){
+
+  const game = games.find(item => item.slug === slug);
+
+  if(!game || !game.screenshots || game.screenshots.length === 0){
+    return;
+  }
+
+  currentScreenshots = game.screenshots;
+  currentScreenshotIndex = index;
+
+  updateScreenshotViewer();
+
+  document
+    .getElementById("imageViewer")
+    .classList.add("active");
+
+  document.body.style.overflow = "hidden";
+}
+
+function updateScreenshotViewer(){
+
+  const image = document.getElementById("viewerImage");
+  const counter = document.getElementById("viewerCounter");
+
+  image.src = currentScreenshots[currentScreenshotIndex];
+
+  counter.textContent =
+    (currentScreenshotIndex + 1) +
+    " / " +
+    currentScreenshots.length;
+}
+
+function nextScreenshot(){
+
+  if(currentScreenshots.length === 0) return;
+
+  currentScreenshotIndex =
+    (currentScreenshotIndex + 1) %
+    currentScreenshots.length;
+
+  updateScreenshotViewer();
+}
+
+function prevScreenshot(){
+
+  if(currentScreenshots.length === 0) return;
+
+  currentScreenshotIndex =
+    (currentScreenshotIndex - 1 + currentScreenshots.length) %
+    currentScreenshots.length;
+
+  updateScreenshotViewer();
+}
+
+function closeScreenshot(event){
+
+  const viewer = document.getElementById("imageViewer");
+
+  if(
+    event &&
+    event.target !== viewer
+  ){
+    return;
+  }
+
+  viewer.classList.remove("active");
+
+  document.getElementById("viewerImage").src = "";
+
+  document.body.style.overflow = "";
+}
