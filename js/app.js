@@ -2060,15 +2060,13 @@ function openGame(slug, updateHistory = true){
         <span>🌎 ${game.region}</span>
       </div>
 
-      ${game.achievementBadge ? `
-        <div class="ra-badge ra-badge-compact">
-          <img src="${game.achievementBadge}" alt="Insígnia de conclusão de ${game.title}" onerror="this.parentElement.style.display='none'">
-          <div class="ra-badge-info">
-            <small>🏅 INSÍGNIA DE CONCLUSÃO</small>
-            <strong>${game.achievementBadgeText || "Complete o jogo para conquistar esta insígnia"}</strong>
-          </div>
+      <div class="ra-badge ra-badge-compact" id="raCompletionBadge" hidden>
+        <img id="raCompletionBadgeImage" src="" alt="Insígnia de conclusão de ${game.title}">
+        <div class="ra-badge-info">
+          <small>🏅 INSÍGNIA DE CONCLUSÃO</small>
+          <strong>${game.achievementBadgeText || `Complete o conjunto de conquistas de ${game.title} para conquistar esta insígnia`}</strong>
         </div>
-      ` : ""}
+      </div>
     </section>
   ` : "";
 
@@ -2612,6 +2610,36 @@ function buildNfsAchievementGuide(title, description){
   return "Cumpra o requisito exatamente como descrito. Antes da tentativa, confira carro, modo de jogo, evento, nível de Heat e qualquer restrição de upgrades ou atalhos.";
 }
 
+
+function retrohubRaMediaUrl(value){
+  const raw=String(value||"").trim();
+  if(!raw)return "";
+  if(/^https?:\/\//i.test(raw))return raw;
+  if(raw.startsWith("/"))return `https://media.retroachievements.org${raw}`;
+  return `https://media.retroachievements.org/${raw}`;
+}
+
+function updateRetrohubCompletionBadgeFromRA(data){
+  const box=document.getElementById("raCompletionBadge");
+  const img=document.getElementById("raCompletionBadgeImage");
+  if(!box||!img||!data)return;
+
+  // GetGameInfoAndUserProgress exposes the official game image as ImageIcon.
+  // Keep a few compatible aliases in case the proxy normalizes field names.
+  const source =
+    data.ImageIcon || data.imageIcon ||
+    data.GameIcon || data.gameIcon ||
+    data?.Game?.ImageIcon || data?.game?.imageIcon || "";
+
+  const url=retrohubRaMediaUrl(source);
+  if(!url)return;
+
+  img.onerror=()=>{ box.hidden=true; };
+  img.onload=()=>{ box.hidden=false; };
+  img.src=url;
+}
+window.updateRetrohubCompletionBadgeFromRA=updateRetrohubCompletionBadgeFromRA;
+
 async function loadNfsAchievementCatalog(game){
   if(!game || !game.retroAchievements || !game.retroAchievementsGameId) return;
   const guide = game.achievementGuide || (game.achievementGuide = { achievements: [] });
@@ -2628,6 +2656,7 @@ async function loadNfsAchievementCatalog(game){
     const response = await fetch(`/api/retroachievements?user=${encodeURIComponent("raiquesantos")}&gameId=${encodeURIComponent(game.retroAchievementsGameId)}`, {cache:"no-store"});
     if(!response.ok) throw new Error("Falha ao consultar o catálogo");
     const data = await response.json();
+    updateRetrohubCompletionBadgeFromRA(data);
     const achievements = data?.Achievements || {};
     ensureAllRetroAchievementsInGuide(achievements);
 
