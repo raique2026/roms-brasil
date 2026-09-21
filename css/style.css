@@ -3620,3 +3620,9 @@ body.retrohub-support-open{
   font-size:20px !important;
   line-height:1 !important;
 }
+
+
+/* ===== RetroHub V14: excluir conversa só para você ===== */
+.retrohub-chat-delete-btn{font-size:15px !important}
+.chat-delete-conversation{border-color:rgba(255,90,110,.28) !important;color:#ff9cab !important}
+.chat-delete-conversation:hover{background:rgba(255,70,95,.10) !important}
