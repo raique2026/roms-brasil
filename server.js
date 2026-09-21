@@ -71,21 +71,57 @@ async function startServer() {
     vercelHandler(patreonSync)
   );
 
-  // SEO servido diretamente no HTML para as páginas dos jogos.
-  // Mantém os metadados principais disponíveis antes do JavaScript do navegador.
-  const gameSEO = {
-    "guitar-hero-2": { title: "Guitar Hero II", platform: "PS2", description: "Guitar Hero II expande a fórmula do jogo original com novas músicas, modos cooperativos e uma carreira musical ainda maior." },
-    "resident-evil-code-veronica-x": { title: "Resident Evil CODE: Veronica X", platform: "PS2", description: "Claire e Chris Redfield enfrentam um novo surto viral e os segredos da família Ashford em Resident Evil CODE: Veronica X." },
-    "the-simpsons-hit-and-run": { title: "The Simpsons: Hit & Run", platform: "PS2", description: "Explore Springfield, complete missões, corridas e colecionáveis com os personagens de The Simpsons: Hit & Run." },
-    "shadow-of-the-colossus": { title: "Shadow of the Colossus", platform: "PS2", description: "Acompanhe Wander pelas Terras Proibidas e enfrente dezesseis colossos em Shadow of the Colossus." },
-    "black": { title: "BLACK", platform: "PS2", description: "BLACK é um jogo de tiro em primeira pessoa da Criterion Games com combates intensos, armas de grande impacto e cenários destrutíveis." },
-    "need-for-speed-most-wanted-black-edition": { title: "Need for Speed: Most Wanted - Black Edition", platform: "PlayStation 2", description: "Corridas de rua, perseguições policiais e a Blacklist em Need for Speed: Most Wanted - Black Edition para PlayStation 2." },
-    "midnight-club-3-dub-edition-remix": { title: "Midnight Club 3: DUB Edition Remix", platform: "PS2", description: "Corridas urbanas, personalização e desafios em Midnight Club 3: DUB Edition Remix para PlayStation 2." },
-    "need-for-speed-underground": { title: "Need for Speed: Underground", platform: "PS2", description: "Corridas de rua e personalização de carros em Need for Speed: Underground para PlayStation 2." },
-    "ben-10-protector-of-earth": { title: "Ben 10: Protector of Earth", platform: "PS2", description: "Use os poderes alienígenas de Ben Tennyson em Ben 10: Protector of Earth para PlayStation 2." },
-    "kung-fu-panda": { title: "Kung Fu Panda", platform: "PS2", description: "Acompanhe Po em uma aventura de ação inspirada no filme Kung Fu Panda para PlayStation 2." },
-    "metroid-fusion": { title: "Metroid Fusion", platform: "Game Boy Advance", description: "Explore a estação BSL com Samus Aran em Metroid Fusion para Game Boy Advance." }
-  };
+  // SEO automático: lê os dados básicos diretamente do array games em js/app.js.
+  // Assim, novos jogos ganham SEO no servidor sem precisar editar este arquivo.
+  function readGamesSEO() {
+    const appJS = fs.readFileSync(path.join(__dirname, "js", "app.js"), "utf8");
+    const gamesStart = appJS.indexOf("const games = [");
+    if (gamesStart < 0) return {};
+
+    const gamesEnd = appJS.indexOf("\n];", gamesStart);
+    if (gamesEnd < 0) return {};
+
+    const block = appJS.slice(gamesStart, gamesEnd);
+    const objectStarts = [];
+    let depth = 0, inString = false, quote = "", escaped = false;
+
+    for (let i = block.indexOf("[") + 1; i < block.length; i++) {
+      const ch = block[i];
+      if (inString) {
+        if (escaped) escaped = false;
+        else if (ch === "\\") escaped = true;
+        else if (ch === quote) inString = false;
+        continue;
+      }
+      if (ch === '"' || ch === "'" || ch === "`") { inString = true; quote = ch; continue; }
+      if (ch === "{") {
+        if (depth === 0) objectStarts.push(i);
+        depth++;
+      } else if (ch === "}") {
+        depth--;
+        if (depth === 0 && objectStarts.length) {
+          const begin = objectStarts.pop();
+          const obj = block.slice(begin, i + 1);
+          const pick = (name) => {
+            const m = obj.match(new RegExp("\\b" + name + '\\s*:\\s*"((?:\\\\.|[^"\\\\])*)"'));
+            if (!m) return "";
+            try { return JSON.parse('"' + m[1] + '"'); } catch { return m[1]; }
+          };
+          const slug = pick("slug");
+          if (slug) {
+            const game = {
+              title: pick("title"),
+              platform: pick("platform"),
+              description: pick("description")
+            };
+            readGamesSEO.cache[slug] = game;
+          }
+        }
+      }
+    }
+    return readGamesSEO.cache;
+  }
+  readGamesSEO.cache = {};
 
   function escapeHTML(value) {
     return String(value)
@@ -96,19 +132,22 @@ async function startServer() {
   }
 
   app.get("/game/:slug", (req, res, next) => {
-    const game = gameSEO[req.params.slug];
-    if (!game) return next();
+    // Recarrega em cada requisição para que novos jogos do app.js entrem automaticamente.
+    readGamesSEO.cache = {};
+    const game = readGamesSEO()[req.params.slug];
+    if (!game || !game.title) return next();
 
     try {
       const indexPath = path.join(__dirname, "index.html");
       let html = fs.readFileSync(indexPath, "utf8");
 
       const canonical = "https://retrohubbr.com/game/" + encodeURIComponent(req.params.slug);
-      const title = game.title + " (" + game.platform + ") | RetroHub BR";
-      const description = game.description;
+      const platform = game.platform || "Jogo retrô";
+      const title = game.title + " (" + platform + ") | RetroHub BR";
+      const description = game.description || ("Confira detalhes, conquistas, guia e informações de " + game.title + " no RetroHub BR.");
 
       html = html
-        .replace(/<title>[\s\S]*?<\/title>/i, "<title>" + escapeHTML(title) + "</title>")
+        .replace(/<title>[\\s\\S]*?<\\/title>/i, "<title>" + escapeHTML(title) + "</title>")
         .replace(/<meta name="description" content="[^"]*">/i, '<meta name="description" content="' + escapeHTML(description) + '">')
         .replace(/<link rel="canonical" href="[^"]*">/i, '<link rel="canonical" href="' + canonical + '">')
         .replace(/<meta property="og:title" content="[^"]*">/i, '<meta property="og:title" content="' + escapeHTML(title) + '">')
