@@ -299,6 +299,7 @@ async function openRetrohubChat(friendId,pushState=true){
           <button class="chat-back" onclick="openRetrohubFriends()">←</button>
           <img src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()">
           <div class="chat-head-info"><strong>@${escapeHTML(profile.username||"Usuário")}</strong><small>Seu amigo no RetroHub BR</small></div>
+          <button class="chat-profile chat-delete-conversation" onclick="deleteRetrohubConversationForMe('${profile.id}')">🗑️ Excluir conversa</button>
           <button class="chat-profile" onclick="openRetrohubPublicProfile('${profile.id}')">Ver perfil</button>
         </header>
         <div id="retrohubChatMessages" class="chat-messages"><div class="chat-empty"><b>Carregando mensagens...</b></div></div>
@@ -318,14 +319,73 @@ async function openRetrohubChat(friendId,pushState=true){
     app.innerHTML=`<section class="chat-page"><button class="public-profile-back" onclick="openRetrohubFriends()">← Voltar para amigos</button><div class="friends-empty friends-error"><div class="friends-empty-icon">!</div><strong>Não foi possível abrir o chat</strong><span>${e?.message==="CHAT_NOT_FRIEND"?"O chat só está disponível entre amigos aceitos.":"Verifique se a tabela de mensagens foi criada no Supabase."}</span></div></section>`;
   }
 }
+
+async function getRetrohubConversationHiddenBefore(friendId){
+  if(!retrohubSession?.user||!friendId)return null;
+  const {data,error}=await retrohubSupabase
+    .from("conversation_hidden_state")
+    .select("hidden_before")
+    .eq("user_id",retrohubSession.user.id)
+    .eq("other_user_id",friendId)
+    .maybeSingle();
+  if(error){
+    console.error("Estado da conversa:",error);
+    return null;
+  }
+  return data?.hidden_before||null;
+}
+
+async function deleteRetrohubConversationForMe(friendId){
+  if(!retrohubSession?.user||!friendId)return;
+  const ok=confirm("Excluir esta conversa só para você?\n\nAs mensagens continuarão visíveis para a outra pessoa. Se uma nova mensagem for enviada depois, a conversa aparecerá novamente.");
+  if(!ok)return;
+
+  const uid=retrohubSession.user.id;
+  const hiddenBefore=new Date().toISOString();
+  const {error}=await retrohubSupabase
+    .from("conversation_hidden_state")
+    .upsert({user_id:uid,other_user_id:friendId,hidden_before:hiddenBefore},{onConflict:"user_id,other_user_id"});
+  if(error){
+    console.error("Excluir conversa:",error);
+    alert("Não foi possível excluir a conversa.");
+    return;
+  }
+
+  // Remove também avisos antigos de mensagens recebidas dessa pessoa.
+  const {error:readError}=await retrohubSupabase
+    .from("messages")
+    .update({read_at:hiddenBefore})
+    .eq("sender_id",friendId)
+    .eq("receiver_id",uid)
+    .is("read_at",null);
+  if(readError)console.error("Marcar conversa como lida:",readError);
+
+  retrohubChatLastSignature="";
+  retrohubFloatingSignature="";
+  const fullBox=document.getElementById("retrohubChatMessages");
+  const floatBox=document.getElementById("retrohubFloatingChatMessages");
+  const empty='<div class="chat-empty"><b>Conversa excluída para você.</b>Novas mensagens aparecerão normalmente aqui.</div>';
+  if(fullBox)fullBox.innerHTML=empty;
+  if(floatBox)floatBox.innerHTML=empty;
+  updateRetrohubMessageNotifications();
+}
+
+async function deleteRetrohubFloatingConversationForMe(){
+  if(!retrohubFloatingFriend?.id)return;
+  await deleteRetrohubConversationForMe(retrohubFloatingFriend.id);
+}
+window.deleteRetrohubConversationForMe=deleteRetrohubConversationForMe;
+window.deleteRetrohubFloatingConversationForMe=deleteRetrohubFloatingConversationForMe;
+
 async function loadRetrohubChatMessages(forceScroll=false){
   if(!retrohubChatFriend||!retrohubSession?.user)return;
   const uid=retrohubSession.user.id, fid=retrohubChatFriend.id;
-  const {data,error}=await retrohubSupabase.from("messages")
+  const hiddenBefore=await getRetrohubConversationHiddenBefore(fid);
+  let query=retrohubSupabase.from("messages")
     .select("id,sender_id,receiver_id,content,created_at")
-    .or(`and(sender_id.eq.${uid},receiver_id.eq.${fid}),and(sender_id.eq.${fid},receiver_id.eq.${uid})`)
-    .order("created_at",{ascending:true})
-    .limit(300);
+    .or(`and(sender_id.eq.${uid},receiver_id.eq.${fid}),and(sender_id.eq.${fid},receiver_id.eq.${uid})`);
+  if(hiddenBefore)query=query.gt("created_at",hiddenBefore);
+  const {data,error}=await query.order("created_at",{ascending:true}).limit(300);
   if(error){console.error(error);return}
   const rows=data||[];
   const sig=rows.length?`${rows.length}:${rows[rows.length-1].id}`:"0";
@@ -537,10 +597,12 @@ async function openRetrohubFloatingChat(friendId){
 async function loadRetrohubFloatingMessages(forceScroll=false){
   if(!retrohubFloatingFriend||!retrohubSession?.user)return;
   const uid=retrohubSession.user.id,fid=retrohubFloatingFriend.id;
-  const {data,error}=await retrohubSupabase.from("messages")
+  const hiddenBefore=await getRetrohubConversationHiddenBefore(fid);
+  let query=retrohubSupabase.from("messages")
     .select("id,sender_id,receiver_id,content,created_at")
-    .or(`and(sender_id.eq.${uid},receiver_id.eq.${fid}),and(sender_id.eq.${fid},receiver_id.eq.${uid})`)
-    .order("created_at",{ascending:true}).limit(300);
+    .or(`and(sender_id.eq.${uid},receiver_id.eq.${fid}),and(sender_id.eq.${fid},receiver_id.eq.${uid})`);
+  if(hiddenBefore)query=query.gt("created_at",hiddenBefore);
+  const {data,error}=await query.order("created_at",{ascending:true}).limit(300);
   if(error){console.error(error);return}
   const rows=data||[];
   const sig=rows.length?`${rows.length}:${rows[rows.length-1].id}`:"0";
