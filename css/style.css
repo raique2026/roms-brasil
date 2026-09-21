@@ -3495,14 +3495,23 @@ body.retrohub-support-open{
 .retrohub-notification-empty{padding:24px 14px;text-align:center;color:#91a0b5;font-size:13px}
 @media(max-width:640px){.retrohub-notification-panel{position:fixed;right:12px;left:12px;top:68px;width:auto}}
 
-
-/* ===== RetroHub V12: Favoritos ===== */
-.retrohub-favorite-button{
-  display:inline-flex;align-items:center;gap:8px;margin:12px 0;
-  padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.15);
-  background:rgba(255,255,255,.05);color:inherit;font-weight:700;cursor:pointer;
+/* V12.1 - botão dentro do hero real do jogo */
+.game-hero-main .retrohub-favorite-button{
+  width:max-content;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:14px;
+  padding:10px 15px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(8,17,31,.72);
+  color:#fff;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
 }
-.retrohub-favorite-button:hover{background:rgba(255,255,255,.09)}
-.retrohub-favorite-button:disabled{opacity:.55;cursor:wait}
-.retrohub-favorite-heart{font-size:20px;line-height:1}
-.retrohub-favorite-button.is-favorite .retrohub-favorite-heart{color:#ff496c}
+.game-hero-main .retrohub-favorite-button:hover{transform:translateY(-1px);background:rgba(255,255,255,.10)}
+.game-hero-main .retrohub-favorite-button.is-favorite{border-color:rgba(255,73,108,.55)}
+.game-hero-main .retrohub-favorite-heart{font-size:21px;color:#fff}
+.game-hero-main .retrohub-favorite-button.is-favorite .retrohub-favorite-heart{color:#ff496c}
