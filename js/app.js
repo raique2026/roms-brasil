@@ -125,6 +125,54 @@ const games = [
     download: "#"
   },
 
+
+  {
+    slug: "resident-evil-code-veronica-x",
+    title: "Resident Evil CODE: Veronica X",
+    platform: "PS2",
+    year: "2001",
+    language: "Inglês",
+    region: "NTSC-U/C",
+    size: "Edite o tamanho",
+    developer: "Capcom",
+    publisher: "Capcom",
+    genre: "Survival Horror",
+    format: "ISO",
+    translation: "Não informado",
+
+    retroAchievements: true,
+    achievements: 90,
+    achievementPoints: 695,
+    supportedHashes: 2,
+    hardcoreSupport: true,
+    recommendedEmulator: "PCSX2",
+    retroAchievementsUrl: "https://retroachievements.org/game/1303",
+    retroAchievementsGameId: 1303,
+    retroHashesUrl: "https://retroachievements.org/game/1303/hashes",
+    achievementBadgeText: "Complete o conjunto de conquistas de Resident Evil CODE: Veronica X para conquistar esta insígnia",
+
+    achievementGuide: {
+      available: false,
+      difficulty: "Em breve",
+      estimatedTime: "Em breve",
+      playthroughs: "Em breve",
+      missables: "Em breve",
+      summary: "O guia em português das conquistas de Resident Evil CODE: Veronica X será adicionado em breve.",
+      steps: [],
+      achievements: []
+    },
+
+    cover: "images/resident-evil-code-veronica-x.jpg",
+    banner: "banners/resident-evil-code-veronica-x.jpg",
+    description: "Depois dos acontecimentos de Raccoon City, Claire Redfield continua sua busca por Chris e acaba aprisionada na Ilha Rockfort. Em meio a um novo surto viral, Claire e Chris enfrentam criaturas da Umbrella e descobrem os segredos da família Ashford. Resident Evil CODE: Veronica X mantém o survival horror clássico da série e adiciona cenas extras à versão lançada para PlayStation 2.",
+    screenshots: [
+      "screenshots/resident-evil-code-veronica-x/screenshot-01.png",
+      "screenshots/resident-evil-code-veronica-x/screenshot-02.png",
+      "screenshots/resident-evil-code-veronica-x/screenshot-03.png"
+    ],
+    download: "#"
+  },
+
   {
     slug: "the-simpsons-hit-and-run",
     title: "The Simpsons: Hit & Run",
