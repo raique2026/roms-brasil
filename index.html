@@ -78,7 +78,7 @@ function getRetrohubRAGameId(game){
   </div>
 
   <div id="messageNotifyWrap" class="message-notify-wrap">
-    <button id="messageBell" class="message-bell" type="button" onclick="toggleRetrohubMessageNotifications(event)" title="Mensagens" aria-label="Mensagens">🔔
+    <button id="messageBell" class="message-bell" type="button" onclick="toggleRetrohubMessageNotifications(event)" title="Mensagens" aria-label="Mensagens"><span class="message-bell-icon" aria-hidden="true">💬</span>
       <span id="messageNotifyBadge" class="message-badge">0</span>
     </button>
     <div id="messageNotifyPopover" class="message-popover" onclick="event.stopPropagation()">
@@ -389,5 +389,5 @@ if(retroHubLogo){
   <script src="js/comments.js"></script>
   <script src="js/notifications.js"></script>
   <script src="js/favorites.js"></script>
-</body>
+  </body>
 </html>
