@@ -2070,7 +2070,7 @@ function openGame(slug, updateHistory = true){
     history.pushState(
       { page: "game", slug: slug },
       "",
-      "#game=" + encodeURIComponent(slug)
+      "/game/" + encodeURIComponent(slug)
     );
   }
 
@@ -2374,10 +2374,17 @@ function normalizeRAName(value){
 }
 
 function getCurrentGame(){
-  const match = location.hash.match(/^#game=(.+)$/);
-  if(!match) return null;
-  const slug = decodeURIComponent(match[1]);
-  return games.find(item => item.slug === slug) || null;
+  const pathMatch = location.pathname.match(/^\/game\/([^/]+)\/?$/);
+  if(pathMatch){
+    const slug = decodeURIComponent(pathMatch[1]);
+    return games.find(item => item.slug === slug) || null;
+  }
+  const hashMatch = location.hash.match(/^#game=(.+)$/);
+  if(hashMatch){
+    const slug = decodeURIComponent(hashMatch[1]);
+    return games.find(item => item.slug === slug) || null;
+  }
+  return null;
 }
 
 
@@ -2951,6 +2958,7 @@ document.addEventListener(
 
     if(event.key === "Escape"){
       const internalPage =
+        location.pathname.startsWith("/game/") ||
         location.hash.startsWith("#game=") ||
         location.hash.startsWith("#emulator=") ||
         location.hash === "#emulators" ||
@@ -2973,10 +2981,24 @@ window.addEventListener(
     if(location.hash === "#profile" && typeof renderRetrohubProfilePage === "function"){
       renderRetrohubProfilePage();
 
+    }else if(location.pathname.startsWith("/game/")){
+
+      const slug = decodeURIComponent(
+        location.pathname.replace(/^\/game\//, "").replace(/\/$/, "")
+      );
+
+      openGame(slug, false);
+
     }else if(location.hash.startsWith("#game=")){
 
       const slug = decodeURIComponent(
         location.hash.replace("#game=", "")
+      );
+
+      history.replaceState(
+        { page: "game", slug: slug },
+        "",
+        "/game/" + encodeURIComponent(slug)
       );
 
       openGame(slug, false);
@@ -3019,10 +3041,10 @@ chooseRandomFeaturedGames();
 
 renderFilters();
 
-if(location.hash.startsWith("#game=")){
+if(location.pathname.startsWith("/game/")){
 
   const initialSlug = decodeURIComponent(
-    location.hash.replace("#game=", "")
+    location.pathname.replace(/^\/game\//, "").replace(/\/$/, "")
   );
 
   const initialGame = games.find(
@@ -3035,12 +3057,34 @@ if(location.hash.startsWith("#game=")){
 
   }else{
 
+    history.replaceState({ page: "home" }, "", "/");
+    renderHome();
+
+  }
+
+}else if(location.hash.startsWith("#game=")){
+
+  const initialSlug = decodeURIComponent(
+    location.hash.replace("#game=", "")
+  );
+
+  const initialGame = games.find(
+    game => game.slug === initialSlug
+  );
+
+  if(initialGame){
+
     history.replaceState(
-      { page: "home" },
+      { page: "game", slug: initialSlug },
       "",
-      location.pathname
+      "/game/" + encodeURIComponent(initialSlug)
     );
 
+    openGame(initialSlug, false);
+
+  }else{
+
+    history.replaceState({ page: "home" }, "", "/");
     renderHome();
 
   }
