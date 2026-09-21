@@ -1,112 +1,101 @@
-/* RetroHub BR V12 — Favoritos */
+/* RetroHub BR V12.1 — Favoritos corrigido para a estrutura real da página */
 (function(){
-  let currentSlug=null, currentUser=null, favorite=false;
+  let activeSlug=null;
+  let isFav=false;
 
-  function sb(){
+  function client(){
+    // O app usa o cliente Supabase como variável lexical global.
+    try { if(typeof supabaseClient!=="undefined") return supabaseClient; } catch(_){}
+    try { if(typeof supabase!=="undefined" && supabase?.auth) return supabase; } catch(_){}
     return window.retrohubSupabase || window.supabaseClient || window._supabase || null;
   }
-  async function user(){
-    const c=sb(); if(!c?.auth) return null;
+  async function getUser(){
+    const c=client(); if(!c?.auth) return null;
     try { const {data}=await c.auth.getUser(); return data?.user||null; } catch(_){ return null; }
   }
-  function slugFromLocation(){
-    const h=location.hash||"";
-    const m=h.match(/^#game=([^&]+)/);
+  function slug(){
+    const m=(location.hash||"").match(/^#game=([^&]+)/);
     return m ? decodeURIComponent(m[1]) : null;
   }
-  function gameTitle(){
-    return document.querySelector(".game-detail h1, .game-page h1, #gameTitle, main h1")?.textContent?.trim() || "Jogo";
-  }
-  function findHost(){
-    return document.querySelector(".game-detail h1, .game-page h1, #gameTitle, main h1")?.parentElement ||
-           document.querySelector(".game-detail, .game-page, main");
-  }
-  function renderButton(){
-    document.getElementById("retrohubFavoriteButton")?.remove();
-    currentSlug=slugFromLocation();
-    if(!currentSlug) return;
-    const host=findHost(); if(!host) return;
-    const b=document.createElement("button");
-    b.id="retrohubFavoriteButton";
-    b.className="retrohub-favorite-button";
-    b.type="button";
-    b.innerHTML='<span class="retrohub-favorite-heart">♡</span><span>Favoritar</span>';
-    b.addEventListener("click",toggle);
-    host.appendChild(b);
-    sync();
-  }
-  async function sync(){
-    const b=document.getElementById("retrohubFavoriteButton"); if(!b) return;
-    currentUser=await user();
-    if(!currentUser){
-      favorite=false; paint(); return;
-    }
-    const c=sb();
-    const {data,error}=await c.from("game_favorites")
-      .select("id").eq("user_id",currentUser.id).eq("game_slug",currentSlug).maybeSingle();
-    favorite=!error && !!data;
-    paint();
-  }
   function paint(){
-    const b=document.getElementById("retrohubFavoriteButton"); if(!b) return;
-    b.classList.toggle("is-favorite",favorite);
-    b.innerHTML=favorite
+    const b=document.getElementById("retrohubFavoriteButton");
+    if(!b) return;
+    b.classList.toggle("is-favorite",isFav);
+    b.innerHTML=isFav
       ? '<span class="retrohub-favorite-heart">♥</span><span>Favoritado</span>'
       : '<span class="retrohub-favorite-heart">♡</span><span>Favoritar</span>';
   }
+  async function sync(){
+    const b=document.getElementById("retrohubFavoriteButton");
+    if(!b || !activeSlug) return;
+    const u=await getUser();
+    if(!u){ isFav=false; paint(); return; }
+    const c=client();
+    const {data,error}=await c.from("game_favorites")
+      .select("id").eq("user_id",u.id).eq("game_slug",activeSlug).maybeSingle();
+    isFav=!error && !!data;
+    paint();
+  }
   async function toggle(){
-    const b=document.getElementById("retrohubFavoriteButton"); if(!b) return;
-    const u=await user();
+    const b=document.getElementById("retrohubFavoriteButton");
+    if(!b) return;
+    const u=await getUser();
     if(!u){
-      if(typeof window.openAccountPanel==="function") window.openAccountPanel();
+      try{
+        if(typeof openAccountPanel==="function") openAccountPanel();
+        else if(typeof handleAccountButton==="function") handleAccountButton();
+      }catch(_){}
       return;
     }
+    const c=client(); if(!c) return;
     b.disabled=true;
-    const c=sb();
     try{
-      if(favorite){
+      if(isFav){
         const {error}=await c.from("game_favorites").delete()
-          .eq("user_id",u.id).eq("game_slug",currentSlug);
+          .eq("user_id",u.id).eq("game_slug",activeSlug);
         if(error) throw error;
-        favorite=false;
+        isFav=false;
       }else{
-        const {error}=await c.from("game_favorites").insert({
-          user_id:u.id, game_slug:currentSlug
-        });
+        const {error}=await c.from("game_favorites").insert({user_id:u.id,game_slug:activeSlug});
         if(error) throw error;
-        favorite=true;
+        isFav=true;
       }
       paint();
-      document.dispatchEvent(new CustomEvent("retrohub:favorites-changed"));
     }catch(e){
-      console.error("Favoritos:",e);
+      console.error("RetroHub favoritos:",e);
       alert("Não foi possível atualizar o favorito.");
     }finally{ b.disabled=false; }
   }
-
-  async function getFavorites(){
-    const u=await user(); if(!u) return [];
-    const c=sb();
-    const {data,error}=await c.from("game_favorites")
-      .select("game_slug,created_at").eq("user_id",u.id)
-      .order("created_at",{ascending:false});
-    return error ? [] : (data||[]);
+  function mount(){
+    const s=slug();
+    const hero=document.querySelector("main.game-page section.game-hero");
+    if(!s || !hero) return;
+    activeSlug=s;
+    let b=document.getElementById("retrohubFavoriteButton");
+    if(!b){
+      b=document.createElement("button");
+      b.id="retrohubFavoriteButton";
+      b.type="button";
+      b.className="retrohub-favorite-button";
+      b.addEventListener("click",toggle);
+      const main=hero.querySelector(".game-hero-main") || hero;
+      main.appendChild(b);
+    }
+    sync();
   }
 
-  // API pública para o perfil/recursos futuros.
-  window.retrohubFavorites={
-    refresh:renderButton,
-    get:getFavorites,
-    isFavorite:()=>favorite
-  };
-
-  let lastHash=location.hash;
-  function refreshSoon(){ setTimeout(renderButton,120); setTimeout(renderButton,600); }
-  window.addEventListener("hashchange",()=>{ lastHash=location.hash; refreshSoon(); });
-  document.addEventListener("click",()=> {
-    if(location.hash!==lastHash){ lastHash=location.hash; refreshSoon(); }
+  // openGame troca o HTML sem disparar hashchange em todos os fluxos.
+  // MutationObserver acompanha exatamente essa troca sem alterar app.js.
+  const observer=new MutationObserver(()=>{
+    if(document.querySelector("main.game-page section.game-hero") &&
+       !document.getElementById("retrohubFavoriteButton")) mount();
   });
-  document.addEventListener("retrohub:favorites-changed",()=>sync());
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",refreshSoon);
-  else refreshSoon();
+  function start(){
+    observer.observe(document.body,{childList:true,subtree:true});
+    mount();
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start);
+  else start();
+
+  window.retrohubFavorites={refresh:mount};
 })();
