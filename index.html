@@ -40,56 +40,7 @@ function getRetrohubRAGameId(game){
   return Number(game?.retroAchievementsGameId || RETROHUB_RA_GAME_IDS[game?.slug] || 0);
 }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0">
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    .retrohub-material-icon{
-      font-family:"Material Symbols Rounded";
-      font-weight:normal;
-      font-style:normal;
-      font-size:24px;
-      line-height:1;
-      letter-spacing:normal;
-      text-transform:none;
-      display:inline-block;
-      white-space:nowrap;
-      word-wrap:normal;
-      direction:ltr;
-      -webkit-font-feature-settings:"liga";
-      -webkit-font-smoothing:antialiased;
-      font-feature-settings:"liga";
-    }
-  </style>
 </head>
 
 <body class="dark-mode">
@@ -108,11 +59,16 @@ function getRetrohubRAGameId(game){
       id="q"
       placeholder="Pesquisar jogos..."
     >
-    <span class="search-icon retrohub-material-icon" aria-hidden="true">search</span>
+    <span class="search-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M20 20l-3.6-3.6"></path>
+      </svg>
+    </span>
   </div>
 
   <div id="messageNotifyWrap" class="message-notify-wrap">
-    <button id="messageBell" class="message-bell" type="button" onclick="toggleRetrohubMessageNotifications(event)" title="Mensagens" aria-label="Mensagens"><span class="message-bell-icon retrohub-material-icon" aria-hidden="true">chat_bubble</span>
+    <button id="messageBell" class="message-bell" type="button" onclick="toggleRetrohubMessageNotifications(event)" title="Mensagens" aria-label="Mensagens"><span class="message-bell-icon" aria-hidden="true">💬</span>
       <span id="messageNotifyBadge" class="message-badge">0</span>
     </button>
     <div id="messageNotifyPopover" class="message-popover" onclick="event.stopPropagation()">
@@ -122,7 +78,7 @@ function getRetrohubRAGameId(game){
   </div>
 
 <button id="accountButton" class="account-button" type="button" onclick="handleAccountButton()">
-    <span id="accountAvatarMini" class="account-avatar-mini retrohub-material-icon">person</span>
+    <span id="accountAvatarMini" class="account-avatar-mini">👤</span>
     <span id="accountButtonText">Entrar</span>
   </button>
 
