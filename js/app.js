@@ -2345,6 +2345,257 @@ function disconnectRetroAchievements(){
   });
 }
 
+
+function openScreenshot(slug,index){
+
+  const game = games.find(item => item.slug === slug);
+
+  if(!game || !game.screenshots || game.screenshots.length === 0){
+    return;
+  }
+
+  currentScreenshots = game.screenshots;
+  currentScreenshotIndex = index;
+
+  updateScreenshotViewer();
+
+  document
+    .getElementById("imageViewer")
+    .classList.add("active");
+
+  document.body.style.overflow = "hidden";
+}
+
+function updateScreenshotViewer(){
+
+  const image = document.getElementById("viewerImage");
+  const counter = document.getElementById("viewerCounter");
+
+  image.src = currentScreenshots[currentScreenshotIndex];
+
+  counter.textContent =
+    (currentScreenshotIndex + 1) +
+    " / " +
+    currentScreenshots.length;
+}
+
+function nextScreenshot(){
+
+  if(currentScreenshots.length === 0) return;
+
+  currentScreenshotIndex =
+    (currentScreenshotIndex + 1) %
+    currentScreenshots.length;
+
+  updateScreenshotViewer();
+}
+
+function prevScreenshot(){
+
+  if(currentScreenshots.length === 0) return;
+
+  currentScreenshotIndex =
+    (currentScreenshotIndex - 1 + currentScreenshots.length) %
+    currentScreenshots.length;
+
+  updateScreenshotViewer();
+}
+
+function closeScreenshot(event){
+
+  const viewer = document.getElementById("imageViewer");
+
+  if(
+    event &&
+    event.target !== viewer
+  ){
+    return;
+  }
+
+  viewer.classList.remove("active");
+
+  document.getElementById("viewerImage").src = "";
+
+  document.body.style.overflow = "";
+}
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    const viewer =
+      document.getElementById("imageViewer");
+
+    if(viewer.classList.contains("active")){
+
+      if(event.key === "Escape"){
+        closeScreenshot();
+      }
+
+      if(event.key === "ArrowRight"){
+        nextScreenshot();
+      }
+
+      if(event.key === "ArrowLeft"){
+        prevScreenshot();
+      }
+
+      return;
+    }
+
+    if(event.key === "Escape"){
+      const internalPage =
+        location.hash.startsWith("#game=") ||
+        location.hash.startsWith("#emulator=") ||
+        location.hash === "#emulators" ||
+        q.style.display === "none" ||
+        filters.style.display === "none";
+
+      if(internalPage){
+        event.preventDefault();
+        goHome(true);
+      }
+    }
+
+  }
+);
+
+window.addEventListener(
+  "popstate",
+  function(){
+
+    if(location.hash === "#profile" && typeof renderRetrohubProfilePage === "function"){
+      renderRetrohubProfilePage();
+
+    }else if(location.hash.startsWith("#game=")){
+
+      const slug = decodeURIComponent(
+        location.hash.replace("#game=", "")
+      );
+
+      openGame(slug, false);
+
+    }else if(location.hash.startsWith("#emulator=")){
+
+      const slug = decodeURIComponent(
+        location.hash.replace("#emulator=", "")
+      );
+
+      emulatorMode = true;
+      renderFilters();
+      openEmulator(slug, false);
+
+    }else if(location.hash === "#emulators"){
+
+      showEmulators(false);
+
+    }else{
+
+      goHome(false);
+
+    }
+
+  }
+);
+
+q.addEventListener(
+  "input",
+  function(){
+
+    emulatorMode = false;
+    renderFilters();
+    renderHome();
+
+  }
+);
+
+chooseRandomFeaturedGames();
+
+renderFilters();
+
+if(location.hash.startsWith("#game=")){
+
+  const initialSlug = decodeURIComponent(
+    location.hash.replace("#game=", "")
+  );
+
+  const initialGame = games.find(
+    game => game.slug === initialSlug
+  );
+
+  if(initialGame){
+
+    openGame(initialSlug, false);
+
+  }else{
+
+    history.replaceState(
+      { page: "home" },
+      "",
+      location.pathname
+    );
+
+    renderHome();
+
+  }
+
+}else if(location.hash.startsWith("#emulator=")){
+
+  const initialEmulatorSlug = decodeURIComponent(
+    location.hash.replace("#emulator=", "")
+  );
+
+  const initialEmulator = emulators.find(
+    emulator => emulator.slug === initialEmulatorSlug
+  );
+
+  if(initialEmulator){
+
+    emulatorMode = true;
+    renderFilters();
+    openEmulator(initialEmulatorSlug, false);
+
+  }else{
+
+    showEmulators(false);
+
+  }
+
+}else if(location.hash === "#emulators"){
+
+  showEmulators(false);
+
+}else{
+
+  renderHome();
+
+}
+
+/* ===== BLOCO SEPARADO ===== */
+
+window.va = window.va || function () {
+    (window.vaq = window.vaq || []).push(arguments);
+  };
+
+/* ===== BLOCO SEPARADO ===== */
+
+/* ===== RETROHUB BR - SUPABASE AUTH ===== */
+const RETROHUB_SUPABASE_URL = "https://cybhsinaymvmgfwrhhvt.supabase.co";
+const RETROHUB_SUPABASE_KEY = "sb_publishable_rlT-HHY5MTNgeBcNfLp01A_DCICFJzd";
+const retrohubSupabase = window.supabase.createClient(RETROHUB_SUPABASE_URL, RETROHUB_SUPABASE_KEY);
+let retrohubSession = null;
+let retrohubProfile = null;
+
+function handleAccountButton(){
+  // Se estiver logado, o botão Perfil abre direto o perfil completo.
+  // Se não estiver logado, abre a tela de Entrar/Criar conta.
+  if(retrohubSession?.user){
+    openFullRetrohubProfile();
+  }else{
+    openAccountPanel();
+  }
+}
+
 function openAccountPanel(){
   document.getElementById("accountModal").hidden = false;
   refreshRetrohubAccountUI();
