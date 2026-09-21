@@ -3517,58 +3517,20 @@ body.retrohub-support-open{
 .game-hero-main .retrohub-favorite-button.is-favorite .retrohub-favorite-heart{color:#ff496c}
 
 
-/* ===== V12.2: alinhamento dos controles do cabeçalho ===== */
-#topBar{
-  align-items:center !important;
-}
-#topBar .retrohub-notification-wrap,
-#topBar .game-header-account,
-#topBar .header-actions,
-#topBar .account-actions{
-  align-items:center;
-}
-#topBar .retrohub-notification-wrap{
-  height:42px;
-  flex:0 0 42px;
-}
-#topBar .retrohub-notification-bell{
-  width:42px !important;
-  height:42px !important;
-  min-width:42px !important;
-  min-height:42px !important;
-  padding:0 !important;
-  margin:0 !important;
-  border-radius:12px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  box-sizing:border-box !important;
-}
-#topBar .retrohub-notification-bell-icon{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:22px;
-  height:22px;
-  font-size:18px;
-  line-height:1;
-}
-#topBar [onclick*="Messages"],
-#topBar [onclick*="messages"],
-#topBar [onclick*="Message"],
-#topBar [onclick*="message"],
-#topBar .messages-button,
-#topBar .message-button,
-#topBar .chat-button{
-  width:42px !important;
-  height:42px !important;
-  min-width:42px !important;
-  min-height:42px !important;
-  padding:0 !important;
-  margin:0 !important;
-  border-radius:12px !important;
-  box-sizing:border-box !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-}
+/* ===== RetroHub V13: Meus Favoritos no perfil ===== */
+.profile-favorites-section{margin:22px 0;padding:20px;border:1px solid rgba(255,255,255,.11);border-radius:18px;background:rgba(9,18,34,.72)}
+.profile-favorites-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.profile-favorites-heading h2{margin:0 0 4px;font-size:21px}
+.profile-favorites-heading p{margin:0;color:#94a3b8;font-size:13px}
+.profile-favorites-count{min-width:34px;height:34px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.08);display:grid;place-items:center;font-weight:800}
+.profile-favorites-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.profile-favorite-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(255,255,255,.035);cursor:pointer;transition:transform .18s ease,border-color .18s ease}
+.profile-favorite-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.22)}
+.profile-favorite-cover{height:230px;background:#07101e;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.profile-favorite-cover img{width:100%;height:100%;object-fit:contain}
+.profile-favorite-info{padding:12px 40px 12px 12px}
+.profile-favorite-info strong{display:block;font-size:14px;line-height:1.3}
+.profile-favorite-info small{display:block;color:#8fa0b8;margin-top:5px;font-size:12px}
+.profile-favorite-heart{position:absolute;right:12px;bottom:15px;color:#ff496c;font-size:19px}
+.profile-favorites-empty{grid-column:1/-1;padding:28px 14px;text-align:center;color:#8fa0b8}
+@media(max-width:600px){.profile-favorites-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.profile-favorite-cover{height:190px}}
