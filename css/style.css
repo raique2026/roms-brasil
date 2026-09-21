@@ -3599,3 +3599,24 @@ body.retrohub-support-open{
 #messageBell .message-badge{
   position:absolute;
 }
+
+
+/* ===== V13.3: remove o ícone antigo duplicado de Mensagens ===== */
+#messageBell::before{
+  content:none !important;
+  display:none !important;
+  width:0 !important;
+  height:0 !important;
+  -webkit-mask:none !important;
+  mask:none !important;
+  background:none !important;
+}
+#messageBell .message-bell-icon{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:22px !important;
+  height:22px !important;
+  font-size:20px !important;
+  line-height:1 !important;
+}
