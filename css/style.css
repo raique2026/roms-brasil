@@ -3534,3 +3534,68 @@ body.retrohub-support-open{
 .profile-favorite-heart{position:absolute;right:12px;bottom:15px;color:#ff496c;font-size:19px}
 .profile-favorites-empty{grid-column:1/-1;padding:28px 14px;text-align:center;color:#8fa0b8}
 @media(max-width:600px){.profile-favorites-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.profile-favorite-cover{height:190px}}
+
+
+/* ===== RetroHub V13.1: Mensagens 💬 + Notificações 🔔 ===== */
+#topBar .retrohub-notification-wrap,
+#topBar .game-header-account{
+  align-items:center;
+}
+
+#topBar .retrohub-notification-bell,
+#topBar .retrohub-message-icon-fix{
+  width:48px !important;
+  height:48px !important;
+  min-width:48px !important;
+  min-height:48px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border-radius:13px !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+#topBar .retrohub-notification-bell-icon{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  font-size:20px !important;
+  line-height:1 !important;
+}
+
+#topBar .retrohub-message-icon-fix > *{
+  display:none !important;
+}
+#topBar .retrohub-message-icon-fix::before{
+  content:"💬";
+  display:block;
+  font-size:20px;
+  line-height:1;
+}
+
+
+/* ===== V13.2: correção direta do ícone original de Mensagens ===== */
+#messageBell{
+  width:48px !important;
+  height:48px !important;
+  min-width:48px !important;
+  min-height:48px !important;
+  padding:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:13px !important;
+  box-sizing:border-box !important;
+}
+#messageBell .message-bell-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  line-height:1;
+}
+#messageBell .message-badge{
+  position:absolute;
+}
