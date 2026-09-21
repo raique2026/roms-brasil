@@ -4,9 +4,13 @@
   let isFav=false;
 
   function client(){
-    // O app usa o cliente Supabase como variável lexical global.
-    try { if(typeof supabaseClient!=="undefined") return supabaseClient; } catch(_){}
-    try { if(typeof supabase!=="undefined" && supabase?.auth) return supabase; } catch(_){}
+    // Cliente REAL criado pelo app.js:
+    // const retrohubSupabase = window.supabase.createClient(...)
+    try {
+      if(typeof retrohubSupabase !== "undefined" && retrohubSupabase?.auth){
+        return retrohubSupabase;
+      }
+    } catch(_){}
     return window.retrohubSupabase || window.supabaseClient || window._supabase || null;
   }
   async function getUser(){
@@ -44,13 +48,7 @@
       try{
         if(typeof openAccountPanel==="function"){
           openAccountPanel();
-          setTimeout(()=>{
-            try{
-              if(typeof showAuthTab==="function") showAuthTab("login");
-            }catch(_){}
-          },0);
-        }else if(typeof handleAccountButton==="function"){
-          handleAccountButton();
+          if(typeof showAuthTab==="function") showAuthTab("login");
         }
       }catch(_){}
       return;
