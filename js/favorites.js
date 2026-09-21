@@ -42,8 +42,16 @@
     const u=await getUser();
     if(!u){
       try{
-        if(typeof openAccountPanel==="function") openAccountPanel();
-        else if(typeof handleAccountButton==="function") handleAccountButton();
+        if(typeof openAccountPanel==="function"){
+          openAccountPanel();
+          setTimeout(()=>{
+            try{
+              if(typeof showAuthTab==="function") showAuthTab("login");
+            }catch(_){}
+          },0);
+        }else if(typeof handleAccountButton==="function"){
+          handleAccountButton();
+        }
       }catch(_){}
       return;
     }
