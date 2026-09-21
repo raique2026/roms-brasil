@@ -101,6 +101,7 @@
         isFav=true;
       }
       paint();
+      if(typeof window.loadRetrohubProfileFavorites==='function') window.loadRetrohubProfileFavorites();
     }catch(e){
       console.error("RetroHub favoritos:",e);
       const msg=e?.message ? String(e.message) : "erro desconhecido";
