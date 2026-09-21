@@ -564,7 +564,23 @@ function openFloatingChatProfile(){
   closeRetrohubFloatingChat();
   openRetrohubPublicProfile(id);
 }
+
 async function openRetrohubFloatingChat(friendId){
+  // O botão é garantido aqui porque o chat flutuante é controlado por friends.js.
+  setTimeout(()=>{
+    const tools=document.querySelector("#retrohubFloatingChat .retrohub-chat-float-tools, .retrohub-chat-float-tools");
+    if(tools && !tools.querySelector(".retrohub-chat-delete-btn")){
+      const btn=document.createElement("button");
+      btn.className="retrohub-chat-icon-btn retrohub-chat-delete-btn";
+      btn.type="button";
+      btn.title="Excluir conversa só para você";
+      btn.setAttribute("aria-label","Excluir conversa só para você");
+      btn.textContent="🗑️";
+      btn.onclick=()=>deleteRetrohubFloatingConversationForMe();
+      tools.prepend(btn);
+    }
+  },80);
+
   if(!retrohubSession?.user){openAccountPanel();return}
   if(!friendId||friendId===retrohubSession.user.id)return;
 
