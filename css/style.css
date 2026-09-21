@@ -3515,3 +3515,60 @@ body.retrohub-support-open{
 .game-hero-main .retrohub-favorite-button.is-favorite{border-color:rgba(255,73,108,.55)}
 .game-hero-main .retrohub-favorite-heart{font-size:21px;color:#fff}
 .game-hero-main .retrohub-favorite-button.is-favorite .retrohub-favorite-heart{color:#ff496c}
+
+
+/* ===== V12.2: alinhamento dos controles do cabeçalho ===== */
+#topBar{
+  align-items:center !important;
+}
+#topBar .retrohub-notification-wrap,
+#topBar .game-header-account,
+#topBar .header-actions,
+#topBar .account-actions{
+  align-items:center;
+}
+#topBar .retrohub-notification-wrap{
+  height:42px;
+  flex:0 0 42px;
+}
+#topBar .retrohub-notification-bell{
+  width:42px !important;
+  height:42px !important;
+  min-width:42px !important;
+  min-height:42px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border-radius:12px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-sizing:border-box !important;
+}
+#topBar .retrohub-notification-bell-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;
+  height:22px;
+  font-size:18px;
+  line-height:1;
+}
+#topBar [onclick*="Messages"],
+#topBar [onclick*="messages"],
+#topBar [onclick*="Message"],
+#topBar [onclick*="message"],
+#topBar .messages-button,
+#topBar .message-button,
+#topBar .chat-button{
+  width:42px !important;
+  height:42px !important;
+  min-width:42px !important;
+  min-height:42px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border-radius:12px !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
