@@ -364,10 +364,66 @@ async function renderRetrohubProfilePage(){
       <div class="profile-hero-main"><h1 class="profile-page-name">@${escapeHTML(username)}</h1>${supporterBadgeHTML(retrohubProfile)}<div class="profile-page-ra">${raUser?escapeHTML(raUser):"RetroAchievements não vinculado"}</div><div class="profile-meta-row"><div class="profile-online">Online</div></div><div id="profileHeroFeaturedBadge" class="profile-hero-featured-badge" hidden></div><div class="profile-level-wrap"><div class="profile-level-line"><div id="profileLevelPill" class="profile-level">🎖️ Nível <b>1</b> · Novato</div><span id="profileXpText" class="profile-xp-text">0 / 500 XP</span></div><div class="profile-xp-track"><div id="profileXpFill" class="profile-xp-fill"></div></div></div></div>
       <div class="profile-hero-actions"><button class="account-secondary" onclick="openRetrohubFriends()">👥 Amigos</button><button class="account-secondary" onclick="openAccountPanel()">✏️ Editar perfil</button></div>
     </div></div>
+    <div id="profileFavoritesSection" class="profile-favorites-section">
+      <div class="profile-favorites-heading"><div><h2>❤️ Meus Favoritos</h2><p>Jogos que você salvou no RetroHub.</p></div><span id="profileFavoritesCount" class="profile-favorites-count">0</span></div>
+      <div id="profileFavoritesGrid" class="profile-favorites-grid"><div class="profile-favorites-empty">Carregando favoritos...</div></div>
+    </div>
     <div id="profileDashboard"><div class="profile-loading">${raUser?"Carregando suas conquistas...":"Vincule seu usuário do RetroAchievements em Editar perfil para sincronizar suas conquistas."}</div></div>
   </section>`;
+  loadRetrohubProfileFavorites();
   if(raUser) await loadRetrohubFullProfile(raUser);
 }
+
+
+async function loadRetrohubProfileFavorites(){
+  const grid=document.getElementById("profileFavoritesGrid");
+  const count=document.getElementById("profileFavoritesCount");
+  if(!grid) return;
+
+  try{
+    if(!retrohubSession?.user){
+      grid.innerHTML='<div class="profile-favorites-empty">Entre na sua conta para visualizar seus favoritos.</div>';
+      if(count) count.textContent="0";
+      return;
+    }
+
+    const {data,error}=await retrohubSupabase
+      .from("game_favorites")
+      .select("game_slug,created_at")
+      .eq("user_id",retrohubSession.user.id)
+      .order("created_at",{ascending:false});
+
+    if(error) throw error;
+
+    const rows=Array.isArray(data)?data:[];
+    const favoriteGames=rows.map(row=>{
+      const game=games.find(g=>g.slug===row.game_slug);
+      return game?{game,row}:null;
+    }).filter(Boolean);
+
+    if(count) count.textContent=String(favoriteGames.length);
+
+    if(!favoriteGames.length){
+      grid.innerHTML='<div class="profile-favorites-empty">Você ainda não favoritou nenhum jogo. Abra um jogo e clique em ♡ Favoritar.</div>';
+      return;
+    }
+
+    grid.innerHTML=favoriteGames.map(({game})=>`
+      <article class="profile-favorite-card" onclick="openGame('${String(game.slug).replace(/'/g,"\\'")}')">
+        <div class="profile-favorite-cover"><img src="${escapeHTML(getCover(game))}" alt="${escapeHTML(game.title)}"></div>
+        <div class="profile-favorite-info">
+          <strong>${escapeHTML(game.title)}</strong>
+          <small>${escapeHTML(game.platform||"")} ${game.year?"• "+escapeHTML(game.year):""}</small>
+        </div>
+        <span class="profile-favorite-heart">♥</span>
+      </article>
+    `).join("");
+  }catch(e){
+    console.error("Perfil/favoritos:",e);
+    grid.innerHTML='<div class="profile-favorites-empty">Não foi possível carregar seus favoritos.</div>';
+  }
+}
+window.loadRetrohubProfileFavorites=loadRetrohubProfileFavorites;
 
 
 function getRetroHubProgression(stats,badges){
