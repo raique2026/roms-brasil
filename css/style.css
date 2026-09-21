@@ -3626,3 +3626,25 @@ body.retrohub-support-open{
 .retrohub-chat-delete-btn{font-size:15px !important}
 .chat-delete-conversation{border-color:rgba(255,90,110,.28) !important;color:#ff9cab !important}
 .chat-delete-conversation:hover{background:rgba(255,70,95,.10) !important}
+
+
+/* ===== V14.1: botão excluir conversa sempre visível ===== */
+.retrohub-chat-float-tools{
+  display:flex !important;
+  align-items:center !important;
+  gap:6px !important;
+  overflow:visible !important;
+}
+.retrohub-chat-delete-btn{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:34px !important;
+  height:34px !important;
+  min-width:34px !important;
+  padding:0 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  font-size:16px !important;
+  line-height:1 !important;
+}
