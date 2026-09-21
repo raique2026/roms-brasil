@@ -79,29 +79,29 @@ async function refreshSupporterEditor(){
 const games = [
 
   {
-    slug: "resident-evil-code-veronica-x",
-    title: "Resident Evil CODE: Veronica X",
+    slug: "guitar-hero-2",
+    title: "Guitar Hero II",
     platform: "PS2",
-    year: "2001",
+    year: "2006",
     language: "Inglês",
     region: "NTSC-U/C",
     size: "Edite o tamanho",
-    developer: "Capcom",
-    publisher: "Capcom",
-    genre: "Survival Horror",
+    developer: "Harmonix Music Systems",
+    publisher: "RedOctane",
+    genre: "Ritmo/Música",
     format: "ISO",
     translation: "Não informado",
 
     retroAchievements: true,
-    achievements: 90,
-    achievementPoints: 695,
+    achievements: 180,
+    achievementPoints: 1640,
     supportedHashes: 2,
     hardcoreSupport: true,
     recommendedEmulator: "PCSX2",
-    retroAchievementsUrl: "https://retroachievements.org/game/1303",
-    retroAchievementsGameId: 1303,
-    retroHashesUrl: "https://retroachievements.org/game/1303/hashes",
-    achievementBadgeText: "Complete o conjunto de conquistas de Resident Evil CODE: Veronica X para conquistar esta insígnia",
+    retroAchievementsUrl: "https://retroachievements.org/game/9049",
+    retroAchievementsGameId: 9049,
+    retroHashesUrl: "https://retroachievements.org/game/9049/hashes",
+    achievementBadgeText: "Complete o conjunto de conquistas de Guitar Hero II para conquistar esta insígnia",
 
     achievementGuide: {
       available: false,
@@ -109,18 +109,18 @@ const games = [
       estimatedTime: "Em breve",
       playthroughs: "Em breve",
       missables: "Em breve",
-      summary: "O guia em português das conquistas de Resident Evil CODE: Veronica X será adicionado em breve.",
+      summary: "O guia em português das conquistas de Guitar Hero II será adicionado em breve.",
       steps: [],
       achievements: []
     },
 
-    cover: "images/resident-evil-code-veronica-x.jpg",
-    banner: "banners/resident-evil-code-veronica-x.jpg",
-    description: "Depois dos acontecimentos de Raccoon City, Claire Redfield continua sua busca por Chris e acaba aprisionada na Ilha Rockfort. Em meio a um novo surto viral, Claire e Chris enfrentam criaturas da Umbrella e descobrem os segredos da família Ashford. Resident Evil CODE: Veronica X mantém o survival horror clássico da série e adiciona cenas extras à versão lançada para PlayStation 2.",
+    cover: "images/guitar-hero-2.jpg",
+    banner: "banners/guitar-hero-2.jpg",
+    description: "Guitar Hero II expande a fórmula do jogo original com novas músicas, modos cooperativos e uma carreira musical ainda maior. Escolha sua guitarra, avance pelos repertórios e domine as dificuldades mais altas enquanto busca pontuações e sequências perfeitas.",
     screenshots: [
-      "screenshots/resident-evil-code-veronica-x/screenshot-01.png",
-      "screenshots/resident-evil-code-veronica-x/screenshot-02.png",
-      "screenshots/resident-evil-code-veronica-x/screenshot-03.png"
+      "screenshots/guitar-hero-2/screenshot-01.png",
+      "screenshots/guitar-hero-2/screenshot-02.png",
+      "screenshots/guitar-hero-2/screenshot-03.png"
     ],
     download: "#"
   },
