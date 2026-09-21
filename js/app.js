@@ -2586,6 +2586,98 @@ const retrohubSupabase = window.supabase.createClient(RETROHUB_SUPABASE_URL, RET
 let retrohubSession = null;
 let retrohubProfile = null;
 
+function handleAccountButton(){
+  // Se estiver logado, o botão Perfil abre direto o perfil completo.
+  // Se não estiver logado, abre a tela de Entrar/Criar conta.
+  if(retrohubSession?.user){
+    openFullRetrohubProfile();
+  }else{
+    openAccountPanel();
+  }
+}
+
+function openAccountPanel(){
+  document.getElementById("accountModal").hidden = false;
+  refreshRetrohubAccountUI();
+  setTimeout(()=>{if(typeof refreshSupporterEditor==="function")refreshSupporterEditor().catch(console.warn)},50);
+}
+function closeAccountPanel(){ document.getElementById("accountModal").hidden = true; }
+
+function showAuthTab(tab){
+  const login = tab === "login";
+  document.getElementById("loginForm").hidden = !login;
+  document.getElementById("signupForm").hidden = login;
+  document.getElementById("loginTab").classList.toggle("active", login);
+  document.getElementById("signupTab").classList.toggle("active", !login);
+  document.getElementById("authMessage").textContent = "";
+}
+
+function setAccountMessage(id, text, ok=false){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = text || "";
+  el.style.color = ok ? "#65e6a6" : "#ff9bb5";
+}
+
+async function retrohubSignup(event){
+  event.preventDefault();
+  const username = document.getElementById("signupUsername").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+  const password2 = document.getElementById("signupPassword2").value;
+  if(password !== password2) return setAccountMessage("authMessage","As senhas não são iguais.");
+  if(!/^[A-Za-z0-9_]{3,24}$/.test(username)) return setAccountMessage("authMessage","Use 3 a 24 caracteres: letras, números ou _.");
+
+  setAccountMessage("authMessage","Criando conta...", true);
+  const { data, error } = await retrohubSupabase.auth.signUp({
+    email, password, options:{ data:{ username } }
+  });
+  if(error) return setAccountMessage("authMessage", error.message);
+  if(data.session){
+    setAccountMessage("authMessage","Conta criada com sucesso!", true);
+    await loadRetrohubProfile();
+  }else{
+    setAccountMessage("authMessage","Conta criada. Confira seu e-mail para confirmar o cadastro.", true);
+  }
+}
+
+async function retrohubLogin(event){
+  event.preventDefault();
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const submit = event.submitter || event.currentTarget?.querySelector('button[type="submit"]');
+  if(submit) submit.disabled = true;
+  setAccountMessage("authMessage","Entrando...", true);
+
+  try {
+    const { data, error } = await retrohubSupabase.auth.signInWithPassword({ email, password });
+    if(error) throw error;
+
+    retrohubSession = data?.session || null;
+    if(!retrohubSession?.user) throw new Error("A sessão não foi criada.");
+
+    // Carrega o perfil uma única vez antes de navegar.
+    await loadRetrohubProfile();
+
+    // O login terminou: o modal nunca deve continuar cobrindo a página.
+    closeAccountPanel();
+    await openFullRetrohubProfile({ replaceHistory: true });
+  } catch(error) {
+    console.error("Erro no login RetroHub:", error);
+    setAccountMessage(
+      "authMessage",
+      "Não foi possível entrar. Verifique o e-mail, a senha e se o e-mail foi confirmado."
+    );
+  } finally {
+    if(submit) submit.disabled = false;
+  }
+}
+
+async function retrohubLogout(){
+  await retrohubSupabase.auth.signOut();
+  retrohubProfile = null;
+  closeAccountPanel();
+}
 
 async function retrohubPatreonAuthHeader(){
   const {data,error}=await retrohubSupabase.auth.getSession();
