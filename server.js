@@ -162,42 +162,6 @@ async function startServer() {
     }
   });
 
-  // Sitemap automático: inclui todos os jogos encontrados no app.js.
-  app.get("/sitemap.xml", (req, res, next) => {
-    try {
-      readGamesSEO.cache = {};
-      const games = readGamesSEO();
-
-      const staticUrls = [
-        { loc: "https://retrohubbr.com/", changefreq: "daily", priority: "1.0" },
-        { loc: "https://retrohubbr.com/privacidade.html", changefreq: "monthly", priority: "0.3" },
-        { loc: "https://retrohubbr.com/termos.html", changefreq: "monthly", priority: "0.3" }
-      ];
-
-      const gameUrls = Object.keys(games).map(slug => ({
-        loc: "https://retrohubbr.com/game/" + encodeURIComponent(slug),
-        changefreq: "weekly",
-        priority: "0.8"
-      }));
-
-      const urls = staticUrls.concat(gameUrls);
-      const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-        urls.map(item =>
-          "  <url>\n" +
-          "    <loc>" + item.loc + "</loc>\n" +
-          "    <changefreq>" + item.changefreq + "</changefreq>\n" +
-          "    <priority>" + item.priority + "</priority>\n" +
-          "  </url>"
-        ).join("\n") +
-        "\n</urlset>\n";
-
-      res.type("application/xml").send(xml);
-    } catch (error) {
-      next(error);
-    }
-  });
-
   // Arquivos do RetroHub
   app.use(
     express.static(__dirname, {
