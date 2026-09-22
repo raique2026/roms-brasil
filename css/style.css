@@ -3648,3 +3648,55 @@ body.retrohub-support-open{
   font-size:16px !important;
   line-height:1 !important;
 }
+
+
+/* Editor de perfil compacto por abas */
+#accountModal .account-card:has(#profileView:not([hidden])){
+  width:min(900px,94vw)!important;
+  max-height:90vh!important;
+}
+#profileView .rhx-titlebar{height:60px!important}
+#profileView .rhx-titlebar h2{font-size:21px!important}
+#profileView .rhx-title-icon{width:36px!important;height:36px!important;font-size:22px!important}
+#profileView .rhx-hero{height:145px!important;margin:0 14px!important}
+#profileView .rhx-avatar-wrap{left:28px!important;bottom:18px!important}
+#profileView .rhx-avatar-wrap .profile-avatar{width:86px!important;height:86px!important}
+#profileView .rhx-avatar-camera{width:32px!important;height:32px!important}
+#profileView .rhx-hero-user{left:138px!important;bottom:31px!important}
+#profileView .rhx-hero-user .profile-username{font-size:22px!important}
+#profileView .rhx-cover-button{right:20px!important;bottom:20px!important;padding:9px 14px!important}
+#profileView .rhx-tabs{
+  width:calc(100% - 28px)!important;
+  margin:12px 14px 0!important;
+}
+#profileView .rhx-tab{height:42px!important}
+#profileView .rhx-form{padding:12px 14px 0!important}
+#profileView .rhx-main-grid{display:block!important}
+#profileView [data-rhx-panel][hidden]{display:none!important}
+#profileView [data-rhx-panel]:not([hidden]){display:block!important}
+#profileView .rhx-card{padding:15px!important}
+#profileView .rhx-card + .rhx-card:not([hidden]){margin-top:10px!important}
+#profileView .rhx-cover-card .profile-editor-wallpaper{height:95px!important}
+#profileView .profile-highlight-editor-list{grid-template-columns:1fr!important}
+#profileView .profile-highlight-editor-row{
+  min-height:0!important;
+  display:grid!important;
+  grid-template-columns:38px 1fr minmax(180px,240px)!important;
+  flex-direction:initial!important;
+  align-items:center!important;
+}
+#profileView .profile-highlight-editor-row select{margin-top:0!important}
+#profileView .rhx-footer{
+  margin:12px -14px 0!important;
+  padding:11px 14px!important;
+  grid-template-columns:1fr auto 220px!important;
+}
+#profileView .rhx-cancel,#profileView .rhx-footer .account-primary{height:42px!important}
+@media(max-width:760px){
+  #profileView .rhx-hero{height:135px!important}
+  #profileView .rhx-hero-user{left:125px!important}
+  #profileView .rhx-tabs{grid-template-columns:repeat(2,1fr)!important}
+  #profileView .profile-highlight-editor-row{grid-template-columns:34px 1fr!important}
+  #profileView .profile-highlight-editor-row select{grid-column:1/-1!important}
+  #profileView .rhx-footer{grid-template-columns:1fr 1fr!important}
+}
