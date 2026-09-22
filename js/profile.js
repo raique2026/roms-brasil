@@ -365,7 +365,7 @@ async function renderRetrohubProfilePage(){
       <div class="profile-hero-actions"><button class="account-secondary" onclick="openRetrohubFriends()"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="vertical-align:-3px;margin-right:6px"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3ZM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13Zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5Z"/></svg>Amigos</button><button class="account-secondary" onclick="openAccountPanel()"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="vertical-align:-3px;margin-right:6px"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm17.71-10.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.96 1.96 3.75 3.75 2.13-1.79Z"/></svg>Editar perfil</button></div>
     </div></div>
     <div id="profileFavoritesSection" class="profile-favorites-section">
-      <div class="profile-favorites-heading"><div><h2>❤️ Meus Favoritos</h2><p>Jogos que você salvou no RetroHub.</p></div><span id="profileFavoritesCount" class="profile-favorites-count">0</span></div>
+      <div class="profile-favorites-heading"><div><h2><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="25" height="25" style="vertical-align:-4px;margin-right:7px;color:#ff304f"><path d="M12 21s-7-4.35-9.33-8.36C.5 8.91 2.24 4.5 6.5 4.5A5.46 5.46 0 0 1 12 7.57 5.46 5.46 0 0 1 17.5 4.5c4.26 0 6 4.41 3.83 8.14C19 16.65 12 21 12 21Z"/></svg>Meus Favoritos</h2><p>Jogos que você salvou no RetroHub.</p></div><span id="profileFavoritesCount" class="profile-favorites-count">0</span></div>
       <div id="profileFavoritesGrid" class="profile-favorites-grid"><div class="profile-favorites-empty">Carregando favoritos...</div></div>
     </div>
     <div id="profileDashboard"><div class="profile-loading">${raUser?"Carregando suas conquistas...":"Vincule seu usuário do RetroAchievements em Editar perfil para sincronizar suas conquistas."}</div></div>
@@ -415,7 +415,7 @@ async function loadRetrohubProfileFavorites(){
           <strong>${escapeHTML(game.title)}</strong>
           <small>${escapeHTML(game.platform||"")} ${game.year?"• "+escapeHTML(game.year):""}</small>
         </div>
-        <span class="profile-favorite-heart">♥</span>
+        <span class="profile-favorite-heart" aria-label="Favorito"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 21s-7-4.35-9.33-8.36C.5 8.91 2.24 4.5 6.5 4.5A5.46 5.46 0 0 1 12 7.57 5.46 5.46 0 0 1 17.5 4.5c4.26 0 6 4.41 3.83 8.14C19 16.65 12 21 12 21Z"/></svg></span>
       </article>
     `).join("");
   }catch(e){
