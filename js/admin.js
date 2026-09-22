@@ -14,7 +14,7 @@ async function adminRequired(){
 $("#loginForm").onsubmit=async e=>{e.preventDefault();const b=$("#loginForm button");b.disabled=true;$("#loginMsg").textContent="Entrando...";const {error}=await sb.auth.signInWithPassword({email:$("#email").value,password:$("#password").value});if(error)$("#loginMsg").textContent="E-mail ou senha inválidos.";else await adminRequired();b.disabled=false};
 $("#logout").onclick=async()=>{await sb.auth.signOut();location.reload()};
 
-function showPage(id){$$(".page").forEach(x=>x.hidden=x.id!==id);$$("aside nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));$("#pageTitle").textContent=({newgame:"Novo jogo",games:"Jogos",collections:"Coleções",reports:"Denúncias",broken:"Links quebrados",site:"Site",dashboard:"Dashboard"})[id]||id;if(id==="games")loadGames();if(id==="collections")loadCollections();if(id==="reports"||id==="broken")loadDashboard();window.scrollTo(0,0)}
+function showPage(id){localStorage.setItem("retrohub_admin_page",id);$(".page").forEach(x=>x.hidden=x.id!==id);$$("aside nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));$("#pageTitle").textContent=({newgame:"Novo jogo",games:"Jogos",collections:"Coleções",reports:"Denúncias",broken:"Links quebrados",site:"Site",dashboard:"Dashboard"})[id]||id;if(id==="games")loadGames();if(id==="collections")loadCollections();if(id==="reports"||id==="broken")loadDashboard();window.scrollTo(0,0)}
 $$("aside nav button").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
 $("#newGameBtn").onclick=()=>{resetForm();showPage("newgame")};
 $("#cancelGameEdit").onclick=e=>{e.preventDefault();resetForm();showPage("games")};
@@ -59,19 +59,31 @@ async function loadGames(){
 }
 function renderGames(){const q=$("#gameSearch").value.toLowerCase(),pf=$("#gamePlatformFilter").value,sf=$("#gameStatusFilter").value;$("#gamesRows").innerHTML=gameCache.filter(g=>(g.title+" "+g.platform).toLowerCase().includes(q)&&(!pf||g.platform===pf)&&(!sf||g.status===sf)).map(g=>'<tr><td><div class="game-cell">'+(g.cover?'<img src="'+esc(g.cover)+'" alt="">':'')+'<div><b>'+esc(g.title)+'</b><small>'+esc(g.slug)+'</small></div></div></td><td>'+esc(g.platform)+'</td><td>'+esc(g.language)+'</td><td>'+Number(downloadCounts[g.slug]||0)+'</td><td><span class="badge '+g.status+'">'+({published:"Publicado",draft:"Rascunho",scheduled:"Agendado"}[g.status]||g.status)+'</span></td><td>'+new Date(g.updated_at).toLocaleDateString("pt-BR")+'</td><td class="actions"><button onclick="editGame(\''+g.id+'\')">Editar</button><button onclick="viewGame(\''+g.slug+'\')">Ver</button><button onclick="duplicateGame(\''+g.id+'\')">Duplicar</button><button class="danger" onclick="deleteGame(\''+g.id+'\')">Excluir</button></td></tr>').join("")}
 $("#gameSearch").oninput=renderGames;$("#gamePlatformFilter").onchange=renderGames;$("#gameStatusFilter").onchange=renderGames;
-function resetForm(){$("#gameForm").reset();$("#gameId").value="";$("#formTitle").textContent="Novo jogo";$("#gameMsg").textContent="";$("#guideSteps").innerHTML="";$("#raResult").hidden=true;$("#raResult").innerHTML="";$("[data-editor-tab]")[0]?.click();syncPreviews();updateNewGameUX()}
+function resetForm(){$("#gameForm").reset();$("#gameId").value="";$("#formTitle").textContent="Novo jogo";$("#gameMsg").textContent="";$("#guideSteps").innerHTML="";$("#raResult").hidden=true;$("#raResult").innerHTML="";editorTabs()[0]?.click();syncPreviews();updateNewGameUX()}
 window.editGame=id=>{const g=gameCache.find(x=>x.id===id);if(!g)return;showPage("newgame");$("#gameId").value=g.id;$("#formTitle").textContent="Editar jogo";$("#formSubtitle").textContent="Atualize as informações e publique quando estiver pronto.";Object.keys(g).forEach(k=>{const el=$("#gameForm").elements[k];if(!el)return;if(el.type==="checkbox")el.checked=!!g[k];else if(k==="screenshots")el.value=(g[k]||[]).join("\n");else if(k==="scheduled_at"&&g[k])el.value=new Date(g[k]).toISOString().slice(0,16);else el.value=g[k]??""});const gd=g.guide_data||{};const fm=$("#gameForm").elements;fm.guide_difficulty.value=gd.difficulty||"";fm.guide_time.value=gd.estimatedTime||"";fm.guide_playthroughs.value=gd.playthroughs||"";fm.guide_missables.value=gd.missables||"";fm.guide_summary.value=gd.summary||"";renderGuideSteps(gd.steps||[]);syncPreviews();updateNewGameUX()};
 window.editBySlug=async slug=>{await loadGames();const g=gameCache.find(x=>x.slug===slug);if(g)editGame(g.id)};
 window.viewGame=slug=>window.open("/game/"+encodeURIComponent(slug),"_blank");
 window.duplicateGame=async id=>{const g=gameCache.find(x=>x.id===id);if(!g)return;const copy={...g};delete copy.id;delete copy.created_at;copy.title+=" (Cópia)";copy.slug+="-copia";copy.status="draft";copy.published_at=null;copy.updated_at=new Date().toISOString();const {data,error}=await sb.from("admin_games").insert(copy).select().single();if(error)return alert(error.message);await logActivity("Jogo duplicado","game",data.id,data.title);loadGames()};
 window.deleteGame=async id=>{const g=gameCache.find(x=>x.id===id);if(!confirm("Excluir "+(g?.title||"este jogo")+"?"))return;const {error}=await sb.from("admin_games").delete().eq("id",id);if(error)return alert(error.message);await logActivity("Jogo excluído","game",id,g?.title||"");loadGames();loadDashboard()};
 
-const editorTabs=()=>document.querySelectorAll("[data-editor-tab]");
-editorTabs().forEach(b=>b.onclick=()=>{editorTabs().forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("[data-editor-panel]").forEach(p=>p.hidden=p.dataset.editorPanel!==b.dataset.editorTab);updateStepNav()});
-function currentStep(){return Math.max(0,editorTabs().findIndex(x=>x.classList.contains("active")))}
-function goEditorStep(n){const tabs=editorTabs();tabs[Math.max(0,Math.min(tabs.length-1,n))]?.click();window.scrollTo({top:0,behavior:"smooth"})}
+const editorTabs=()=>Array.from(document.querySelectorAll("[data-editor-tab]"));
+function bindEditorTabs(){
+  editorTabs().forEach(b=>{
+    b.onclick=()=>{
+      const tab=b.dataset.editorTab;
+      editorTabs().forEach(x=>x.classList.toggle("active",x===b));
+      document.querySelectorAll("[data-editor-panel]").forEach(p=>{p.hidden=p.dataset.editorPanel!==tab});
+      localStorage.setItem("retrohub_admin_editor_tab",tab);
+      updateStepNav();
+    };
+  });
+}
+function currentStep(){const tabs=editorTabs();const i=tabs.findIndex(x=>x.classList.contains("active"));return i<0?0:i}
+function goEditorStep(n){const tabs=editorTabs();const target=tabs[Math.max(0,Math.min(tabs.length-1,n))];if(target)target.click();window.scrollTo({top:0,behavior:"smooth"})}
 function updateStepNav(){const n=currentStep(),tabs=editorTabs();$("#prevEditorStep").disabled=n===0;$("#nextEditorStep").hidden=n===tabs.length-1}
-$("#prevEditorStep").onclick=()=>goEditorStep(currentStep()-1);$("#nextEditorStep").onclick=()=>goEditorStep(currentStep()+1);
+bindEditorTabs();
+$("#prevEditorStep").onclick=()=>goEditorStep(currentStep()-1);
+$("#nextEditorStep").onclick=()=>goEditorStep(currentStep()+1);
 function payload(status){const fd=new FormData($("#gameForm")),o=Object.fromEntries(fd.entries());o.retroachievements_game_id=o.retroachievements_game_id?Number(o.retroachievements_game_id):null;o.rating=o.rating?Number(o.rating):null;o.screenshots=(o.screenshots||"").split("\n").map(x=>x.trim()).filter(Boolean);o.featured=$("#gameForm").elements.featured.checked;o.guide_data={available:!!o.guide_summary,difficulty:o.guide_difficulty||"—",estimatedTime:o.guide_time||"—",playthroughs:o.guide_playthroughs||"—",missables:o.guide_missables||"—",summary:o.guide_summary||"",steps:readGuideSteps(),achievements:[]};delete o.guide_difficulty;delete o.guide_time;delete o.guide_playthroughs;delete o.guide_missables;delete o.guide_summary;o.status=status;o.updated_at=new Date().toISOString();o.scheduled_at=o.scheduled_at?new Date(o.scheduled_at).toISOString():null;if(status==="published")o.published_at=new Date().toISOString();return o}
 async function save(status){const id=$("#gameId").value,p=payload(status),r=id?await sb.from("admin_games").update(p).eq("id",id).select().single():await sb.from("admin_games").insert(p).select().single();$("#gameMsg").textContent=r.error?r.error.message:({published:"Jogo publicado no site.",draft:"Rascunho salvo.",scheduled:"Publicação agendada."}[status]);if(!r.error){localStorage.removeItem("retrohub_admin_game_draft");$("#autoSaveState").textContent="Salvo no servidor"}if(r.error)return;if(r.data)$("#gameId").value=r.data.id;await logActivity(status==="published"?"Jogo publicado":status==="scheduled"?"Jogo agendado":"Rascunho salvo","game",r.data.id,r.data.title);await loadGames();await loadDashboard()}
 $("#gameForm").onsubmit=async e=>{e.preventDefault();await save("published")};$("#saveDraft").onclick=()=>save("draft");$("#scheduleGame").onclick=()=>{if(!$("#gameForm").elements.scheduled_at.value)return alert("Escolha a data e o horário.");save("scheduled")};$("#previewGame").onclick=()=>{const slug=$("#gameForm").elements.slug.value;if(slug)window.open("/game/"+encodeURIComponent(slug),"_blank")};
@@ -122,3 +134,17 @@ $("#gameForm").addEventListener("change",updateNewGameUX);
 function restoreLocalDraft(){if($("#gameId").value)return;try{const o=JSON.parse(localStorage.getItem("retrohub_admin_game_draft")||"null");if(!o)return;Object.entries(o).forEach(([k,v])=>{const el=$("#gameForm").elements[k];if(el&&el.type!=="file")el.value=v??""});slugTouched=!!o.slug;syncPreviews();$("#autoSaveState").textContent="Rascunho local recuperado"}catch(_){}}
 const originalNew=$("#newGameBtn").onclick;$("#newGameBtn").onclick=()=>{resetForm();restoreLocalDraft();showPage("newgame")};
 updateStepNav();updateNewGameUX();
+async function restoreAdminWorkspace(){
+  const page=localStorage.getItem("retrohub_admin_page");
+  if(page==="newgame"){
+    restoreLocalDraft();
+    showPage("newgame");
+    const tab=localStorage.getItem("retrohub_admin_editor_tab")||"info";
+    const btn=editorTabs().find(x=>x.dataset.editorTab===tab);
+    if(btn)btn.click();
+  }else if(page && document.getElementById(page)){
+    showPage(page);
+  }
+}
+sb.auth.onAuthStateChange((event,session)=>{if(session)setTimeout(restoreAdminWorkspace,50)});
+setTimeout(async()=>{const {data:{session}}=await sb.auth.getSession();if(session)restoreAdminWorkspace()},250);
