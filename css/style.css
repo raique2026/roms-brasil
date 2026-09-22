@@ -3812,3 +3812,86 @@ img,video,canvas,svg{max-width:100%}
   #socialX{display:none!important}
   .grid{gap:8px!important}
 }
+
+
+/* ===== FIX CARROSSEL MOBILE ===== */
+@media(max-width:620px){
+  .featured-section-title{
+    margin:24px 2px 14px!important;
+    font-size:22px!important;
+    line-height:1.15!important;
+  }
+  .featured-wrap{
+    width:100%!important;
+    max-width:100%!important;
+    margin:0 0 28px!important;
+    padding:0 0 24px!important;
+    overflow:hidden!important;
+  }
+  .featured-track{
+    width:100%!important;
+    gap:0!important;
+  }
+  .featured-card{
+    flex:0 0 100%!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    overflow:hidden!important;
+    border-radius:10px!important;
+    transform:none!important;
+  }
+  .featured-card.active{transform:none!important}
+  .featured-card>img{
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    aspect-ratio:16/9!important;
+    object-fit:cover!important;
+    object-position:center!important;
+    flex:none!important;
+  }
+  .featured-card .featured-overlay{display:none!important}
+  .featured-card .featured-info{
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:170px!important;
+    padding:16px 18px 18px!important;
+    background:linear-gradient(180deg,#17314a,#10253a)!important;
+  }
+  .featured-info h2{
+    font-size:24px!important;
+    line-height:1.1!important;
+    margin:0 0 12px!important;
+  }
+  .featured-info p{
+    display:none!important;
+  }
+  .featured-recommend{
+    margin-top:18px!important;
+  }
+  .featured-recommend strong{font-size:16px!important}
+  .featured-recommend span{
+    display:block!important;
+    font-size:12px!important;
+    line-height:1.4!important;
+    margin-top:8px!important;
+  }
+  .featured-tags{margin-top:12px!important}
+  .featured-arrow{
+    top:calc((100vw - 24px) * .28125)!important;
+    transform:translateY(-50%)!important;
+    width:38px!important;
+    height:62px!important;
+    font-size:32px!important;
+    z-index:8!important;
+  }
+  .featured-prev{left:0!important}
+  .featured-next{right:0!important}
+  .featured-dots{bottom:2px!important}
+}
