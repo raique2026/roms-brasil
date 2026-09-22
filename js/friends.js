@@ -20,7 +20,7 @@ function retrohubFriendCard(profile, relation, mode){
   }else if(mode==="blocked"){
     buttons=`<button class="friend-action secondary" onclick="removeRetrohubFriendship('${relation.id}')">Desbloquear</button>`;
   }else{
-    buttons=`<button class="friend-chat-btn" onclick="openRetrohubChat('${profile.id}')">💬 Conversar</button><span class="friend-status">Amigo</span><button class="friend-action danger" onclick="removeRetrohubFriendship('${relation.id}')">Remover</button>`;
+    buttons=`<button class="friend-chat-btn" onclick="openRetrohubChat('${profile.id}')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="vertical-align:-3px;margin-right:6px"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v10h4.3L9 16.1V16h11V6H4Z"/></svg>Conversar</button><span class="friend-status">Amigo</span><button class="friend-action danger" onclick="removeRetrohubFriendship('${relation.id}')">Remover</button>`;
   }
   return `<article class="friend-card">
     <div class="friend-avatar-wrap" onclick="openRetrohubPublicProfile('${profile.id}')" title="Ver perfil de @${escapeHTML(username)}"><img class="friend-avatar" src="${escapeHTML(avatar)}" alt="" onerror="this.onerror=null;this.src=avatarFallback()"><span class="friend-online-dot" title="Usuário do RetroHub"></span></div>
@@ -92,11 +92,11 @@ async function openRetrohubFriends(){
   const app=document.getElementById("app");
   app.innerHTML=`<section class="friends-page">
     <div class="friends-head">
-      <div class="friends-title-row"><div class="friends-title-icon">👥</div><div><h1>Amigos</h1><p>Sua comunidade no RetroHub BR</p><div class="friends-summary"><strong id="friendsOnlineSummary">0</strong> amigos na sua lista</div></div></div>
+      <div class="friends-title-row"><div class="friends-title-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="34" height="34"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3ZM8 11c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13Zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5Z"/></svg></div><div><h1>Amigos</h1><p>Sua comunidade no RetroHub BR</p><div class="friends-summary"><strong id="friendsOnlineSummary">0</strong> amigos na sua lista</div></div></div>
       <button class="friends-profile-btn" onclick="openFullRetrohubProfile()">← Meu perfil</button>
     </div>
     <form class="friends-search" onsubmit="searchRetrohubPeople(event)">
-      <div class="friends-search-box"><span class="friends-search-icon">⌕</span><input id="friendsSearchInput" maxlength="24" autocomplete="off" placeholder="Pesquisar usuários do RetroHub..."></div>
+      <div class="friends-search-box"><span class="friends-search-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" width="22" height="22"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg></span><input id="friendsSearchInput" maxlength="24" autocomplete="off" placeholder="Pesquisar usuários do RetroHub..."></div>
       <button type="submit">Pesquisar</button>
     </form>
     <div class="friends-tabs">
@@ -170,7 +170,7 @@ function publicProfileActionHTML(profile,relation){
   const uid=retrohubSession.user.id;
   if(profile.id===uid)return `<button class="friend-action" onclick="openFullRetrohubProfile()">Meu perfil</button>`;
   if(!relation)return `<button class="friend-action" onclick="sendRetrohubFriendRequestFromProfile('${profile.id}')">＋ Adicionar amigo</button><button class="friend-action secondary" onclick="blockRetrohubUserFromProfile('${profile.id}')">Bloquear</button>`;
-  if(relation.status==="accepted")return `<button class="friend-action" onclick="openRetrohubChat('${profile.id}')">💬 Conversar</button><button class="friend-action secondary">✓ Amigos</button><button class="friend-action danger" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Remover amigo</button>`;
+  if(relation.status==="accepted")return `<button class="friend-action" onclick="openRetrohubChat('${profile.id}')"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="vertical-align:-3px;margin-right:6px"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v10h4.3L9 16.1V16h11V6H4Z"/></svg>Conversar</button><button class="friend-action secondary">✓ Amigos</button><button class="friend-action danger" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Remover amigo</button>`;
   if(relation.status==="blocked")return `<button class="friend-action secondary" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Desbloquear</button>`;
   if(relation.receiver_id===uid)return `<button class="friend-action" onclick="acceptRetrohubFriendRequestFromProfile('${relation.id}','${profile.id}')">✓ Aceitar pedido</button><button class="friend-action secondary" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Recusar</button>`;
   return `<button class="friend-action secondary">Pedido enviado</button><button class="friend-action danger" onclick="removeRetrohubFriendshipFromProfile('${relation.id}')">Cancelar</button>`;
