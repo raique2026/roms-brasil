@@ -3720,3 +3720,95 @@ body.retrohub-support-open{
   border-color:#3d6797 !important;
   transform:translateY(-1px) !important;
 }
+
+
+/* ===== RETROHUB BR · MOBILE STABILITY FIX ===== */
+html,body{max-width:100%;overflow-x:hidden}
+img,video,canvas,svg{max-width:100%}
+
+@media(max-width:760px){
+  header nav{padding-left:12px!important;padding-right:12px!important}
+  #topBar{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto auto auto auto!important;
+    gap:7px!important;
+    align-items:center!important;
+    padding:10px 0!important;
+  }
+  #topBar .logo{
+    min-width:0!important;
+    font-size:19px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  #topBar .search-wrap{
+    grid-column:1/-1!important;
+    grid-row:2!important;
+    width:100%!important;
+    min-width:0!important;
+    order:initial!important;
+  }
+  #topBar .search-wrap input{width:100%!important;min-width:0!important}
+  #messageBell,
+  #accountButton{
+    max-width:42px!important;
+  }
+  #accountButton{
+    width:42px!important;
+    min-width:42px!important;
+    height:42px!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+  #accountButton .account-label{display:none!important}
+  #socialX .x-icon{
+    width:42px!important;
+    height:42px!important;
+    min-width:42px!important;
+    min-height:42px!important;
+  }
+  #socialX .x-icon svg{width:21px!important;height:21px!important}
+
+  .main-menu,
+  .nav-links,
+  header .filters{
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    flex-wrap:nowrap!important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .main-menu::-webkit-scrollbar,
+  .nav-links::-webkit-scrollbar,
+  header .filters::-webkit-scrollbar{display:none}
+  .main-menu-item,
+  .main-menu-btn,
+  .nav-links a{flex:0 0 auto!important;white-space:nowrap!important}
+
+  main{padding-left:12px!important;padding-right:12px!important}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .card{min-width:0!important}
+  .card img{max-width:100%!important}
+
+  .game-page,
+  .profile-page,
+  .public-profile-page,
+  .friends-page,
+  .chat-page,
+  .badge-page{max-width:100%!important}
+
+  .game-tabs{max-width:100%!important;-webkit-overflow-scrolling:touch}
+  .game-achievement-toolbar>*{min-width:0}
+  .game-ach-search{max-width:100%!important}
+
+  .community{flex-direction:column!important;align-items:flex-start!important}
+  .community a{width:100%;text-align:center}
+}
+
+@media(max-width:390px){
+  #topBar{grid-template-columns:minmax(0,1fr) auto auto auto!important}
+  #topBar .logo{font-size:17px!important}
+  #socialX{display:none!important}
+  .grid{gap:8px!important}
+}
