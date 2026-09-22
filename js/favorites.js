@@ -31,8 +31,10 @@
   }
 
   function currentSlug(){
-    const m=(location.hash||"").match(/^#game=([^&]+)/);
-    return m ? decodeURIComponent(m[1]) : null;
+    const pathMatch=(location.pathname||"").match(/^\/game\/([^/?#]+)/);
+    if(pathMatch) return decodeURIComponent(pathMatch[1]);
+    const hashMatch=(location.hash||"").match(/^#game=([^&]+)/);
+    return hashMatch ? decodeURIComponent(hashMatch[1]) : null;
   }
 
   function paint(){
