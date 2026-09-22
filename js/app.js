@@ -3348,7 +3348,7 @@ async function retrohubLoadCmsCatalog(){
     const hardcoded=new Map(games.map(g=>[g.slug,g]));
     const {data:rows,error}=await retrohubSupabase.rpc("get_public_games");
     if(error||!Array.isArray(rows))throw error||new Error("Catálogo indisponível");
-    const mapped=rows.map(r=>{const base=hardcoded.get(r.slug)||{};return {...base,...r,retroAchievements:!!r.retroachievements_game_id,retroAchievementsGameId:r.retroachievements_game_id||base.retroAchievementsGameId,retroAchievementsUrl:r.retroachievements_game_id?"https://retroachievements.org/game/"+r.retroachievements_game_id:base.retroAchievementsUrl,screenshots:Array.isArray(r.screenshots)?r.screenshots:(base.screenshots||[])}});
+    const mapped=rows.map(r=>{const base=hardcoded.get(r.slug)||{};return {...base,...r,retroAchievements:!!r.retroachievements_game_id,retroAchievementsGameId:r.retroachievements_game_id||base.retroAchievementsGameId,retroAchievementsUrl:r.retroachievements_game_id?"https://retroachievements.org/game/"+r.retroachievements_game_id:base.retroAchievementsUrl,achievementGuide:(r.guide_data&&Object.keys(r.guide_data).length?r.guide_data:base.achievementGuide),screenshots:Array.isArray(r.screenshots)?r.screenshots:(base.screenshots||[])}});
     games.splice(0,games.length,...mapped);
     chooseRandomFeaturedGames();renderFilters();
     if(location.pathname.startsWith("/game/")){const slug=decodeURIComponent(location.pathname.replace(/^\/game\//,"").replace(/\/$/,""));if(games.some(g=>g.slug===slug))openGame(slug,false);else renderHome()}else if(!location.hash||location.hash==="#")renderHome();
