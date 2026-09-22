@@ -79,6 +79,50 @@ async function refreshSupporterEditor(){
 const games = [
 
   {
+    slug: "guitar-hero-3-legends-of-rock",
+    title: "Guitar Hero III: Legends of Rock",
+    platform: "PS2",
+    year: "2007",
+    language: "Inglês",
+    region: "NTSC-U/C",
+    size: "Edite o tamanho",
+    developer: "Budcat Creations",
+    publisher: "Activision",
+    genre: "Ritmo/Música",
+    format: "ISO",
+    translation: "Não informado",
+
+    retroAchievements: true,
+    achievements: 135,
+    achievementPoints: 930,
+    supportedHashes: 2,
+    hardcoreSupport: true,
+    recommendedEmulator: "PCSX2",
+    retroAchievementsUrl: "https://retroachievements.org/game/5579",
+    retroAchievementsGameId: 5579,
+    retroHashesUrl: "https://retroachievements.org/game/5579/hashes",
+    achievementBadgeText: "Complete o conjunto de conquistas de Guitar Hero III: Legends of Rock para conquistar esta insígnia",
+
+    achievementGuide: {
+      available: false,
+      difficulty: "Em breve",
+      estimatedTime: "Em breve",
+      playthroughs: "Em breve",
+      missables: "Em breve",
+      summary: "O guia em português das conquistas de Guitar Hero III: Legends of Rock será adicionado em breve.",
+      steps: [],
+      achievements: []
+    },
+
+    cover: "images/guitar-hero-3-legends-of-rock.jpg",
+    banner: "images/guitar-hero-3-legends-of-rock.jpg",
+    description: "Guitar Hero III: Legends of Rock leva a série a uma nova turnê com batalhas de guitarra, novos personagens e uma seleção de músicas de rock. Avance pela carreira, enfrente grandes guitarristas e domine as dificuldades mais altas.",
+    screenshots: [],
+    download: "#"
+  },
+
+
+  {
     slug: "guitar-hero-2",
     title: "Guitar Hero II",
     platform: "PS2",
