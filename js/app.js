@@ -1857,6 +1857,7 @@ function renderHome(){
 
   const filteredGames = games.filter(game => {
 
+    const matchesCollection = !window.retrohubCollectionSlugs || window.retrohubCollectionSlugs.includes(game.slug);
     const matchesPlatform =
       currentPlatform === "Todos" ||
       game.platform === currentPlatform;
@@ -1874,7 +1875,8 @@ function renderHome(){
     const matchesSearch =
       game.title.toLowerCase().includes(search);
 
-    return matchesPlatform &&
+    return matchesCollection &&
+           matchesPlatform &&
            matchesGenre &&
            matchesDubbed &&
            matchesSearch;
