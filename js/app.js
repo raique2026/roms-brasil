@@ -2384,10 +2384,10 @@ function openGame(slug, updateHistory = true){
           <h2>${game.title} — Roteiro para 100%</h2>
           ${guide.summary ? `<p>${guide.summary}</p>` : ""}
           <div class="achievement-summary-stats">
-            ${guide.difficulty ? `<span>⚔ <strong>${guide.difficulty}</strong></span>` : ""}
-            ${guide.estimatedTime ? `<span>⏱ <strong>${guide.estimatedTime}</strong></span>` : ""}
-            ${guide.playthroughs ? `<span>🎮 <strong>${guide.playthroughs}</strong></span>` : ""}
-            ${guide.missables ? `<span>⚠ <strong>${guide.missables}</strong> perdíveis</span>` : ""}
+            ${guide.difficulty ? `<span><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="17" height="17" style="vertical-align:-3px;margin-right:5px"><path d="M14.5 4 20 9.5 18.5 11l-2-2-5.75 5.75 1.5 1.5-1.5 1.5-1.5-1.5L6 19.5 4.5 18l3.25-3.25-1.5-1.5 1.5-1.5 1.5 1.5L15 7.5l-2-2L14.5 4Z"/></svg><strong>${guide.difficulty}</strong></span>` : ""}
+            ${guide.estimatedTime ? `<span><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="17" height="17" style="vertical-align:-3px;margin-right:5px"><path d="M15 1H9v2h6V1Zm-1 13h-4v-4h2v2h2v2Zm4.03-5.03 1.42-1.42A10.05 10.05 0 0 0 17.03 5l-1.42 1.42A8 8 0 1 0 18.03 8.97ZM12 20a6 6 0 1 1 0-12 6 6 0 0 1 0 12Z"/></svg><strong>${guide.estimatedTime}</strong></span>` : ""}
+            ${guide.playthroughs ? `<span><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="17" height="17" style="vertical-align:-3px;margin-right:5px"><path d="M7 6h10a5 5 0 0 1 4.76 3.47l1.08 3.36A4 4 0 0 1 19.03 18H18a3 3 0 0 1-2.4-1.2L14.25 15h-4.5L8.4 16.8A3 3 0 0 1 6 18H4.97a4 4 0 0 1-3.81-5.17l1.08-3.36A5 5 0 0 1 7 6Zm-.5 3v2H4.5v2h2v2h2v-2h2v-2h-2V9h-2Zm9.75 1.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Zm3 2a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/></svg><strong>${guide.playthroughs}</strong></span>` : ""}
+            ${guide.missables ? `<span><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="17" height="17" style="vertical-align:-3px;margin-right:5px"><path d="M1 21h22L12 2 1 21Zm12-3h-2v-2h2v2Zm0-4h-2v-4h2v4Z"/></svg><strong>${guide.missables}</strong> perdíveis</span>` : ""}
           </div>
         </div>
       ` : ""}
