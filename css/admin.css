@@ -3,3 +3,5 @@
 /* O atributo hidden precisa prevalecer sobre o layout do painel */
 [hidden]{display:none!important}
 #adminApp:not([hidden]){display:grid}
+
+.admin-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:14px 0;border-bottom:1px solid #20334f}.admin-row small{display:block;color:#8297bb;margin-top:5px}.danger{background:#291522!important;color:#ff8ca8!important;border:1px solid #6b3042!important}#downloadsByGame>div,#commentReportRows>div,#brokenReportRows>div{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #20334f}#downloadsByGame>div span,#commentReportRows>div b,#brokenReportRows>div b{flex:1}
