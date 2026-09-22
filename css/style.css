@@ -3654,3 +3654,31 @@ body.retrohub-support-open{
 #accountModal{
   z-index:100000!important;
 }
+
+
+/* Botão da rede social X no cabeçalho */
+.social .x-icon{
+  width:48px !important;
+  height:48px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:0 !important;
+  background:#0b1528 !important;
+  border:1px solid #294264 !important;
+  border-radius:12px !important;
+  color:#f4f7ff !important;
+  box-shadow:none !important;
+}
+.social .x-icon svg{
+  width:25px !important;
+  height:25px !important;
+  display:block !important;
+  fill:currentColor !important;
+}
+.social .x-icon:hover{
+  background:#101d34 !important;
+  border-color:#3d6797 !important;
+  color:#fff !important;
+  transform:translateY(-1px) !important;
+}
