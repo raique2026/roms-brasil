@@ -159,7 +159,7 @@ const games = [
     },
 
     cover: "images/guitar-hero-3-legends-of-rock.jpg",
-    banner: "images/guitar-hero-3-legends-of-rock.jpg",
+    banner: "banners/guitar-hero-3-legends-of-rock.jpg",
     description: "Guitar Hero III: Legends of Rock leva a série a uma nova turnê com batalhas de guitarra, novos personagens e uma seleção de músicas de rock. Avance pela carreira, enfrente grandes guitarristas e domine as dificuldades mais altas.",
     screenshots: [
       "screenshots/guitar-hero-3-legends-of-rock/screenshot-01.png",
