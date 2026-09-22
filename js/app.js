@@ -148,13 +148,18 @@ const games = [
     achievementBadgeText: "Complete o conjunto de conquistas de Guitar Hero III: Legends of Rock para conquistar esta insígnia",
 
     achievementGuide: {
-      available: false,
-      difficulty: "Em breve",
-      estimatedTime: "Em breve",
-      playthroughs: "Em breve",
-      missables: "Em breve",
-      summary: "O guia em português das conquistas de Guitar Hero III: Legends of Rock será adicionado em breve.",
-      steps: [],
+      available: true,
+      difficulty: "Difícil",
+      estimatedTime: "32h+",
+      playthroughs: "4 carreiras + extras",
+      missables: "0",
+      summary: "Para dominar o conjunto base, avance pelas dificuldades, derrote Tom Morello, Slash e Lou nas batalhas de guitarra e conclua os desafios das músicas exigidos pelas conquistas. O RetroAchievements registra mediana de 31h53 para mastery.",
+      steps: [
+        { title: "1. Complete as batalhas nas quatro dificuldades", text: "Derrote Tom Morello, Slash e Lou em Easy, Medium, Hard e Expert. O conjunto possui conquistas específicas para cada dificuldade." },
+        { title: "2. Conclua as músicas exigidas", text: "Avance pelos setlists e pelas músicas bônus, cumprindo os requisitos indicados nas conquistas de cada dificuldade." },
+        { title: "3. Faça os desafios de pontuação e desempenho", text: "Depois das carreiras, volte às músicas necessárias para concluir objetivos de pontuação, desempenho e outros requisitos específicos." },
+        { title: "4. Finalize o conjunto base", text: "Revise as conquistas restantes no RetroAchievements e complete os requisitos que faltarem até alcançar 135/135." }
+      ],
       achievements: []
     },
 
