@@ -3314,10 +3314,13 @@ if(location.pathname.startsWith("/game/")){
     openGame(initialSlug, false);
 
   }else{
-
-    history.replaceState({ page: "home" }, "", "/");
-    renderHome();
-
+    /*
+      O catálogo do Supabase é carregado logo depois deste bloco.
+      Um jogo criado somente pelo painel ainda não existe no array local
+      neste instante. Não apague a URL /game/<slug>; mantenha a rota
+      enquanto o CMS termina de carregar e então abra o jogo.
+    */
+    app.innerHTML = '<section style="padding:60px 0;text-align:center"><p class="desc">Carregando jogo...</p></section>';
   }
 
 }else if(location.hash.startsWith("#game=")){
@@ -3399,7 +3402,7 @@ async function retrohubLoadCmsCatalog(){
     const mapped=rows.map(r=>{const base=hardcoded.get(r.slug)||{};return {...base,...r,retroAchievements:!!r.retroachievements_game_id,retroAchievementsGameId:r.retroachievements_game_id||base.retroAchievementsGameId,retroAchievementsUrl:r.retroachievements_game_id?"https://retroachievements.org/game/"+r.retroachievements_game_id:base.retroAchievementsUrl,achievementGuide:(r.guide_data&&Object.keys(r.guide_data).length?r.guide_data:base.achievementGuide),screenshots:Array.isArray(r.screenshots)?r.screenshots:(base.screenshots||[])}});
     games.splice(0,games.length,...mapped);
     chooseRandomFeaturedGames();renderFilters();
-    if(location.pathname.startsWith("/game/")){const slug=decodeURIComponent(location.pathname.replace(/^\/game\//,"").replace(/\/$/,""));if(games.some(g=>g.slug===slug))openGame(slug,false);else renderHome()}else if(!location.hash||location.hash==="#")renderHome();
+    if(location.pathname.startsWith("/game/")){const slug=decodeURIComponent(location.pathname.replace(/^\/game\//,"").replace(/\/$/,""));if(games.some(g=>g.slug===slug))openGame(slug,false);else{app.innerHTML='<section style="padding:60px 0;text-align:center"><h2>Jogo não encontrado</h2><p class="desc">Este jogo não está disponível no catálogo.</p></section>'}}else if(!location.hash||location.hash==="#")renderHome();
   }catch(e){console.warn("CMS: usando catálogo local de segurança.",e)}
 }
 setTimeout(retrohubLoadCmsCatalog,0);
