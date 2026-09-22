@@ -92,7 +92,7 @@ async function loadGameComments(gameSlug){
         </div>
         <div class="rh-comment-text">${rhEscapeComment(c.content)}</div>
       </div>
-      ${me===c.user_id?`<button class="rh-comment-delete" type="button" onclick="deleteGameComment('${rhEscapeComment(c.id)}','${rhEscapeComment(gameSlug)}')">Excluir</button>`:""}
+      ${me===c.user_id?`<button class="rh-comment-delete" type="button" onclick="deleteGameComment('${rhEscapeComment(c.id)}','${rhEscapeComment(gameSlug)}')">Excluir</button>`:(me?`<button class="rh-comment-delete" type="button" onclick="reportGameComment('${rhEscapeComment(c.id)}')">Denunciar</button>`:"")}
     </article>`;
   }).join("");
 }
@@ -164,4 +164,17 @@ async function confirmDeleteGameComment(){
 
 async function deleteGameComment(id,gameSlug){
   openDeleteCommentModal(id,gameSlug);
+}
+
+
+async function reportGameComment(commentId){
+  if(!retrohubSession?.user?.id)return;
+  const reason=prompt("Motivo da denúncia:","Spam ou conteúdo inadequado");
+  if(!reason)return;
+  const {error}=await retrohubSupabase.from("comment_reports").insert({
+    comment_id:commentId,
+    reporter_id:retrohubSession.user.id,
+    reason:reason.slice(0,300)
+  });
+  alert(error?(error.code==="23505"?"Você já denunciou este comentário.":"Não foi possível enviar a denúncia."):"Denúncia enviada para a administração.");
 }
