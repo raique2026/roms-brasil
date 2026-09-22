@@ -3743,3 +3743,19 @@ window.addEventListener('load',()=>setTimeout(syncHero,600));
   const observer=new MutationObserver(()=>repairFeaturedBadgeCards());
   observer.observe(document.body,{childList:true,subtree:true});
 })();
+
+
+/* ===== RETROHUB BR · ANALYTICS PRÓPRIO ===== */
+(function initRetroHubPageview(){
+  try{
+    let visitorId=localStorage.getItem("retrohub_visitor_id");
+    if(!visitorId){
+      visitorId=(crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2));
+      localStorage.setItem("retrohub_visitor_id",visitorId);
+    }
+    retrohubSupabase.from("site_pageviews").insert({
+      path:location.pathname+location.hash,
+      visitor_id:visitorId
+    }).then(()=>{});
+  }catch(_){}
+})();
