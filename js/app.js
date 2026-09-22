@@ -104,13 +104,19 @@ const games = [
     achievementBadgeText: "Complete o conjunto de conquistas de Final Fantasy X: International para conquistar esta insígnia",
 
     achievementGuide: {
-      available: false,
-      difficulty: "Em breve",
-      estimatedTime: "Em breve",
-      playthroughs: "Em breve",
-      missables: "Em breve",
-      summary: "O guia em português das conquistas de Final Fantasy X: International será adicionado em breve.",
-      steps: [],
+      available: true,
+      difficulty: "Muito difícil",
+      estimatedTime: "89h+",
+      playthroughs: "1+ jogada",
+      missables: "58",
+      summary: "O conjunto base de Final Fantasy X: International é extenso e possui muitos objetivos perdíveis. Planeje os coletáveis e eventos opcionais desde o início, avance pela história e deixe a limpeza de superbosses, minijogos e desenvolvimento dos personagens para a reta final. O RetroAchievements registra mediana de 89h04 para mastery.",
+      steps: [
+        { title: "1. Acompanhe os perdíveis desde o início", text: "O conjunto possui 58 conquistas marcadas como perdíveis. Confira os requisitos antes de avançar por áreas e eventos importantes para evitar uma nova jogada desnecessária." },
+        { title: "2. Avance pela história e desenvolva o grupo", text: "Complete a campanha enquanto trabalha no Sphere Grid, aprende habilidades, coleta equipamentos e cumpre os objetivos específicos encontrados ao longo da jornada." },
+        { title: "3. Faça conteúdos opcionais e minijogos", text: "Complete os desafios opcionais, minijogos e atividades necessárias para as conquistas antes da limpeza final." },
+        { title: "4. Enfrente o conteúdo de fim de jogo", text: "Prepare a equipe para os chefes opcionais e desafios mais difíceis da edição International, incluindo o conteúdo adicional disponível nessa versão." },
+        { title: "5. Limpeza para 249/249", text: "Revise as conquistas restantes no RetroAchievements e conclua coletáveis, objetivos específicos e qualquer requisito pendente até alcançar a mastery." }
+      ],
       achievements: []
     },
 
