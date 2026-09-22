@@ -1673,7 +1673,7 @@ function goHome(updateHistory = true){
     history.replaceState(
       { page: "home" },
       "",
-      location.pathname + location.search
+      "/"
     );
   }
 
