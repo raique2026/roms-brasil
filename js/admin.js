@@ -107,7 +107,43 @@ $("#screensUpload").onchange=async e=>{try{const urls=[];for(const f of e.target
 function syncPreviews(){const c=$("#gameForm").elements.cover.value,b=$("#gameForm").elements.banner.value;$("#coverPreview").src=c||"";$("#coverPreview").hidden=!c;$("#bannerPreview").src=b||"";$("#bannerPreview").hidden=!b}
 $("#gameForm").elements.cover.oninput=syncPreviews;$("#gameForm").elements.banner.oninput=syncPreviews;
 
-$("#fetchRA").onclick=async()=>{const id=$("#gameForm").elements.retroachievements_game_id.value;if(!id)return alert("Informe o ID.");$("#raMsg").textContent="Buscando...";try{const r=await fetch("/api/retroachievements?mode=game&gameId="+encodeURIComponent(id)),j=await r.json();if(!r.ok)throw new Error(j.error||"Erro");const f=$("#gameForm").elements;if(!f.title.value)f.title.value=j.Title||j.title||"";f.platform.value=j.ConsoleName||j.consoleName||f.platform.value;f.developer.value=j.Developer||j.developer||f.developer.value;f.publisher.value=j.Publisher||j.publisher||f.publisher.value;f.genre.value=j.Genre||j.genre||f.genre.value;const rel=j.Released||j.released;if(rel&&!f.year.value)f.year.value=String(rel).slice(0,4);$("#raMsg").textContent="Dados encontrados.";$("#raResult").hidden=false;$("#raResult").innerHTML="<b>"+esc(j.Title||j.title||"Jogo encontrado")+"</b><span>"+esc(j.ConsoleName||j.consoleName||"")+"</span><small>Conquistas: "+esc(j.NumAchievements??j.numAchievements??"—")+"</small>";updateNewGameUX();}catch(e){$("#raMsg").textContent=e.message}};
+$("#fetchRA").onclick=async()=>{
+ const id=$("#gameForm").elements.retroachievements_game_id.value;if(!id)return alert("Informe o ID do RetroAchievements.");
+ $("#raMsg").textContent="Buscando dados do jogo...";
+ try{
+  const r=await fetch("/api/retroachievements?mode=game&gameId="+encodeURIComponent(id)),j=await r.json();
+  if(!r.ok)throw new Error(j.error||"Erro ao consultar RetroAchievements");
+  const f=$("#gameForm").elements;
+  const title=j.Title||j.title||"", consoleName=j.ConsoleName||j.consoleName||"", developer=j.Developer||j.developer||"", publisher=j.Publisher||j.publisher||"", genre=j.Genre||j.genre||"", released=j.Released||j.released||j.ReleasedAt||"";
+  if(title){f.title.value=title;if(!slugTouched&&!$("#gameId").value)f.slug.value=slugify(title)}
+  setSelectValue(f.platform,consoleName);
+  if(developer)f.developer.value=developer;
+  if(publisher)f.publisher.value=publisher;
+  if(genre)f.genre.value=genre;
+  if(released)f.year.value=String(released).match(/\d{4}/)?.[0]||f.year.value;
+  const achObj=j.Achievements||j.achievements||{};
+  const achievements=Array.isArray(achObj)?achObj:Object.values(achObj);
+  const missable=achievements.filter(a=>/missable|perd[ií]vel/i.test(String(a.Type||a.type||"")+" "+String(a.Description||a.description||"")));
+  const guide=f.guide_summary;
+  if(achievements.length){
+    f.guide_missables.value=missable.length?String(missable.length):f.guide_missables.value;
+    if(!guide.value)guide.value="Conquistas do RetroAchievements importadas: "+achievements.length+". Revise dificuldade, tempo, jogadas e perdíveis antes de publicar o guia.";
+  }
+  $("#raMsg").textContent="Dados importados para Informações e Guia. Revise os campos antes de publicar.";
+  $("#raResult").hidden=false;
+  $("#raResult").innerHTML="<b>"+esc(title||"Jogo encontrado")+"</b><span>"+esc(consoleName)+"</span><small>Conquistas: "+esc(j.NumAchievements??j.numAchievements??achievements.length??"—")+"</small>";
+  updateNewGameUX();
+ }catch(e){$("#raMsg").textContent=e.message}
+};
+function setSelectValue(select,value){
+ if(!select||!value)return;
+ const norm=s=>String(s).toLowerCase().replace(/[^a-z0-9]/g,"");
+ const aliases={"playstation2":"PS2","playstation":"PS1","playstationportable":"PSP","gameboyadvance":"Game Boy Advance","gameboycolor":"Game Boy Color","gameboy":"Game Boy","nintendods":"Nintendo DS","nintendo64":"N64","supernintendoentertainmentsystem":"SNES","nintendoentertainmentsystem":"NES","segamegadrive":"Mega Drive"};
+ const wanted=aliases[norm(value)]||value;
+ const option=Array.from(select.options).find(o=>norm(o.value)===norm(wanted)||norm(o.textContent)===norm(wanted));
+ if(option)select.value=option.value;
+}
+
 
 async function loadCollections(){const [{data:cols},{data:items}]=await Promise.all([sb.from("game_collections").select("*").order("created_at",{ascending:false}),sb.from("game_collection_items").select("*")]);const its=items||[];$("#collectionRows").innerHTML=(cols||[]).map(x=>'<div class="admin-row"><div><b>'+esc(x.title)+'</b><small>'+its.filter(i=>i.collection_id===x.id).length+' jogos · '+(x.status==="published"?"Publicada":"Rascunho")+'</small></div><button onclick="manageCollection(\''+x.id+'\',\''+esc(x.title).replaceAll("'","&#39;")+'\')">Editar jogos</button><button class="danger" onclick="deleteCollection(\''+x.id+'\')">Excluir</button></div>').join("")||"<p>Nenhuma coleção criada.</p>"}
 $("#createCollection").onclick=async()=>{const title=$("#collectionTitle").value.trim();if(!title)return;const slug=title.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");const {data,error}=await sb.from("game_collections").insert({title,slug,status:"published"}).select().single();if(error)return alert(error.message);await logActivity("Coleção criada","collection",data.id,title);$("#collectionTitle").value="";loadCollections()};
