@@ -14,7 +14,18 @@ async function adminRequired(){
 $("#loginForm").onsubmit=async e=>{e.preventDefault();const b=$("#loginForm button");b.disabled=true;$("#loginMsg").textContent="Entrando...";const {error}=await sb.auth.signInWithPassword({email:$("#email").value,password:$("#password").value});if(error)$("#loginMsg").textContent="E-mail ou senha inválidos.";else await adminRequired();b.disabled=false};
 $("#logout").onclick=async()=>{await sb.auth.signOut();location.reload()};
 
-function showPage(id){const target=document.getElementById(id);if(!target){console.error("Página admin não encontrada:",id);return}localStorage.setItem("retrohub_admin_page",id);$(".page").forEach(x=>x.hidden=x.id!==id);$("aside nav button[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===id));$("#pageTitle").textContent=({newgame:"Novo jogo",games:"Jogos",collections:"Coleções",reports:"Denúncias",broken:"Links quebrados",site:"Site",dashboard:"Dashboard"})[id]||id;if(id==="games")loadGames();if(id==="collections")loadCollections();if(id==="reports"||id==="broken")loadDashboard();window.scrollTo(0,0)}
+function showPage(id){
+  const target=document.getElementById(id);
+  if(!target){console.error("Página admin não encontrada:",id);return}
+  localStorage.setItem("retrohub_admin_page",id);
+  document.querySelectorAll(".page").forEach(x=>{x.hidden=x.id!==id});
+  document.querySelectorAll("aside nav button[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===id));
+  $("#pageTitle").textContent=({newgame:"Novo jogo",games:"Jogos",collections:"Coleções",reports:"Denúncias",broken:"Links quebrados",site:"Site",dashboard:"Dashboard"})[id]||id;
+  if(id==="games")loadGames();
+  if(id==="collections")loadCollections();
+  if(id==="reports"||id==="broken")loadDashboard();
+  window.scrollTo(0,0);
+}
 function bindAdminNavigation(){document.querySelectorAll("aside nav button[data-page]").forEach(b=>{b.onclick=e=>{e.preventDefault();showPage(b.dataset.page)}})}
 bindAdminNavigation();
 $("#newGameBtn").onclick=()=>{resetForm();showPage("newgame")};
