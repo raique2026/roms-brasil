@@ -1449,7 +1449,7 @@ button,
 .game-info-download{margin:0!important;white-space:nowrap;padding:10px 14px!important;font-size:12px!important}
 .game-info-chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 .game-info-chips span{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #2a3a60;border-radius:999px;background:#111b32;color:#e7edff;font-size:11px;font-weight:800}
-.game-info-chips b{font-size:13px}.game-info-details{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;padding-top:4px}
+.game-info-chips b{font-size:13px}.game-info-chips .game-info-icon{display:inline-flex!important;align-items:center;justify-content:center;width:16px;height:16px;flex:0 0 16px;color:#8f7cff}.game-info-chips .game-info-icon svg{display:block!important;width:16px!important;height:16px!important;fill:currentColor!important}.game-info-details{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;padding-top:4px}
 .game-info-details p{margin:0;padding:10px 0;border-top:1px solid #202e4c;min-width:0}.game-info-details p.translation{grid-column:1/-1}
 .game-info-details small{display:block;color:#7890c3;font-size:9px;margin-bottom:4px}.game-info-details strong{display:block;color:#fff;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
 @media(max-width:560px){.game-info-heading{align-items:flex-start;flex-direction:column}.game-info-download{width:100%;justify-content:center}.game-info-details{grid-template-columns:1fr}.game-info-details p.translation{grid-column:auto}}
