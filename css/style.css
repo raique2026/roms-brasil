@@ -3648,3 +3648,9 @@ body.retrohub-support-open{
   font-size:16px !important;
   line-height:1 !important;
 }
+
+
+/* Editar perfil deve ficar acima do cabeçalho fixo do site */
+#accountModal{
+  z-index:100000!important;
+}
