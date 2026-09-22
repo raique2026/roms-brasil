@@ -842,6 +842,8 @@ ensureMetroidStyleForAllGames();
 let currentPlatform = "Todos";
 let currentGenre = "Todos";
 let dubbedOnly = false;
+let languageFilter = "Todos";
+let raOnly = false;
 let emulatorMode = false;
 
 let latestExpanded = false;
@@ -1263,7 +1265,7 @@ function renderFilters(){
 
     <div class="main-menu-item">
       <button
-        class="main-menu-btn ${currentPlatform === "Todos" && currentGenre === "Todos" && !dubbedOnly && !emulatorMode ? "active" : ""}"
+        class="main-menu-btn ${currentPlatform === "Todos" && currentGenre === "Todos" && !dubbedOnly && languageFilter === "Todos" && !raOnly && !emulatorMode ? "active" : ""}"
         onclick="goHomeMenu()"
       >
         INÍCIO
@@ -1329,6 +1331,23 @@ function renderFilters(){
       </button>
     </div>
 
+    <div class="main-menu-item">
+      <button class="main-menu-btn ${languageFilter !== "Todos" ? "active" : ""}" type="button">
+        IDIOMA <span class="menu-chevron">⌄</span>
+      </button>
+      <div class="dropdown-menu">
+        <button onclick="setLanguageFilter('Todos')">Todos os idiomas</button>
+        <button onclick="setLanguageFilter('Português')">🇧🇷 Português / PT-BR</button>
+        <button onclick="setLanguageFilter('Inglês')">🇺🇸 Inglês</button>
+      </div>
+    </div>
+
+    <div class="main-menu-item">
+      <button class="main-menu-btn ${raOnly ? "active" : ""}" onclick="showRACompatible()">
+        🏆 RETROACHIEVEMENTS
+      </button>
+    </div>
+
 
     <div class="main-menu-item">
       <button
@@ -1362,6 +1381,8 @@ function showAchievementGuides(){
   currentPlatform = "Todos";
   currentGenre = "Todos";
   dubbedOnly = false;
+  languageFilter = "Todos";
+  raOnly = false;
   emulatorMode = false;
   q.value = "";
   q.style.display = "";
@@ -1398,6 +1419,8 @@ function setPlatform(platform){
   currentPlatform = platform;
   currentGenre = "Todos";
   dubbedOnly = false;
+  languageFilter = "Todos";
+  raOnly = false;
   emulatorMode = false;
 
   renderFilters();
@@ -1409,6 +1432,8 @@ function setGenre(genre){
   currentPlatform = "Todos";
   currentGenre = genre;
   dubbedOnly = false;
+  languageFilter = "Todos";
+  raOnly = false;
   emulatorMode = false;
 
   renderFilters();
@@ -1428,10 +1453,24 @@ function showDubbed(){
   currentPlatform = "Todos";
   currentGenre = "Todos";
   dubbedOnly = true;
+  languageFilter = "Todos";
+  raOnly = false;
   emulatorMode = false;
 
   renderFilters();
   renderHome();
+}
+
+
+function setLanguageFilter(language){
+  currentPlatform="Todos"; currentGenre="Todos"; dubbedOnly=false; emulatorMode=false;
+  languageFilter=language; raOnly=false;
+  renderFilters(); renderHome(); window.scrollTo({top:0,behavior:"smooth"});
+}
+function showRACompatible(){
+  currentPlatform="Todos"; currentGenre="Todos"; dubbedOnly=false; emulatorMode=false;
+  languageFilter="Todos"; raOnly=true;
+  renderFilters(); renderHome(); window.scrollTo({top:0,behavior:"smooth"});
 }
 
 
@@ -1872,6 +1911,13 @@ function renderHome(){
       /dublado|dublada/i.test(game.title || "") ||
       /dublado|dublada/i.test(game.description || "");
 
+    const lang=String(game.language||"");
+    const matchesLanguage =
+      languageFilter === "Todos" ||
+      (languageFilter === "Português" && /portugu[eê]s|pt-br|brasil/i.test(lang)) ||
+      (languageFilter === "Inglês" && /ingl[eê]s|english/i.test(lang));
+    const matchesRA = !raOnly || !!game.retroAchievements;
+
     const matchesSearch =
       game.title.toLowerCase().includes(search);
 
@@ -1879,6 +1925,8 @@ function renderHome(){
            matchesPlatform &&
            matchesGenre &&
            matchesDubbed &&
+           matchesLanguage &&
+           matchesRA &&
            matchesSearch;
 
   });
