@@ -3341,6 +3341,18 @@ window.va = window.va || function () {
 const RETROHUB_SUPABASE_URL = "https://cybhsinaymvmgfwrhhvt.supabase.co";
 const RETROHUB_SUPABASE_KEY = "sb_publishable_rlT-HHY5MTNgeBcNfLp01A_DCICFJzd";
 const retrohubSupabase = window.supabase.createClient(RETROHUB_SUPABASE_URL, RETROHUB_SUPABASE_KEY);
+async function retrohubLoadCmsCatalog(){
+  try{
+    const hardcoded=new Map(games.map(g=>[g.slug,g]));
+    const {data:rows,error}=await retrohubSupabase.rpc("get_public_games");
+    if(error||!Array.isArray(rows))throw error||new Error("Catálogo indisponível");
+    const mapped=rows.map(r=>{const base=hardcoded.get(r.slug)||{};return {...base,...r,retroAchievements:!!r.retroachievements_game_id,retroAchievementsGameId:r.retroachievements_game_id||base.retroAchievementsGameId,retroAchievementsUrl:r.retroachievements_game_id?"https://retroachievements.org/game/"+r.retroachievements_game_id:base.retroAchievementsUrl,screenshots:Array.isArray(r.screenshots)?r.screenshots:(base.screenshots||[])}});
+    games.splice(0,games.length,...mapped);
+    chooseRandomFeaturedGames();renderFilters();
+    if(location.pathname.startsWith("/game/")){const slug=decodeURIComponent(location.pathname.replace(/^\\/game\\//,"").replace(/\\/$/,""));if(games.some(g=>g.slug===slug))openGame(slug,false);else renderHome()}else if(!location.hash||location.hash==="#")renderHome();
+  }catch(e){console.warn("CMS: usando catálogo local de segurança.",e)}
+}
+setTimeout(retrohubLoadCmsCatalog,0);
 let retrohubSession = null;
 let retrohubProfile = null;
 
