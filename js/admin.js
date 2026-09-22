@@ -15,7 +15,8 @@ $("#loginForm").onsubmit=async e=>{e.preventDefault();const b=$("#loginForm butt
 $("#logout").onclick=async()=>{await sb.auth.signOut();location.reload()};
 
 function showPage(id){localStorage.setItem("retrohub_admin_page",id);$(".page").forEach(x=>x.hidden=x.id!==id);$$("aside nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));$("#pageTitle").textContent=({newgame:"Novo jogo",games:"Jogos",collections:"Coleções",reports:"Denúncias",broken:"Links quebrados",site:"Site",dashboard:"Dashboard"})[id]||id;if(id==="games")loadGames();if(id==="collections")loadCollections();if(id==="reports"||id==="broken")loadDashboard();window.scrollTo(0,0)}
-$$("aside nav button").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+function bindAdminNavigation(){document.querySelectorAll("aside nav button[data-page]").forEach(b=>{b.onclick=e=>{e.preventDefault();showPage(b.dataset.page)}})}
+bindAdminNavigation();
 $("#newGameBtn").onclick=()=>{resetForm();showPage("newgame")};
 $("#cancelGameEdit").onclick=e=>{e.preventDefault();resetForm();showPage("games")};
 
