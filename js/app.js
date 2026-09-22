@@ -79,6 +79,50 @@ async function refreshSupporterEditor(){
 const games = [
 
   {
+    slug: "final-fantasy-x-international",
+    title: "Final Fantasy X: International",
+    platform: "PS2",
+    year: "2002",
+    language: "Inglês",
+    region: "NTSC-J",
+    size: "Edite o tamanho",
+    developer: "Square",
+    publisher: "Square",
+    genre: "RPG",
+    format: "ISO",
+    translation: "Não informado",
+
+    retroAchievements: true,
+    achievements: 249,
+    achievementPoints: 1852,
+    supportedHashes: 1,
+    hardcoreSupport: true,
+    recommendedEmulator: "PCSX2",
+    retroAchievementsUrl: "",
+    retroAchievementsGameId: null,
+    retroHashesUrl: "",
+    achievementBadgeText: "Complete o conjunto de conquistas de Final Fantasy X: International para conquistar esta insígnia",
+
+    achievementGuide: {
+      available: false,
+      difficulty: "Em breve",
+      estimatedTime: "Em breve",
+      playthroughs: "Em breve",
+      missables: "Em breve",
+      summary: "O guia em português das conquistas de Final Fantasy X: International será adicionado em breve.",
+      steps: [],
+      achievements: []
+    },
+
+    cover: "images/final-fantasy-x-international.jpg",
+    banner: "banners/final-fantasy-x-international.jpg",
+    description: "Final Fantasy X: International acompanha Tidus, um jovem jogador de blitzball levado ao mundo de Spira, onde se junta à invocadora Yuna em uma peregrinação para enfrentar Sin. Esta edição International adiciona conteúdos extras à versão original, incluindo novos desafios e chefes opcionais.",
+    screenshots: [],
+    download: "#"
+  },
+
+
+  {
     slug: "guitar-hero-3-legends-of-rock",
     title: "Guitar Hero III: Legends of Rock",
     platform: "PS2",
