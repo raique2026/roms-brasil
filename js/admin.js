@@ -66,8 +66,8 @@ window.viewGame=slug=>window.open("/game/"+encodeURIComponent(slug),"_blank");
 window.duplicateGame=async id=>{const g=gameCache.find(x=>x.id===id);if(!g)return;const copy={...g};delete copy.id;delete copy.created_at;copy.title+=" (Cópia)";copy.slug+="-copia";copy.status="draft";copy.published_at=null;copy.updated_at=new Date().toISOString();const {data,error}=await sb.from("admin_games").insert(copy).select().single();if(error)return alert(error.message);await logActivity("Jogo duplicado","game",data.id,data.title);loadGames()};
 window.deleteGame=async id=>{const g=gameCache.find(x=>x.id===id);if(!confirm("Excluir "+(g?.title||"este jogo")+"?"))return;const {error}=await sb.from("admin_games").delete().eq("id",id);if(error)return alert(error.message);await logActivity("Jogo excluído","game",id,g?.title||"");loadGames();loadDashboard()};
 
-const editorTabs=()=>$("[data-editor-tab]");
-editorTabs().forEach(b=>b.onclick=()=>{editorTabs().forEach(x=>x.classList.toggle("active",x===b));$("[data-editor-panel]").forEach(p=>p.hidden=p.dataset.editorPanel!==b.dataset.editorTab);updateStepNav()});
+const editorTabs=()=>document.querySelectorAll("[data-editor-tab]");
+editorTabs().forEach(b=>b.onclick=()=>{editorTabs().forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll("[data-editor-panel]").forEach(p=>p.hidden=p.dataset.editorPanel!==b.dataset.editorTab);updateStepNav()});
 function currentStep(){return Math.max(0,editorTabs().findIndex(x=>x.classList.contains("active")))}
 function goEditorStep(n){const tabs=editorTabs();tabs[Math.max(0,Math.min(tabs.length-1,n))]?.click();window.scrollTo({top:0,behavior:"smooth"})}
 function updateStepNav(){const n=currentStep(),tabs=editorTabs();$("#prevEditorStep").disabled=n===0;$("#nextEditorStep").hidden=n===tabs.length-1}
