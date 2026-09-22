@@ -95,12 +95,12 @@ const games = [
     retroAchievements: true,
     achievements: 249,
     achievementPoints: 1852,
-    supportedHashes: 1,
+    supportedHashes: 2,
     hardcoreSupport: true,
     recommendedEmulator: "PCSX2",
-    retroAchievementsUrl: "",
-    retroAchievementsGameId: null,
-    retroHashesUrl: "",
+    retroAchievementsUrl: "https://retroachievements.org/game/2778",
+    retroAchievementsGameId:  2778,
+    retroHashesUrl: "https://retroachievements.org/game/2778/hashes",
     achievementBadgeText: "Complete o conjunto de conquistas de Final Fantasy X: International para conquistar esta insígnia",
 
     achievementGuide: {
