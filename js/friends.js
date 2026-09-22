@@ -575,7 +575,7 @@ async function openRetrohubFloatingChat(friendId){
       btn.type="button";
       btn.title="Excluir conversa só para você";
       btn.setAttribute("aria-label","Excluir conversa só para você");
-      btn.textContent="🗑️";
+      btn.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="19" height="19"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12Zm3-9h2v8H9v-8Zm4 0h2v8h-2v-8Zm2.5-6-1-1h-5l-1 1H5v2h14V4h-3.5Z"/></svg>';
       btn.onclick=()=>deleteRetrohubFloatingConversationForMe();
       tools.prepend(btn);
     }
