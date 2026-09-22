@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   const apiKey = process.env.RA_API_KEY;
-  const { user, gameId } = req.query;
+  const { user, gameId, mode } = req.query;
 
   if (!apiKey) {
     return res.status(500).json({
@@ -16,13 +16,11 @@ export default async function handler(req, res) {
     });
   }
 
-  if (!user || !gameId) {
-    return res.status(400).json({
-      error: "Informe user e gameId"
-    });
+  if (!gameId || (mode !== "game" && !user)) {
+    return res.status(400).json({ error: mode === "game" ? "Informe gameId" : "Informe user e gameId" });
   }
 
-  if (!/^[a-zA-Z0-9_-]{1,50}$/.test(user)) {
+  if (mode !== "game" && !/^[a-zA-Z0-9_-]{1,50}$/.test(user)) {
     return res.status(400).json({
       error: "Usuário inválido"
     });
@@ -35,13 +33,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = new URL(
-      "https://retroachievements.org/API/API_GetGameInfoAndUserProgress.php"
+    const infoOnly = mode === "game";
+    const url = new URL(infoOnly
+      ? "https://retroachievements.org/API/API_GetGameExtended.php"
+      : "https://retroachievements.org/API/API_GetGameInfoAndUserProgress.php"
     );
 
     url.searchParams.set("y", apiKey);
-    url.searchParams.set("u", user);
-    url.searchParams.set("g", gameId);
+    if (infoOnly) url.searchParams.set("i", gameId);
+    else {
+      url.searchParams.set("u", user);
+      url.searchParams.set("g", gameId);
+    }
 
     const response = await fetch(url.toString(), {
       headers: {
