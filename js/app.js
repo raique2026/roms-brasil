@@ -3351,7 +3351,7 @@ async function retrohubLoadCmsCatalog(){
     const mapped=rows.map(r=>{const base=hardcoded.get(r.slug)||{};return {...base,...r,retroAchievements:!!r.retroachievements_game_id,retroAchievementsGameId:r.retroachievements_game_id||base.retroAchievementsGameId,retroAchievementsUrl:r.retroachievements_game_id?"https://retroachievements.org/game/"+r.retroachievements_game_id:base.retroAchievementsUrl,screenshots:Array.isArray(r.screenshots)?r.screenshots:(base.screenshots||[])}});
     games.splice(0,games.length,...mapped);
     chooseRandomFeaturedGames();renderFilters();
-    if(location.pathname.startsWith("/game/")){const slug=decodeURIComponent(location.pathname.replace(/^\\/game\\//,"").replace(/\\/$/,""));if(games.some(g=>g.slug===slug))openGame(slug,false);else renderHome()}else if(!location.hash||location.hash==="#")renderHome();
+    if(location.pathname.startsWith("/game/")){const slug=decodeURIComponent(location.pathname.replace(/^\/game\//,"").replace(/\/$/,""));if(games.some(g=>g.slug===slug))openGame(slug,false);else renderHome()}else if(!location.hash||location.hash==="#")renderHome();
   }catch(e){console.warn("CMS: usando catálogo local de segurança.",e)}
 }
 setTimeout(retrohubLoadCmsCatalog,0);
