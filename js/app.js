@@ -196,13 +196,18 @@ const games = [
     achievementBadgeText: "Complete o conjunto de conquistas de Guitar Hero II para conquistar esta insígnia",
 
     achievementGuide: {
-      available: false,
-      difficulty: "Em breve",
-      estimatedTime: "Em breve",
-      playthroughs: "Em breve",
-      missables: "Em breve",
-      summary: "O guia em português das conquistas de Guitar Hero II será adicionado em breve.",
-      steps: [],
+      available: true,
+      difficulty: "Difícil",
+      estimatedTime: "36h+",
+      playthroughs: "5+ carreiras",
+      missables: "0",
+      summary: "Para dominar o conjunto base, complete as músicas da carreira nas quatro dificuldades, cumpra os desafios adicionais e obtenha os desbloqueios exigidos pelas conquistas. O RetroAchievements registra uma mediana de 36h16 para mastery.",
+      steps: [
+        { title: "1. Complete a carreira no Easy", text: "Conclua os setlists e as músicas bônus exigidas pelas conquistas da dificuldade Easy." },
+        { title: "2. Complete Medium, Hard e Expert", text: "As conquistas de dificuldade não são cumulativas: é necessário cumprir os requisitos separadamente em cada dificuldade." },
+        { title: "3. Faça os desafios extras", text: "Depois das carreiras, complete as conquistas restantes relacionadas a músicas, pontuações, personagens, guitarras e outros desbloqueios." },
+        { title: "4. Finalize o conjunto base", text: "Revise as conquistas que faltarem no RetroAchievements e conclua os requisitos restantes até alcançar 180/180." }
+      ],
       achievements: []
     },
 
