@@ -382,7 +382,7 @@ async function loadRetrohubChatMessages(forceScroll=false){
   const uid=retrohubSession.user.id, fid=retrohubChatFriend.id;
   const hiddenBefore=await getRetrohubConversationHiddenBefore(fid);
   let query=retrohubSupabase.from("messages")
-    .select("id,sender_id,receiver_id,content,created_at")
+    .select("id,sender_id,receiver_id,content,media_url,media_type,created_at")
     .or(`and(sender_id.eq.${uid},receiver_id.eq.${fid}),and(sender_id.eq.${fid},receiver_id.eq.${uid})`);
   if(hiddenBefore)query=query.gt("created_at",hiddenBefore);
   const {data,error}=await query.order("created_at",{ascending:true}).limit(300);
@@ -396,7 +396,7 @@ async function loadRetrohubChatMessages(forceScroll=false){
   const nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<120;
   box.innerHTML=rows.length?rows.map(m=>{
     const mine=m.sender_id===uid;
-    return `<div class="chat-row ${mine?"mine":""}"><div class="chat-bubble">${escapeHTML(m.content||"")}<span class="chat-time">${retrohubChatDate(m.created_at)}</span></div></div>`;
+    return `<div class="chat-row ${mine?"mine":""}"><div class="chat-bubble">${retrohubChatMediaHTML(m)}${m.content?`<div class="chat-text">${escapeHTML(m.content)}</div>`:""}<span class="chat-time">${retrohubChatDate(m.created_at)}</span></div></div>`;
   }).join(""):`<div class="chat-empty"><b>Comece a conversa 👋</b>Envie a primeira mensagem para @${escapeHTML(retrohubChatFriend.username||"seu amigo")}.</div>`;
   if(forceScroll||nearBottom)box.scrollTop=box.scrollHeight;
 }
@@ -628,10 +628,54 @@ async function loadRetrohubFloatingMessages(forceScroll=false){
   const nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<100;
   box.innerHTML=rows.length?rows.map(m=>{
     const mine=m.sender_id===uid;
-    return `<div class="chat-row ${mine?"mine":""}"><div class="chat-bubble">${escapeHTML(m.content||"")}<span class="chat-time">${retrohubChatDate(m.created_at)}</span></div></div>`;
+    return `<div class="chat-row ${mine?"mine":""}"><div class="chat-bubble">${retrohubChatMediaHTML(m)}${m.content?`<div class="chat-text">${escapeHTML(m.content)}</div>`:""}<span class="chat-time">${retrohubChatDate(m.created_at)}</span></div></div>`;
   }).join(""):`<div class="chat-empty"><b>Comece a conversa 👋</b>Envie uma mensagem para @${escapeHTML(retrohubFloatingFriend.username||"seu amigo")}.</div>`;
   if(forceScroll||nearBottom)box.scrollTop=box.scrollHeight;
   await markRetrohubChatRead(fid);
+}
+let retrohubPendingChatMedia=null;
+const retrohubEmojis=["😀","😂","😍","🥰","😎","🤔","😭","😡","👍","👎","👏","🙏","🔥","❤️","💙","🎮","🏆","⚔️","👀","🎉","😅","😉","🤝","💯"];
+function toggleRetrohubEmojiPicker(){
+ const p=document.getElementById("retrohubEmojiPicker");if(!p)return;
+ if(!p.innerHTML)p.innerHTML=retrohubEmojis.map(e=>'<button type="button" onclick="retrohubInsertEmoji(\''+e+'\')">'+e+'</button>').join("");
+ p.hidden=!p.hidden;
+}
+function retrohubInsertEmoji(emoji){
+ const i=document.getElementById("retrohubFloatingChatInput");if(!i)return;
+ const a=i.selectionStart??i.value.length,b=i.selectionEnd??i.value.length;
+ i.value=i.value.slice(0,a)+emoji+i.value.slice(b);i.focus();i.selectionStart=i.selectionEnd=a+emoji.length;
+ document.getElementById("retrohubEmojiPicker").hidden=true;
+}
+async function retrohubPrepareChatMedia(event){
+ const file=event.target.files?.[0];event.target.value="";if(!file)return;
+ if(file.size>25*1024*1024){alert("O arquivo pode ter no máximo 25 MB.");return}
+ const isImage=file.type.startsWith("image/"),isVideo=file.type.startsWith("video/");
+ if(!isImage&&!isVideo){alert("Envie uma foto ou vídeo compatível.");return}
+ if(isVideo){
+  const url=URL.createObjectURL(file),v=document.createElement("video");v.preload="metadata";v.src=url;
+  await new Promise(resolve=>{v.onloadedmetadata=resolve;v.onerror=resolve});
+  const duration=Number(v.duration||0);URL.revokeObjectURL(url);
+  if(!duration||duration>60){alert("O vídeo precisa ter no máximo 1 minuto.");return}
+ }
+ retrohubPendingChatMedia={file,type:isVideo?"video":"image"};
+ const p=document.getElementById("retrohubChatMediaPreview");p.hidden=false;
+ const url=URL.createObjectURL(file);
+ p.innerHTML=(isVideo?'<video src="'+url+'" controls></video>':'<img src="'+url+'" alt="Prévia">')+'<button type="button" onclick="retrohubClearChatMedia()">×</button>';
+}
+function retrohubClearChatMedia(){retrohubPendingChatMedia=null;const p=document.getElementById("retrohubChatMediaPreview");if(p){p.hidden=true;p.innerHTML=""}}
+async function retrohubUploadChatMedia(){
+ if(!retrohubPendingChatMedia)return null;
+ const {file,type}=retrohubPendingChatMedia,ext=(file.name.split(".").pop()|| (type==="video"?"mp4":"jpg")).replace(/[^a-z0-9]/gi,"").toLowerCase();
+ const path=retrohubSession.user.id+"/"+Date.now()+"-"+crypto.randomUUID()+"."+ext;
+ const {error}=await retrohubSupabase.storage.from("chat-media").upload(path,file,{contentType:file.type,upsert:false});
+ if(error)throw error;
+ const {data}=retrohubSupabase.storage.from("chat-media").getPublicUrl(path);
+ return {url:data.publicUrl,type};
+}
+function retrohubChatMediaHTML(m){
+ if(!m.media_url)return "";
+ const url=escapeHTML(m.media_url);
+ return m.media_type==="video"?'<video class="chat-media-video" src="'+url+'" controls preload="metadata"></video>':'<img class="chat-media-image" src="'+url+'" alt="Foto enviada no chat" loading="lazy">';
 }
 async function sendRetrohubFloatingMessage(event){
   event.preventDefault();
@@ -639,19 +683,22 @@ async function sendRetrohubFloatingMessage(event){
   const input=document.getElementById("retrohubFloatingChatInput");
   const button=document.getElementById("retrohubFloatingChatSend");
   const content=(input?.value||"").trim();
-  if(!content)return;
+  if(!content&&!retrohubPendingChatMedia)return;
   button.disabled=true;
-  const {error}=await retrohubSupabase.from("messages").insert({
-    sender_id:retrohubSession.user.id,
-    receiver_id:retrohubFloatingFriend.id,
-    content
-  });
-  button.disabled=false;
-  if(error){console.error(error);alert("Não foi possível enviar a mensagem.");return}
-  input.value="";
-  retrohubFloatingSignature="";
-  await loadRetrohubFloatingMessages(true);
-  input.focus();
+  try{
+    const media=await retrohubUploadChatMedia();
+    const {error}=await retrohubSupabase.from("messages").insert({
+      sender_id:retrohubSession.user.id,
+      receiver_id:retrohubFloatingFriend.id,
+      content:content||null,
+      media_url:media?.url||null,
+      media_type:media?.type||null
+    });
+    if(error)throw error;
+    input.value="";retrohubClearChatMedia();retrohubFloatingSignature="";
+    await loadRetrohubFloatingMessages(true);input.focus();
+  }catch(error){console.error(error);alert("Não foi possível enviar a mensagem ou mídia.")}
+  finally{button.disabled=false}
 }
 function retrohubFloatingChatKeydown(event){
   if(event.key==="Enter"&&!event.shiftKey){
