@@ -1907,7 +1907,7 @@ function renderHome(){
 
     const matchesDubbed =
       !dubbedOnly ||
-      /dublado|dublada/i.test(game.language || "") ||
+      /portugu[eê]s|pt-br|brasil|dublado|dublada/i.test(game.language || "") ||
       /dublado|dublada/i.test(game.title || "") ||
       /dublado|dublada/i.test(game.description || "");
 
