@@ -1428,7 +1428,7 @@ function setGenre(genre){
 
 }
 
-function showDubbed(){
+function showDubbed(updateHistory = true){
 
   currentPlatform = "Todos";
   currentGenre = "Todos";
@@ -1436,6 +1436,10 @@ function showDubbed(){
   languageFilter = "Todos";
   raOnly = false;
   emulatorMode = false;
+
+  if(updateHistory){
+    history.pushState({ page: "dubbed" }, "", "#dublados");
+  }
 
   renderFilters();
   renderHome();
@@ -3268,6 +3272,10 @@ window.addEventListener(
 
       showRACompatible(false);
 
+    }else if(location.hash === "#dublados"){
+
+      showDubbed(false);
+
     }else{
 
       goHome(false);
@@ -3372,6 +3380,10 @@ if(location.pathname.startsWith("/game/")){
 }else if(location.hash === "#retroachievements"){
 
   showRACompatible(false);
+
+}else if(location.hash === "#dublados"){
+
+  showDubbed(false);
 
 }else{
 
