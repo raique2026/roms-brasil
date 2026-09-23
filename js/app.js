@@ -2748,16 +2748,16 @@ function disconnectRetroAchievements(){
   });
 }
 
-async function loadRetroAchievementsProgress(user, game){
+async function loadRetroAchievementsProgress(user, game, options = {}){
   const subtitle = document.getElementById("raUserSubtitle");
   const progress = document.getElementById("raProgress");
   const syncMsg = document.getElementById("raSyncMsg");
   const disconnect = document.getElementById("raDisconnect");
   if(!subtitle || !progress) return;
 
-  subtitle.textContent = `Sincronizando ${user}...`;
+  if(!options.silent) subtitle.textContent = `Sincronizando ${user}...`;
   progress.hidden = false;
-  if(syncMsg) syncMsg.textContent = "Consultando o RetroAchievements...";
+  if(syncMsg && !options.silent) syncMsg.textContent = "Consultando o RetroAchievements...";
 
   try{
     const response = await fetch(`/api/retroachievements?user=${encodeURIComponent(user)}&gameId=${encodeURIComponent(game.retroAchievementsGameId)}`, { cache: "no-store" });
@@ -3063,7 +3063,18 @@ async function loadNfsAchievementCatalog(game){
     const data = await response.json();
     updateRetrohubCompletionBadgeFromRA(data);
     const achievements = data?.Achievements || {};
+
+    // O catálogo público só monta os cards. Se o visitante já sincronizou
+    // o RetroAchievements, reaplicamos o progresso DELE logo depois.
+    // Isso evita a corrida em que esta requisição terminava por último e
+    // recriava todos os cards como bloqueados após F5/navegação.
     ensureAllRetroAchievementsInGuide(achievements);
+
+    const savedUser = localStorage.getItem("retrohub_ra_user");
+    const current = getCurrentGame();
+    if(savedUser && current && current.slug === game.slug){
+      await loadRetroAchievementsProgress(savedUser, current, { silent:true });
+    }
 
     const count = Object.values(achievements).filter(a=>a && a.Title).length;
     const summary = document.querySelector(".achievement-summary-compact h2");
