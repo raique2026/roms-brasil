@@ -1447,9 +1447,14 @@ function setLanguageFilter(language){
   languageFilter=language; raOnly=false;
   renderFilters(); renderHome(); window.scrollTo({top:0,behavior:"smooth"});
 }
-function showRACompatible(){
+function showRACompatible(updateHistory = true){
   currentPlatform="Todos"; currentGenre="Todos"; dubbedOnly=false; emulatorMode=false;
   languageFilter="Todos"; raOnly=true;
+
+  if(updateHistory){
+    history.pushState({ page: "retroachievements" }, "", "#retroachievements");
+  }
+
   renderFilters(); renderHome(); window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -3259,6 +3264,10 @@ window.addEventListener(
 
       showEmulators(false);
 
+    }else if(location.hash === "#retroachievements"){
+
+      showRACompatible(false);
+
     }else{
 
       goHome(false);
@@ -3359,6 +3368,10 @@ if(location.pathname.startsWith("/game/")){
 }else if(location.hash === "#emulators"){
 
   showEmulators(false);
+
+}else if(location.hash === "#retroachievements"){
+
+  showRACompatible(false);
 
 }else{
 
