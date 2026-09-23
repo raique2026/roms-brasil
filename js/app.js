@@ -2672,13 +2672,40 @@ function filterGameAchievements(filter,button){currentGameAchievementFilter=filt
 function searchGameAchievements(value){currentGameAchievementSearch=(value||"").trim().toLowerCase();applyGameAchievementFilters()}
 function initGameAchievementCards(){document.querySelectorAll("#gameAchievements .guide-achievement").forEach(card=>card.addEventListener("click",()=>card.classList.toggle("expanded")))}
 
+let retrohubRAAutoSyncTimer = null;
+
+function stopRetroAchievementsAutoSync(){
+  if(retrohubRAAutoSyncTimer){
+    clearInterval(retrohubRAAutoSyncTimer);
+    retrohubRAAutoSyncTimer = null;
+  }
+}
+
+function startRetroAchievementsAutoSync(user, game){
+  stopRetroAchievementsAutoSync();
+  if(!user || !game?.retroAchievementsGameId) return;
+
+  // Atualiza automaticamente enquanto a página do jogo estiver aberta.
+  // 60s evita consultas excessivas e faz novas conquistas aparecerem sem clique manual.
+  retrohubRAAutoSyncTimer = setInterval(() => {
+    const current = getCurrentGame();
+    if(!current || current.slug !== game.slug){
+      stopRetroAchievementsAutoSync();
+      return;
+    }
+    loadRetroAchievementsProgress(user, current, { silent:true });
+  }, 60000);
+}
+
 function initRetroAchievementsProgress(game){
+  stopRetroAchievementsAutoSync();
   if(!game?.retroAchievements || !game?.retroAchievementsGameId) return;
   const savedUser = localStorage.getItem("retrohub_ra_user");
   const input = document.getElementById("raUsername");
   if(savedUser && input){
     input.value = savedUser;
     loadRetroAchievementsProgress(savedUser, game);
+    startRetroAchievementsAutoSync(savedUser, game);
   }
 }
 
@@ -2692,12 +2719,18 @@ function connectRetroAchievements(event){
     return;
   }
   localStorage.setItem("retrohub_ra_user", user);
+  localStorage.setItem("retrohub_ra_sync_enabled", "1");
   const game = getCurrentGame();
-  if(game) loadRetroAchievementsProgress(user, game);
+  if(game){
+    loadRetroAchievementsProgress(user, game);
+    startRetroAchievementsAutoSync(user, game);
+  }
 }
 
 function disconnectRetroAchievements(){
+  stopRetroAchievementsAutoSync();
   localStorage.removeItem("retrohub_ra_user");
+  localStorage.removeItem("retrohub_ra_sync_enabled");
   const input = document.getElementById("raUsername");
   if(input) input.value = "";
   const subtitle = document.getElementById("raUserSubtitle");
