@@ -1840,6 +1840,8 @@ function isHomeView(){
     currentPlatform === "Todos" &&
     currentGenre === "Todos" &&
     !dubbedOnly &&
+    languageFilter === "Todos" &&
+    !raOnly &&
     !emulatorMode &&
     q.value.trim() === ""
   );
