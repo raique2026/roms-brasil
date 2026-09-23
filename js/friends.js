@@ -615,7 +615,7 @@ async function loadRetrohubFloatingMessages(forceScroll=false){
   const uid=retrohubSession.user.id,fid=retrohubFloatingFriend.id;
   const hiddenBefore=await getRetrohubConversationHiddenBefore(fid);
   let query=retrohubSupabase.from("messages")
-    .select("id,sender_id,receiver_id,content,created_at")
+    .select("id,sender_id,receiver_id,content,media_url,media_type,created_at")
     .or(`and(sender_id.eq.${uid},receiver_id.eq.${fid}),and(sender_id.eq.${fid},receiver_id.eq.${uid})`);
   if(hiddenBefore)query=query.gt("created_at",hiddenBefore);
   const {data,error}=await query.order("created_at",{ascending:true}).limit(300);
