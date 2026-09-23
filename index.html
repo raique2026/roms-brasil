@@ -245,6 +245,13 @@ if(retroHubLogo){
   </header>
   <div id="retrohubFloatingChatMessages" class="chat-messages"></div>
   <form class="chat-compose" onsubmit="sendRetrohubFloatingMessage(event)">
+    <div class="chat-media-tools">
+      <button class="chat-tool-btn" type="button" onclick="toggleRetrohubEmojiPicker()" title="Emoji" aria-label="Emoji">😊</button>
+      <button class="chat-tool-btn" type="button" onclick="document.getElementById('retrohubFloatingMediaInput').click()" title="Enviar foto ou vídeo" aria-label="Enviar foto ou vídeo">📎</button>
+      <input id="retrohubFloatingMediaInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" hidden onchange="retrohubPrepareChatMedia(event)">
+      <div id="retrohubEmojiPicker" class="chat-emoji-picker" hidden></div>
+    </div>
+    <div id="retrohubChatMediaPreview" class="chat-media-preview" hidden></div>
     <textarea id="retrohubFloatingChatInput" maxlength="1000" rows="1" placeholder="Escreva uma mensagem..." onkeydown="retrohubFloatingChatKeydown(event)"></textarea>
     <button id="retrohubFloatingChatSend" class="chat-send" type="submit">Enviar</button>
   </form>
