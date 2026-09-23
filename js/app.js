@@ -1332,17 +1332,6 @@ function renderFilters(){
     </div>
 
     <div class="main-menu-item">
-      <button class="main-menu-btn ${languageFilter !== "Todos" ? "active" : ""}" type="button">
-        IDIOMA <span class="menu-chevron">⌄</span>
-      </button>
-      <div class="dropdown-menu">
-        <button onclick="setLanguageFilter('Todos')">Todos os idiomas</button>
-        <button onclick="setLanguageFilter('Português')">🇧🇷 Português / PT-BR</button>
-        <button onclick="setLanguageFilter('Inglês')">🇺🇸 Inglês</button>
-      </div>
-    </div>
-
-    <div class="main-menu-item">
       <button class="main-menu-btn ${raOnly ? "active" : ""}" onclick="showRACompatible()">
         🏆 RETROACHIEVEMENTS
       </button>
