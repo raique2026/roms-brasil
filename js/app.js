@@ -1351,15 +1351,6 @@ function renderFilters(){
 
     <div class="main-menu-item">
       <button
-        class="main-menu-btn"
-        onclick="showAchievementGuides()"
-      >
-        GUIAS
-      </button>
-    </div>
-
-    <div class="main-menu-item">
-      <button
         class="main-menu-btn ${emulatorMode ? "active" : ""}"
         onclick="showEmulators()"
       >
