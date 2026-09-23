@@ -1394,7 +1394,7 @@ function goHomeMenu(){
   goHome(true);
 }
 
-function setPlatform(platform){
+function setPlatform(platform, updateHistory = true){
 
   currentPlatform = platform;
   currentGenre = "Todos";
@@ -1403,11 +1403,19 @@ function setPlatform(platform){
   raOnly = false;
   emulatorMode = false;
 
+  if(updateHistory){
+    history.pushState(
+      { page: "platform", platform },
+      "",
+      "#jogos=" + encodeURIComponent(platform)
+    );
+  }
+
   renderFilters();
   renderHome();
 }
 
-function setGenre(genre){
+function setGenre(genre, updateHistory = true){
 
   currentPlatform = "Todos";
   currentGenre = genre;
@@ -1415,6 +1423,14 @@ function setGenre(genre){
   languageFilter = "Todos";
   raOnly = false;
   emulatorMode = false;
+
+  if(updateHistory){
+    history.pushState(
+      { page: "genre", genre },
+      "",
+      "#genero=" + encodeURIComponent(genre)
+    );
+  }
 
   renderFilters();
   renderHome();
@@ -1553,6 +1569,8 @@ function showEmulators(updateHistory = true){
   currentPlatform = "Todos";
   currentGenre = "Todos";
   dubbedOnly = false;
+  languageFilter = "Todos";
+  raOnly = false;
   emulatorMode = true;
 
   if(updateHistory && location.hash !== "#emulators"){
@@ -3276,6 +3294,14 @@ window.addEventListener(
 
       showDubbed(false);
 
+    }else if(location.hash.startsWith("#jogos=")){
+
+      setPlatform(decodeURIComponent(location.hash.replace("#jogos=", "")), false);
+
+    }else if(location.hash.startsWith("#genero=")){
+
+      setGenre(decodeURIComponent(location.hash.replace("#genero=", "")), false);
+
     }else{
 
       goHome(false);
@@ -3384,6 +3410,14 @@ if(location.pathname.startsWith("/game/")){
 }else if(location.hash === "#dublados"){
 
   showDubbed(false);
+
+}else if(location.hash.startsWith("#jogos=")){
+
+  setPlatform(decodeURIComponent(location.hash.replace("#jogos=", "")), false);
+
+}else if(location.hash.startsWith("#genero=")){
+
+  setGenre(decodeURIComponent(location.hash.replace("#genero=", "")), false);
 
 }else{
 
