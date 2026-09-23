@@ -3949,3 +3949,39 @@ img,video,canvas,svg{max-width:100%}
 }
 .retrohub-chat-float .chat-tool-btn{width:40px!important;height:40px!important;border-radius:50%!important}
 .retrohub-chat-float .chat-emoji-picker{bottom:48px!important}
+
+
+/* Chat emoji picker v2 */
+.retrohub-chat-float .chat-emoji-picker{
+  position:absolute!important;
+  left:0!important;
+  bottom:50px!important;
+  width:270px!important;
+  max-width:calc(100vw - 100px)!important;
+  max-height:220px!important;
+  overflow-y:auto!important;
+  padding:10px!important;
+  display:grid!important;
+  grid-template-columns:repeat(6,36px)!important;
+  grid-auto-rows:36px!important;
+  gap:6px!important;
+  align-content:start!important;
+  justify-content:start!important;
+  background:#0b1729!important;
+  border:1px solid #304a72!important;
+  border-radius:14px!important;
+  box-shadow:0 14px 35px #0009!important;
+  z-index:100!important;
+}
+.retrohub-chat-float .chat-emoji-picker[hidden]{display:none!important}
+.retrohub-chat-float .chat-emoji-picker button{
+  width:36px!important;height:36px!important;min-width:36px!important;
+  padding:0!important;margin:0!important;border:0!important;
+  border-radius:9px!important;background:#14223d!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  font-size:19px!important;line-height:1!important;cursor:pointer!important;
+}
+.retrohub-chat-float .chat-emoji-picker button:hover{background:#24365b!important;transform:scale(1.08)}
+@media(max-width:520px){
+ .retrohub-chat-float .chat-emoji-picker{width:228px!important;grid-template-columns:repeat(5,36px)!important}
+}
