@@ -3910,3 +3910,42 @@ img,video,canvas,svg{max-width:100%}
 .retrohub-chat-float .chat-compose{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:end}
 .retrohub-chat-float .chat-media-tools{grid-column:1}.retrohub-chat-float #retrohubFloatingChatInput{grid-column:2}.retrohub-chat-float #retrohubFloatingChatSend{grid-column:3}
 @media(max-width:520px){.chat-media-image,.chat-media-video{max-width:210px}.chat-emoji-picker{width:210px;grid-template-columns:repeat(5,1fr)}}
+
+
+/* Chat media layout v2 */
+.retrohub-chat-float .chat-compose{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr) auto!important;
+  grid-template-rows:auto auto!important;
+  align-items:center!important;
+  gap:8px!important;
+  padding:10px!important;
+}
+.retrohub-chat-float .chat-media-tools{grid-column:1;grid-row:2;align-self:center}
+.retrohub-chat-float #retrohubFloatingChatInput{
+  grid-column:2;grid-row:2;width:100%!important;min-width:0!important;
+  height:48px!important;min-height:48px!important;max-height:110px!important;
+  resize:none!important;overflow-y:auto!important;box-sizing:border-box!important;
+}
+.retrohub-chat-float #retrohubFloatingChatSend{
+  grid-column:3;grid-row:2;height:48px!important;min-height:48px!important;
+  width:auto!important;min-width:78px!important;padding:0 16px!important;
+}
+.retrohub-chat-float .chat-media-preview{
+  position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;
+  grid-column:1 / -1;grid-row:1;padding:10px!important;
+  display:flex;align-items:center;justify-content:center;
+  min-height:0!important;max-height:190px!important;
+}
+.retrohub-chat-float .chat-media-preview[hidden]{display:none!important}
+.retrohub-chat-float .chat-media-preview img,
+.retrohub-chat-float .chat-media-preview video{
+  width:auto!important;height:auto!important;max-width:220px!important;max-height:165px!important;
+  object-fit:contain!important;margin:0!important;border-radius:10px!important;
+}
+.retrohub-chat-float .chat-media-preview button{
+  width:30px!important;height:30px!important;position:absolute!important;right:8px!important;top:8px!important;
+  border-radius:50%!important;padding:0!important;
+}
+.retrohub-chat-float .chat-tool-btn{width:40px!important;height:40px!important;border-radius:50%!important}
+.retrohub-chat-float .chat-emoji-picker{bottom:48px!important}
