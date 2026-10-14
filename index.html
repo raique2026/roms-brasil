@@ -7,6 +7,7 @@ main.wrap{padding-top:28px}.hero{min-height:285px;padding:52px 48px}.section{mar
 
 .port-banner{height:clamp(170px,25vw,310px);border:1px solid var(--line);border-radius:17px;overflow:hidden;margin:16px 0 24px;background:#14243b}.port-banner img{width:100%;height:100%;object-fit:cover}.port-cover-fallback{min-height:300px;background:#13233c;display:grid;place-items:center;border-radius:16px;font-size:65px}.port-section{margin-top:34px}.port-section h2{font-size:23px;margin-bottom:18px}.port-description{white-space:pre-line;line-height:1.8;color:#c1d0e2;background:#101c30;padding:22px;border:1px solid var(--line);border-radius:14px}.port-section .detail-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.shots-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.shots-grid a{display:block;aspect-ratio:16/9;overflow:hidden;border-radius:12px;border:1px solid var(--line)}.shots-grid img{width:100%;height:100%;object-fit:cover}.related-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.related-card{display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);border-radius:13px;background:#111c2e;padding:10px}.related-card img,.related-placeholder{width:100%;height:140px;object-fit:contain;background:#0b1424;border-radius:8px}.related-placeholder{display:grid;place-items:center;font-size:38px}.related-card strong{font-size:14px}@media(max-width:760px){.port-section .detail-facts{grid-template-columns:repeat(2,minmax(0,1fr))}.shots-grid,.related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:430px){.port-section .detail-facts,.shots-grid{grid-template-columns:1fr}}
 .preview-notice{display:flex;flex-direction:column;gap:5px;padding:14px 18px;border:1px solid #527ab0;background:#122b4a;border-radius:12px;margin-bottom:15px}.preview-notice strong{color:#a9d4ff}.preview-notice span{font-size:13px;color:#c5d7ed}
+.shots-grid .shot-open{display:block;width:100%;height:100%;padding:0;border:0;background:transparent;cursor:zoom-in}.shot-viewer[hidden]{display:none!important}.shot-viewer{position:fixed;inset:0;z-index:9999;background:rgba(3,8,17,.96);display:flex;align-items:center;justify-content:center;padding:65px 75px}.shot-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:7px}.shot-viewer button{position:absolute;border:1px solid #58708e;background:#15243b;color:#fff;border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:30px;display:grid;place-items:center}.shot-close{top:16px;right:18px}.shot-prev{left:16px;top:50%}.shot-next{right:16px;top:50%}.shot-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#d6e5f7;font-size:14px}.viewer-open{overflow:hidden}@media(max-width:600px){.shot-viewer{padding:75px 12px}.shot-viewer button{width:38px;height:38px}.shot-prev{left:6px}.shot-next{right:6px}}
 </style></head><body><header><div class="wrap nav"><a class="brand" href="./index.html">PC PORTS <span>BRASIL</span></a><nav class="links"><a href="#catalogo">Catálogo</a><button id="favoritesToggle" class="filter" type="button" style="padding:7px 11px">♡ Favoritos</button><button id="loginToggle" class="filter" type="button" style="padding:7px 11px">Entrar</button><a href="#sobre">Sobre</a></nav><input id="search" class="search" type="search" aria-label="Pesquisar ports" placeholder="Pesquisar ports..."></div></header><main class="wrap"><section class="hero"><div class="hero-content"><div class="eyebrow">JOGOS NATIVOS PARA PC</div><h1>Clássicos que ganham uma nova vida no PC.</h1><p>Explore ports oficiais, projetos da comunidade e iniciativas open source — tudo organizado em um só lugar.</p><a class="cta" href="#catalogo">Explorar catálogo →</a></div></section><section class="section" id="authPanel" hidden><h2>Minha conta</h2><form id="authForm" style="display:flex;flex-wrap:wrap;gap:12px"><input type="email" id="authEmail" required placeholder="E-mail" class="search"><input type="password" id="authPassword" required minlength="6" placeholder="Senha" class="search"><button class="filter" type="submit">Entrar</button><button class="filter" type="button" id="signUp">Criar conta</button><button class="filter" type="button" id="signOut">Sair</button></form><p id="authMessage" role="status"></p></section><section class="section" id="catalogo"><h2>Explore os ports</h2><p>Catálogo em preparação. Os projetos serão publicados após a verificação de compatibilidade, licença e origem.</p><div class="filters" id="filters"><button class="filter active" data-type="todos">Todos</button><button class="filter" data-type="oficial">Oficiais</button><button class="filter" data-type="comunidade">Comunidade</button><button class="filter" data-type="open-source">Open source</button></div><div class="catalog-toolbar"><span id="resultCount" aria-live="polite">Carregando catálogo...</span><label>Ordenar por <select id="sortPorts" aria-label="Ordenar catálogo"><option value="az">Nome: A–Z</option><option value="za">Nome: Z–A</option><option value="recent">Ano: mais recentes</option></select></label></div><div id="results" class="empty" role="status">Nenhum port cadastrado ainda. Em breve, novos projetos por aqui.</div></section><section class="section" id="sobre"><h2>O que é um port nativo?</h2><p>É uma versão adaptada para executar diretamente no sistema operacional, sem depender de um emulador tradicional. Alguns projetos exigem arquivos obtidos legalmente do jogo original.</p></section></main><footer><div class="wrap">© PC Ports Brasil · Projeto independente. Direitos dos jogos pertencem aos respectivos titulares.</div></footer><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* Public catalog: only published native PC ports; never expose console ROMs. */
@@ -29,12 +30,35 @@ main.wrap{padding-top:28px}.hero{min-height:285px;padding:52px 48px}.section{mar
  document.getElementById('signUp').onclick=async()=>{const {error}=await client.auth.signUp({email:document.getElementById('authEmail').value,password:document.getElementById('authPassword').value});document.getElementById('authMessage').textContent=error?error.message:'Cadastro solicitado. Confira seu e-mail para confirmar a conta, se necessário.'};
  document.getElementById('signOut').onclick=async()=>{await client.auth.signOut();document.getElementById('authMessage').textContent='Sessão encerrada.'};
  client.auth.onAuthStateChange((_event,session)=>{user=session?.user||null;document.getElementById('loginToggle').textContent=user?'Minha conta':'Entrar';loadFavorites().then(render)});
+let currentShots=[],currentShotIndex=0;
+function closeShotViewer(){const el=document.getElementById('shotViewer');if(el)el.hidden=true;document.body.classList.remove('viewer-open')}
+function showShotViewer(index){
+ if(!currentShots.length)return;
+ currentShotIndex=(index+currentShots.length)%currentShots.length;
+ const modal=document.getElementById('shotViewer');if(!modal)return;
+ modal.querySelector('img').src=currentShots[currentShotIndex];
+ modal.querySelector('.shot-counter').textContent=(currentShotIndex+1)+' / '+currentShots.length;
+ modal.hidden=false;document.body.classList.add('viewer-open');
+ modal.querySelector('.shot-close').focus();
+}
+document.addEventListener('click',event=>{
+ const btn=event.target.closest('[data-shot-index]');if(btn){showShotViewer(Number(btn.dataset.shotIndex));return}
+ if(event.target.closest('[data-shot-close]'))closeShotViewer();
+ if(event.target.closest('[data-shot-prev]'))showShotViewer(currentShotIndex-1);
+ if(event.target.closest('[data-shot-next]'))showShotViewer(currentShotIndex+1);
+});
+document.addEventListener('keydown',event=>{
+ const modal=document.getElementById('shotViewer');if(!modal||modal.hidden)return;
+ if(event.key==='Escape')closeShotViewer();
+ if(event.key==='ArrowLeft')showShotViewer(currentShotIndex-1);
+ if(event.key==='ArrowRight')showShotViewer(currentShotIndex+1);
+});
 function renderDetail(){
  const g=ports.find(x=>x.slug===detailSlug),section=document.getElementById('catalogo');
  document.body.classList.add('detail-only');document.querySelector('.hero').classList.add('detail-hero-hide');
  if(!g){section.innerHTML='<a class="detail-back" href="/">← Voltar ao catálogo</a><div class="empty">Port não encontrado ou não publicado.</div>';return}
  const cover=safeUrl(g.cover),banner=safeUrl(g.banner),download=safeUrl(g.download);
- const shots=(Array.isArray(g.screenshots)?g.screenshots:[]).map(safeUrl).filter(Boolean);
+ const shots=(Array.isArray(g.screenshots)?g.screenshots:[]).map(safeUrl).filter(Boolean);currentShots=shots;
  const fact=(label,value)=>value?'<div class="fact"><small>'+esc(label)+'</small><strong>'+esc(value)+'</strong></div>':'';
  const technical=fact('Sistema',g.platform)+fact('Tipo de port',g.translation)+fact('Gênero',g.genre)+fact('Ano',g.year)+fact('Formato',g.format)+fact('Tamanho',g.size)+fact('Idioma',g.language)+fact('Compatibilidade',g.region)+fact('Desenvolvedora',g.developer)+fact('Publicadora',g.publisher);
  const related=ports.filter(x=>x.slug!==g.slug&&((x.genre&&g.genre&&x.genre===g.genre)||(x.translation&&g.translation&&x.translation===g.translation))).slice(0,4);
@@ -47,7 +71,7 @@ function renderDetail(){
  +(download?'<a class="cta" href="'+esc(download)+'" rel="noopener noreferrer" target="_blank">Acessar projeto ou download ↗</a>':'<p class="intro">Link do projeto ainda não cadastrado.</p>')+'</div></div>'
  +(technical?'<section class="port-section"><h2>Informações técnicas</h2><div class="detail-facts">'+technical+'</div></section>':'')
  +(g.emulation_requirements?'<section class="port-section"><h2>Requisitos e instruções</h2><p class="port-description">'+esc(g.emulation_requirements)+'</p></section>':'')
- +(shots.length?'<section class="port-section"><h2>Capturas de tela</h2><div class="shots-grid">'+shots.map((url,i)=>'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="'+esc(url)+'" alt="Captura '+(i+1)+' de '+esc(g.title)+'"></a>').join('')+'</div></section>':'')
+ +(shots.length?'<section class="port-section"><h2>Capturas de tela</h2><div class="shots-grid">'+shots.map((url,i)=>'<button type="button" class="shot-open" data-shot-index="'+i+'" aria-label="Ampliar captura '+(i+1)+'"><img loading="lazy" src="'+esc(url)+'" alt="Captura '+(i+1)+' de '+esc(g.title)+'"></button>').join('')+'</div></section>':'')
  +(related.length?'<section class="port-section"><h2>Ports relacionados</h2><div class="related-grid">'+related.map(x=>'<a class="related-card" href="?port='+encodeURIComponent(x.slug)+'">'+(safeUrl(x.cover)?'<img loading="lazy" src="'+esc(safeUrl(x.cover))+'" alt="">':'<div class="related-placeholder">🎮</div>')+'<strong>'+esc(x.title)+'</strong></a>').join('')+'</div></section>':'');
 }
 function render(){if(detailSlug){renderDetail();return;}
@@ -78,4 +102,4 @@ function render(){if(detailSlug){renderDetail();return;}
   ports=(data||[]).filter(isPort);render();
  }catch(e){console.error('Catálogo indisponível',e);results.className='empty';results.textContent=isPreview?'Não foi possível abrir a prévia. Volte ao Admin e clique em Pré-visualizar novamente.':'Não foi possível carregar o catálogo. Tente novamente mais tarde.'}
 })();
-</script></body></html>
+</script><div id="shotViewer" class="shot-viewer" role="dialog" aria-modal="true" aria-label="Visualizador de screenshots" hidden><button type="button" class="shot-close" data-shot-close aria-label="Fechar">×</button><button type="button" class="shot-prev" data-shot-prev aria-label="Imagem anterior">‹</button><img alt="Screenshot ampliada"><button type="button" class="shot-next" data-shot-next aria-label="Próxima imagem">›</button><div class="shot-counter" aria-live="polite"></div></div></body></html>
