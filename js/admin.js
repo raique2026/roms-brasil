@@ -98,16 +98,10 @@ $("#prevEditorStep").onclick=()=>goEditorStep(currentStep()-1);
 $("#nextEditorStep").onclick=()=>goEditorStep(currentStep()+1);
 function payload(status){
  const form=$("#gameForm"),fd=new FormData(form),o=Object.fromEntries(fd.entries());
- const errors=[];
- if(!String(o.title||"").trim())errors.push("Título");
- if(!String(o.slug||"").trim())errors.push("Slug");
- if(!["PC","Windows","Linux","Windows/Linux"].includes(o.platform))errors.push("Plataforma PC/Windows/Linux (etapa Informações)");
- if(!["Native Port","Executable","Source Code"].includes(o.format))errors.push("Formato do port (etapa Informações)");
- if(status==="published"){
-  if(!String(o.description||"").trim())errors.push("Descrição (etapa Informações)");
-  if(!String(o.download||"").trim())errors.push("Link oficial do projeto (etapa Download)");
- }
- if(errors.length)throw Error("Para "+(status==="published"?"publicar":"salvar")+", preencha: "+errors.join("; ")+".");
+ // Campos de descrição, link e demais metadados são opcionais.
+ // Plataforma e formato recebem padrões compatíveis para novos ports.
+ if(!o.platform)o.platform="PC";
+ if(!o.format)o.format="Native Port";
  o.retroachievements_game_id=o.retroachievements_game_id?Number(o.retroachievements_game_id):null;
  o.rating=o.rating?Number(o.rating):null;
  o.screenshots=(o.screenshots||"").split("\n").map(x=>x.trim()).filter(Boolean);
