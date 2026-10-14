@@ -96,9 +96,49 @@ function updateStepNav(){const n=currentStep(),tabs=editorTabs();$("#prevEditorS
 bindEditorTabs();
 $("#prevEditorStep").onclick=()=>goEditorStep(currentStep()-1);
 $("#nextEditorStep").onclick=()=>goEditorStep(currentStep()+1);
-function payload(status){const fd=new FormData($("#gameForm")),o=Object.fromEntries(fd.entries());if(!["PC","Windows","Linux","Windows/Linux"].includes(o.platform))throw Error("Selecione uma plataforma nativa para PC.");if(!["Native Port","Executable","Source Code"].includes(o.format))throw Error("Selecione um formato de port válido.");o.retroachievements_game_id=o.retroachievements_game_id?Number(o.retroachievements_game_id):null;o.rating=o.rating?Number(o.rating):null;o.screenshots=(o.screenshots||"").split("\n").map(x=>x.trim()).filter(Boolean);o.featured=$("#gameForm").elements.featured.checked;o.guide_data={available:!!o.guide_summary,difficulty:o.guide_difficulty||"—",estimatedTime:o.guide_time||"—",playthroughs:o.guide_playthroughs||"—",missables:o.guide_missables||"—",summary:o.guide_summary||"",steps:readGuideSteps(),achievements:[]};delete o.guide_difficulty;delete o.guide_time;delete o.guide_playthroughs;delete o.guide_missables;delete o.guide_summary;o.status=status;o.updated_at=new Date().toISOString();o.scheduled_at=o.scheduled_at?new Date(o.scheduled_at).toISOString():null;if(status==="published")o.published_at=new Date().toISOString();return o}
-async function save(status){let p;try{p=payload(status)}catch(e){$("#gameMsg").textContent=e.message;return}const id=$("#gameId").value,r=id?await sb.from("admin_games").update(p).eq("id",id).select().single():await sb.from("admin_games").insert(p).select().single();$("#gameMsg").textContent=r.error?r.error.message:({published:"Jogo publicado no site.",draft:"Rascunho salvo.",scheduled:"Publicação agendada."}[status]);if(!r.error){localStorage.removeItem("retrohub_admin_game_draft");$("#autoSaveState").textContent="Salvo no servidor"}if(r.error)return;if(r.data)$("#gameId").value=r.data.id;await logActivity(status==="published"?"Jogo publicado":status==="scheduled"?"Jogo agendado":"Rascunho salvo","game",r.data.id,r.data.title);await loadGames();await loadDashboard()}
-$("#gameForm").onsubmit=async e=>{e.preventDefault();await save("published")};$("#saveDraft").onclick=()=>save("draft");$("#scheduleGame").onclick=()=>{if(!$("#gameForm").elements.scheduled_at.value)return alert("Escolha a data e o horário.");save("scheduled")};$("#previewGame").onclick=()=>{const slug=$("#gameForm").elements.slug.value;if(slug)window.open("/game/"+encodeURIComponent(slug),"_blank")};
+function payload(status){
+ const form=$("#gameForm"),fd=new FormData(form),o=Object.fromEntries(fd.entries());
+ const errors=[];
+ if(!String(o.title||"").trim())errors.push("Título");
+ if(!String(o.slug||"").trim())errors.push("Slug");
+ if(!["PC","Windows","Linux","Windows/Linux"].includes(o.platform))errors.push("Plataforma PC/Windows/Linux (etapa Informações)");
+ if(!["Native Port","Executable","Source Code"].includes(o.format))errors.push("Formato do port (etapa Informações)");
+ if(status==="published"){
+  if(!String(o.description||"").trim())errors.push("Descrição (etapa Informações)");
+  if(!String(o.download||"").trim())errors.push("Link oficial do projeto (etapa Download)");
+ }
+ if(errors.length)throw Error("Para "+(status==="published"?"publicar":"salvar")+", preencha: "+errors.join("; ")+".");
+ o.retroachievements_game_id=o.retroachievements_game_id?Number(o.retroachievements_game_id):null;
+ o.rating=o.rating?Number(o.rating):null;
+ o.screenshots=(o.screenshots||"").split("\n").map(x=>x.trim()).filter(Boolean);
+ o.featured=form.elements.featured.checked;
+ o.guide_data={available:!!o.guide_summary,difficulty:o.guide_difficulty||"—",estimatedTime:o.guide_time||"—",playthroughs:o.guide_playthroughs||"—",missables:o.guide_missables||"—",summary:o.guide_summary||"",steps:readGuideSteps(),achievements:[]};
+ delete o.guide_difficulty;delete o.guide_time;delete o.guide_playthroughs;delete o.guide_missables;delete o.guide_summary;
+ o.status=status;o.updated_at=new Date().toISOString();
+ o.scheduled_at=o.scheduled_at?new Date(o.scheduled_at).toISOString():null;
+ if(status==="published")o.published_at=new Date().toISOString();
+ return o;
+}
+async function save(status){
+ const msg=$("#gameMsg");
+ let p;
+ try{p=payload(status)}catch(e){msg.textContent=e.message;msg.style.color="#ffadad";msg.scrollIntoView({behavior:"smooth",block:"center"});return}
+ msg.textContent="Salvando no servidor...";msg.style.color="";
+ try{
+  const id=$("#gameId").value;
+  const r=id?await sb.from("admin_games").update(p).eq("id",id).select().single():await sb.from("admin_games").insert(p).select().single();
+  if(r.error){msg.textContent="Erro ao salvar: "+r.error.message;msg.style.color="#ffadad";msg.scrollIntoView({behavior:"smooth",block:"center"});return}
+  msg.textContent=({published:"Jogo publicado no site.",draft:"Rascunho salvo.",scheduled:"Publicação agendada."}[status]);
+  localStorage.removeItem("retrohub_admin_game_draft");$("#autoSaveState").textContent="Salvo no servidor";
+  if(r.data)$("#gameId").value=r.data.id;
+  try{await logActivity(status==="published"?"Jogo publicado":status==="scheduled"?"Jogo agendado":"Rascunho salvo","game",r.data.id,r.data.title)}catch(e){console.warn("Registro de atividade indisponível",e)}
+  await loadGames();await loadDashboard();
+ }catch(e){msg.textContent="Erro inesperado ao salvar: "+e.message;msg.style.color="#ffadad"}
+}
+$("#gameForm").onsubmit=async e=>{e.preventDefault();await save("published")};
+$("#saveDraft").onclick=()=>save("draft");
+$("#scheduleGame").onclick=()=>{if(!$("#gameForm").elements.scheduled_at.value)return alert("Escolha a data e o horário.");save("scheduled")};
+$("#previewGame").onclick=()=>{const slug=$("#gameForm").elements.slug.value;if(slug)window.open("/?port="+encodeURIComponent(slug),"_blank")};
 
 async function uploadMedia(file,kind){if(!file)return null;const slug=$("#gameForm").elements.slug.value||"novo-jogo",ext=(file.name.split(".").pop()||"jpg").toLowerCase(),path=slug+"/"+kind+"-"+Date.now()+"."+ext;const {error}=await sb.storage.from("game-media").upload(path,file,{upsert:false});if(error)throw error;return sb.storage.from("game-media").getPublicUrl(path).data.publicUrl}
 $("#coverUpload").onchange=async e=>{try{$("#gameForm").elements.cover.value=await uploadMedia(e.target.files[0],"cover");syncPreviews()}catch(x){alert(x.message)}};
