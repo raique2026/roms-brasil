@@ -132,7 +132,17 @@ async function save(status){
 $("#gameForm").onsubmit=async e=>{e.preventDefault();await save("published")};
 $("#saveDraft").onclick=()=>save("draft");
 $("#scheduleGame").onclick=()=>{if(!$("#gameForm").elements.scheduled_at.value)return alert("Escolha a data e o horário.");save("scheduled")};
-$("#previewGame").onclick=()=>{const slug=$("#gameForm").elements.slug.value;if(slug)window.open("/?port="+encodeURIComponent(slug),"_blank")};
+$("#previewGame").onclick=()=>{
+ const form=$("#gameForm"),fd=new FormData(form),draft=Object.fromEntries(fd.entries());
+ draft.slug=String(draft.slug||"previsualizacao").trim();
+ draft.title=String(draft.title||"Jogo sem título").trim();
+ draft.screenshots=String(draft.screenshots||"").split("\n").map(x=>x.trim()).filter(Boolean);
+ draft.status="preview";
+ try{
+  localStorage.setItem("pcports_private_preview",JSON.stringify({savedAt:Date.now(),game:draft}));
+  window.open("/?preview=1","_blank","noopener");
+ }catch(e){$("#gameMsg").textContent="Não foi possível preparar a prévia: "+e.message}
+};
 
 async function uploadMedia(file,kind){if(!file)return null;const slug=$("#gameForm").elements.slug.value||"novo-jogo",ext=(file.name.split(".").pop()||"jpg").toLowerCase(),path=slug+"/"+kind+"-"+Date.now()+"."+ext;const {error}=await sb.storage.from("game-media").upload(path,file,{upsert:false});if(error)throw error;return sb.storage.from("game-media").getPublicUrl(path).data.publicUrl}
 $("#coverUpload").onchange=async e=>{try{$("#gameForm").elements.cover.value=await uploadMedia(e.target.files[0],"cover");syncPreviews()}catch(x){alert(x.message)}};
