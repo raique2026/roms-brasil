@@ -137,9 +137,38 @@ $("#previewGame").onclick=()=>{const slug=$("#gameForm").elements.slug.value;if(
 async function uploadMedia(file,kind){if(!file)return null;const slug=$("#gameForm").elements.slug.value||"novo-jogo",ext=(file.name.split(".").pop()||"jpg").toLowerCase(),path=slug+"/"+kind+"-"+Date.now()+"."+ext;const {error}=await sb.storage.from("game-media").upload(path,file,{upsert:false});if(error)throw error;return sb.storage.from("game-media").getPublicUrl(path).data.publicUrl}
 $("#coverUpload").onchange=async e=>{try{$("#gameForm").elements.cover.value=await uploadMedia(e.target.files[0],"cover");syncPreviews()}catch(x){alert(x.message)}};
 $("#bannerUpload").onchange=async e=>{try{$("#gameForm").elements.banner.value=await uploadMedia(e.target.files[0],"banner");syncPreviews()}catch(x){alert(x.message)}};
-$("#screensUpload").onchange=async e=>{try{const urls=[];for(const f of e.target.files)urls.push(await uploadMedia(f,"screenshot"));const ta=$("#gameForm").elements.screenshots;ta.value=[ta.value.trim(),...urls].filter(Boolean).join("\n")}catch(x){alert(x.message)}};
-function syncPreviews(){const c=$("#gameForm").elements.cover.value,b=$("#gameForm").elements.banner.value;$("#coverPreview").src=c||"";$("#coverPreview").hidden=!c;$("#bannerPreview").src=b||"";$("#bannerPreview").hidden=!b}
-$("#gameForm").elements.cover.oninput=syncPreviews;$("#gameForm").elements.banner.oninput=syncPreviews;
+$("#screensUpload").onchange=async e=>{
+ const files=[...e.target.files];if(!files.length)return;
+ const status=$("#screensCount");status.textContent="Enviando "+files.length+" imagem(ns)...";
+ const ta=$("#gameForm").elements.screenshots,urls=ta.value.split("\n").map(x=>x.trim()).filter(Boolean);
+ for(const file of files){try{const url=await uploadMedia(file,"screenshot");if(url)urls.push(url)}catch(err){alert("Erro ao enviar "+file.name+": "+err.message)}}
+ ta.value=[...new Set(urls)].join("\n");e.target.value="";syncPreviews();updateNewGameUX();
+};
+const validMediaUrl=value=>{try{const u=new URL(value);return ["https:","http:"].includes(u.protocol)?u.href:null}catch{return null}};
+function renderScreens(){
+ const ta=$("#gameForm").elements.screenshots;
+ const urls=ta.value.split("\n").map(x=>x.trim()).filter(Boolean);
+ $("#screensCount").textContent=urls.length+" "+(urls.length===1?"imagem":"imagens");
+ $("#screensPreview").innerHTML=urls.map((url,i)=>'<div class="screen-thumb">'+(validMediaUrl(url)?'<img loading="lazy" src="'+esc(url)+'" alt="Screenshot '+(i+1)+'">':'<div>URL inválida</div>')+'<button type="button" data-remove-screen="'+i+'" aria-label="Remover screenshot '+(i+1)+'">×</button><small>'+esc(url)+'</small></div>').join("");
+}
+$("#screensPreview").addEventListener("click",e=>{
+ const btn=e.target.closest("[data-remove-screen]");if(!btn)return;
+ const ta=$("#gameForm").elements.screenshots,urls=ta.value.split("\n").map(x=>x.trim()).filter(Boolean);
+ urls.splice(Number(btn.dataset.removeScreen),1);ta.value=urls.join("\n");syncPreviews();updateNewGameUX();
+});
+$("#refreshScreens").onclick=renderScreens;
+$("#screenshotsUrls").addEventListener("input",()=>{renderScreens();updateNewGameUX()});
+function syncPreviews(){
+ const form=$("#gameForm").elements,c=form.cover.value,b=form.banner.value;
+ $("#coverPreview").src=c||"";$("#coverPreview").hidden=!c;
+ $("#bannerPreview").src=b||"";$("#bannerPreview").hidden=!b;
+ renderScreens();
+ const link=validMediaUrl(form.download.value),test=$("#testDownload");
+ test.hidden=!link;if(link)test.href=link;else test.removeAttribute("href");
+}
+$("#gameForm").elements.cover.oninput=syncPreviews;
+$("#gameForm").elements.banner.oninput=syncPreviews;
+$("#gameForm").elements.download.oninput=syncPreviews;
 
 $("#fetchRA").onclick=async()=>{
  const id=$("#gameForm").elements.retroachievements_game_id.value;if(!id)return alert("Informe o ID do RetroAchievements.");
