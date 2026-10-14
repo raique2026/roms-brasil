@@ -72,7 +72,7 @@ async function loadGames(){
 function renderGames(){const q=$("#gameSearch").value.toLowerCase(),pf=$("#gamePlatformFilter").value,sf=$("#gameStatusFilter").value;$("#gamesRows").innerHTML=gameCache.filter(g=>(g.title+" "+g.platform).toLowerCase().includes(q)&&(!pf||g.platform===pf)&&(!sf||g.status===sf)).map(g=>'<tr><td><div class="game-cell">'+(g.cover?'<img src="'+esc(g.cover)+'" alt="">':'')+'<div><b>'+esc(g.title)+'</b><small>'+esc(g.slug)+'</small></div></div></td><td>'+esc(g.platform)+'</td><td>'+esc(g.language)+'</td><td>'+Number(downloadCounts[g.slug]||0)+'</td><td><span class="badge '+g.status+'">'+({published:"Publicado",draft:"Rascunho",scheduled:"Agendado"}[g.status]||g.status)+'</span></td><td>'+new Date(g.updated_at).toLocaleDateString("pt-BR")+'</td><td class="actions"><button onclick="editGame(\''+g.id+'\')">Editar</button><button onclick="viewGame(\''+g.slug+'\')">Ver</button><button onclick="duplicateGame(\''+g.id+'\')">Duplicar</button><button class="danger" onclick="deleteGame(\''+g.id+'\')">Excluir</button></td></tr>').join("")}
 $("#gameSearch").oninput=renderGames;$("#gamePlatformFilter").onchange=renderGames;$("#gameStatusFilter").onchange=renderGames;
 function resetForm(){$("#gameForm").reset();$("#gameId").value="";$("#formTitle").textContent="Novo jogo";$("#gameMsg").textContent="";$("#guideSteps").innerHTML="";$("#raResult").hidden=true;$("#raResult").innerHTML="";editorTabs()[0]?.click();syncPreviews();updateNewGameUX()}
-window.editGame=id=>{const g=gameCache.find(x=>x.id===id);if(!g)return;showPage("newgame");$("#gameId").value=g.id;$("#formTitle").textContent="Editar jogo";$("#formSubtitle").textContent="Atualize as informações e publique quando estiver pronto.";Object.keys(g).forEach(k=>{const el=$("#gameForm").elements[k];if(!el)return;if(el.type==="checkbox")el.checked=!!g[k];else if(k==="screenshots")el.value=(g[k]||[]).join("\n");else if(k==="scheduled_at"&&g[k])el.value=new Date(g[k]).toISOString().slice(0,16);else el.value=g[k]??""});const gd=g.guide_data||{};const fm=$("#gameForm").elements;fm.guide_difficulty.value=gd.difficulty||"";fm.guide_time.value=gd.estimatedTime||"";fm.guide_playthroughs.value=gd.playthroughs||"";fm.guide_missables.value=gd.missables||"";fm.guide_summary.value=gd.summary||"";renderGuideSteps(gd.steps||[]);syncPreviews();updateNewGameUX()};
+window.editGame=id=>{const g=gameCache.find(x=>x.id===id);if(!g)return;showPage("newgame");$("#gameId").value=g.id;$("#formTitle").textContent="Editar jogo";$("#formSubtitle").textContent="Atualize as informações e publique quando estiver pronto.";Object.keys(g).forEach(k=>{const el=$("#gameForm").elements[k];if(!el)return;if(el.type==="checkbox")el.checked=!!g[k];else if(k==="screenshots")el.value=(g[k]||[]).join("\n");else if(k==="scheduled_at"&&g[k])el.value=new Date(g[k]).toISOString().slice(0,16);else el.value=g[k]??""});["port_github","port_author","port_install","port_rights"].forEach(k=>{const el=$("#gameForm").elements[k];if(el)el.value=g.extra_data?.[k]||""});const gd=g.guide_data||{};const fm=$("#gameForm").elements;fm.guide_difficulty.value=gd.difficulty||"";fm.guide_time.value=gd.estimatedTime||"";fm.guide_playthroughs.value=gd.playthroughs||"";fm.guide_missables.value=gd.missables||"";fm.guide_summary.value=gd.summary||"";renderGuideSteps(gd.steps||[]);syncPreviews();updateNewGameUX()};
 window.editBySlug=async slug=>{await loadGames();const g=gameCache.find(x=>x.slug===slug);if(g)editGame(g.id)};
 window.viewGame=slug=>window.open("/game/"+encodeURIComponent(slug),"_blank");
 window.duplicateGame=async id=>{const g=gameCache.find(x=>x.id===id);if(!g)return;const copy={...g};delete copy.id;delete copy.created_at;copy.title+=" (Cópia)";copy.slug+="-copia";copy.status="draft";copy.published_at=null;copy.updated_at=new Date().toISOString();const {data,error}=await sb.from("admin_games").insert(copy).select().single();if(error)return alert(error.message);await logActivity("Jogo duplicado","game",data.id,data.title);loadGames()};
@@ -105,6 +105,10 @@ function payload(status){
  o.retroachievements_game_id=o.retroachievements_game_id?Number(o.retroachievements_game_id):null;
  o.rating=o.rating?Number(o.rating):null;
  o.screenshots=(o.screenshots||"").split("\n").map(x=>x.trim()).filter(Boolean);
+ const portFields=["port_github","port_author","port_install","port_rights"];
+ const existing=gameCache.find(g=>String(g.id)===$("#gameId").value);
+ o.extra_data={...(existing?.extra_data||{})};
+ portFields.forEach(k=>{o.extra_data[k]=String(o[k]||"").trim();delete o[k]});
  o.featured=form.elements.featured.checked;
  o.guide_data={available:!!o.guide_summary,difficulty:o.guide_difficulty||"—",estimatedTime:o.guide_time||"—",playthroughs:o.guide_playthroughs||"—",missables:o.guide_missables||"—",summary:o.guide_summary||"",steps:readGuideSteps(),achievements:[]};
  delete o.guide_difficulty;delete o.guide_time;delete o.guide_playthroughs;delete o.guide_missables;delete o.guide_summary;
@@ -137,6 +141,7 @@ $("#previewGame").onclick=()=>{
  draft.slug=String(draft.slug||"previsualizacao").trim();
  draft.title=String(draft.title||"Jogo sem título").trim();
  draft.screenshots=String(draft.screenshots||"").split("\n").map(x=>x.trim()).filter(Boolean);
+ draft.extra_data=Object.fromEntries(["port_github","port_author","port_install","port_rights"].map(k=>[k,draft[k]||""]));
  draft.status="preview";
  try{
   localStorage.setItem("pcports_private_preview",JSON.stringify({savedAt:Date.now(),game:draft}));
