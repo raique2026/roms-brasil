@@ -155,7 +155,7 @@ function renderDetail(){
  +'<div class="detail-layout"><div>'+(cover?'<img class="detail-img" alt="Capa de '+esc(g.title)+'" src="'+esc(cover)+'">':'<div class="port-cover-fallback">🎮</div>')+'</div>'
  +'<div class="detail-panel"><span class="tag">'+esc(g.platform||'PC')+'</span> '+(g.translation?'<span class="tag">'+esc(g.translation)+'</span>':'')+'<h1>'+esc(g.title)+'</h1>'
  +'<p class="intro">'+esc(g.description||'Descrição ainda não cadastrada.')+'</p>'
- +'<div class="port-actions">'+(github?'<a class="cta port-github" href="'+esc(github)+'" rel="noopener noreferrer" target="_blank">GitHub / Desenvolvedor ↗</a>':'')+(download?'<a class="cta" href="'+esc(download)+'" rel="noopener noreferrer" target="_blank">Baixar arquivo ↗</a>':'')+(!github&&!download?'<p class="intro">Links do projeto ainda não cadastrados.</p>':'')+'</div></div></div>'
+ +'<div class="port-actions">'+(github?'<a class="cta port-github" href="'+esc(github)+'" rel="noopener noreferrer" target="_blank">GitHub / Desenvolvedor ↗</a>':'')+(download&&download!==github?'<a class="cta" href="'+esc(download)+'" rel="noopener noreferrer" target="_blank">Baixar arquivo ↗</a>':'')+(!github&&!download?'<p class="intro">Links do projeto ainda não cadastrados.</p>':'')+'</div></div></div>'
  +(technical?'<section class="port-section"><h2>Informações técnicas</h2><div class="detail-facts">'+technical+'</div></section>':'')
  +(extra.port_author?'<section class="port-section"><h2>Créditos do port</h2><p class="port-description">'+esc(extra.port_author)+'</p></section>':'')
  +(extra.port_install?'<section class="port-section"><h2>Como instalar</h2><p class="port-description">'+esc(extra.port_install)+'</p></section>':'')
