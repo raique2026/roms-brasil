@@ -69,12 +69,23 @@ async function run(){
     if(!team.venue?.name&&!team.country?.name&&!team.coaches?.length)text("Informações adicionais ainda não disponíveis na resposta da API.","p",p)
    }else if(tab==="Elenco"){
     const players=Array.isArray(team.players)?team.players:Array.isArray(team.squad)?team.squad:[];
-    if(!players.length)text("Elenco não disponível neste endpoint.","p",p);
-    players.forEach(x=>text(x.player?.display_name??x.player?.name??x.name??"Jogador","div",p).className="row")
+    if(!players.length){text("A SportMonks não disponibilizou o elenco nesta consulta.","p",p);return}
+    const groups=new Map();
+    players.forEach(x=>{const position=x.position?.name??x.player?.position?.name??"Outros";if(!groups.has(position))groups.set(position,[]);groups.get(position).push(x)});
+    for(const [position,items] of groups){text(position+" · "+items.length,"h3",p);items.forEach(x=>{const line=document.createElement("div");line.className="row club";const player=x.player??x;if(player.image_path){const img=document.createElement("img");img.src=player.image_path;img.alt="";img.onerror=()=>img.remove();line.append(img)}line.append(document.createTextNode((x.jersey_number??x.number??"")+" · "+(player.display_name??player.name??"Jogador")));p.append(line)})}
    }else{
-    const fixtures=Array.isArray(team.fixtures)?team.fixtures:[];
-    if(!fixtures.length)text("Jogos do clube ainda não disponíveis neste endpoint.","p",p);
-    fixtures.forEach(x=>{const a=document.createElement("a");a.href="/pagina.html?tipo=partida&id="+x.id;a.textContent=x.name??("Partida "+x.id);a.className="row";a.style.display="block";p.append(a)})
+    const controls=document.createElement("div");controls.className="tabs";const list=document.createElement("div");p.append(controls,list);
+    let date=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date()),seq=0;
+    const prev=document.createElement("button"),next=document.createElement("button"),label=document.createElement("strong");prev.textContent="‹ Dia anterior";next.textContent="Próximo dia ›";controls.append(prev,label,next);
+    const shift=n=>{const d=new Date(date+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+n);date=d.toISOString().slice(0,10);load()};
+    prev.onclick=()=>shift(-1);next.onclick=()=>shift(1);
+    async function load(){const n=++seq;label.textContent=date.split("-").reverse().join("/");list.textContent="Buscando partidas do clube...";
+     try{const data=await get("/api/futscore/fixtures?date="+date);if(n!==seq||!list.isConnected)return;list.replaceChildren();
+      const rows=(Array.isArray(data)?data:Array.isArray(data?.data)?data.data:[]).filter(f=>(f.participants??[]).some(x=>Number(x.id)===id));
+      if(!rows.length){text("Nenhuma partida do clube nesta data.","p",list);return}
+      rows.forEach(f=>{const a=document.createElement("a");a.href="/pagina.html?tipo=partida&id="+f.id;a.style.display="block";a.className="row";a.textContent=(f.participants??[]).map(x=>x.name).join(" × ")+" · "+(f.state?.name??"Partida");list.append(a)})
+     }catch(e){if(n===seq&&list.isConnected)list.textContent="Não foi possível carregar os jogos."}}
+    load()
    }
   })
  }
