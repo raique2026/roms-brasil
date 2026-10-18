@@ -116,7 +116,7 @@ async function run(){
     if(!lineups.length){text("Escalações ainda não disponíveis para esta partida.","p",p);return}
     const getName=x=>x.player?.display_name??x.player?.name??x.player_name??"Nome indisponível";
     const getType=x=>String(x.type?.developer_name??x.type?.name??x.lineup_type??"").toLowerCase();
-    const getPosition=x=>{const raw=String(x.formation_position??x.position?.formation_position??"").trim();const m=/^(\\d{1,2})[:.,-](\\d{1,2})$/.exec(raw);return m?{row:Number(m[1]),column:Number(m[2])}:null};
+    const getPosition=x=>{const raw=String(x.formation_position??x.position?.formation_position??"").trim();const m=/^(\d{1,2})[:.,-](\d{1,2})$/.exec(raw);return m?{row:Number(m[1]),column:Number(m[2])}:null};
     for(const team of [home,away]){
      if(!team)continue;
      const rows=lineups.filter(x=>Number(x.team_id??x.participant_id)===Number(team.id));
