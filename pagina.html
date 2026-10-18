@@ -11,13 +11,35 @@ async function run(){
  if(tipo==="competicao"){
   if(!names[id])throw Error("Competição não disponível");
   title.textContent=names[id];content.replaceChildren();
-  text("Página da competição · Classificação","h2");
-  if(id!==648&&id!==651){text("A classificação desta competição ainda não está integrada. Os jogos estão disponíveis na página inicial.");return}
-  const data=await get("/api/futscore/standings?season="+(id===648?26763:27198));const rows=(Array.isArray(data)?data:[]).filter(x=>x.position!=null&&x.participant).sort((a,b)=>a.position-b.position);
-  if(!rows.length){text("Classificação indisponível.");return}
-  const scroll=document.createElement("div");scroll.className="scroll";const table=document.createElement("table");const tr=document.createElement("tr");["#","Clube","P","J","V","E","D","SG"].forEach(v=>text(v,"th",tr));table.append(tr);
-  const val=(r,t)=>r.details?.find(x=>x.type_id===t)?.value??"—";
-  rows.forEach(r=>{const tr=document.createElement("tr");const cells=[r.position,r.participant.name,r.points,val(r,129),val(r,130),val(r,131),val(r,132),val(r,179)];cells.forEach((v,i)=>{const td=text(v,"td",tr);if(i===1){td.replaceChildren();club(r.participant,td)}});table.append(tr)});scroll.append(table);content.append(scroll);
+  const leagueId=id;
+  tabs(["Jogos","Classificação","Detalhes"],(tab,p)=>{
+   if(tab==="Detalhes"){text("Competição: "+names[leagueId],"h2",p);text("Resultados e classificação são consultados diretamente pela integração SportMonks.","p",p);return}
+   if(tab==="Classificação"){
+    if(leagueId!==648&&leagueId!==651){text("Classificação por grupos ou mata-mata ainda não disponível nesta versão.","p",p);return}
+    text("Carregando classificação...","p",p);
+    get("/api/futscore/standings?season="+(leagueId===648?26763:27198)).then(data=>{
+     if(!p.isConnected)return;p.replaceChildren();
+     const raw=Array.isArray(data)?data:Array.isArray(data?.data)?data.data:[];
+     const rows=raw.flatMap(x=>Array.isArray(x.standings)?x.standings:[x]).filter(x=>x.position!=null&&x.participant).sort((a,b)=>a.position-b.position);
+     if(!rows.length){text("Classificação indisponível.","p",p);return}
+     const scroll=document.createElement("div");scroll.className="scroll";const table=document.createElement("table");
+     const tr=document.createElement("tr");["#","Clube","P","J","V","E","D","SG"].forEach(v=>text(v,"th",tr));table.append(tr);
+     const val=(r,t)=>r.details?.find(x=>x.type_id===t)?.value??"—";
+     rows.forEach(r=>{const tr=document.createElement("tr");const pos=Number(r.position);const color=leagueId===648?(pos<=4?"#e6c343":pos===5?"#f28c37":pos<=11?"#2194ff":pos>=17?"#e04e54":"transparent"):(pos<=2?"#39b77d":pos<=6?"#2194ff":pos>=17?"#e04e54":"transparent");tr.style.borderLeft="4px solid "+color;const sg=r.goal_difference??((Number.isFinite(Number(val(r,133)))&&Number.isFinite(Number(val(r,134))))?Number(val(r,133))-Number(val(r,134)):"—");[pos,r.participant.name,r.points??"—",r.played??val(r,129),r.won??val(r,130),r.draw??val(r,131),r.lost??val(r,132),sg].forEach((v,i)=>{const td=text(v,"td",tr);if(i===1){td.replaceChildren();club(r.participant,td)}});table.append(tr)});
+     scroll.append(table);p.append(scroll)
+    }).catch(()=>{if(p.isConnected){p.replaceChildren();text("Não foi possível carregar a classificação.","p",p)}});
+    return
+   }
+   const dateBox=document.createElement("div");dateBox.className="tabs";p.append(dateBox);const results=document.createElement("div");p.append(results);
+   const fmt=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"});let date=fmt.format(new Date()),seq=0;
+   const change=(days)=>{const d=new Date(date+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+days);date=d.toISOString().slice(0,10);load()};
+   const prev=document.createElement("button");prev.textContent="‹ Anterior";prev.onclick=()=>change(-1);const label=document.createElement("strong");const next=document.createElement("button");next.textContent="Próximo ›";next.onclick=()=>change(1);dateBox.append(prev,label,next);
+   async function load(){const n=++seq;label.textContent=date.split("-").reverse().join("/");results.textContent="Carregando jogos...";
+    try{const data=await get("/api/futscore/fixtures?date="+date);if(n!==seq||!results.isConnected)return;results.replaceChildren();const rows=(Array.isArray(data)?data:Array.isArray(data?.data)?data.data:[]).filter(x=>Number(x.league_id)===leagueId);if(!rows.length){text("Nenhuma partida encontrada nesta data.","p",results);return}
+    rows.sort((a,b)=>String(a.starting_at??"").localeCompare(String(b.starting_at??""))).forEach(f=>{const ps=Array.isArray(f.participants)?f.participants:[],home=ps.find(x=>x.meta?.location==="home"),away=ps.find(x=>x.meta?.location==="away");const a=document.createElement("a");a.href="/pagina.html?tipo=partida&id="+f.id;a.className="row";a.style.display="block";a.textContent=(home?.name??"Mandante")+" × "+(away?.name??"Visitante")+" · "+(f.state?.name??"Partida");results.append(a)})
+    }catch(e){if(n===seq&&results.isConnected)results.textContent="Jogos indisponíveis. Tente outra data."}}
+   load()
+  });
  }else if(tipo==="partida"){
   const f=await get("/api/futscore/fixture?id="+id);const ps=Array.isArray(f.participants)?f.participants:[],home=ps.find(x=>x.meta?.location==="home"),away=ps.find(x=>x.meta?.location==="away");
   title.textContent=(home?.name??"Mandante")+" × "+(away?.name??"Visitante");content.replaceChildren();
