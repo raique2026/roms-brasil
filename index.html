@@ -98,33 +98,69 @@ document.getElementById("date-today").addEventListener("click",()=>{selectedDate
 loadFixtures();
 
 const detailSection=document.getElementById("detalhes"),detailContent=document.getElementById("detail-content");
-document.getElementById("close-detail").addEventListener("click",()=>{detailSection.hidden=true;document.getElementById("jogos").scrollIntoView({behavior:"smooth"})});
+document.getElementById("close-detail").addEventListener("click",()=>{detailRequest++;detailSection.hidden=true;document.getElementById("jogos").scrollIntoView({behavior:"smooth"})});
+let detailRequest=0;
 async function openFixture(f){
+ const request=++detailRequest;
  if(!Number.isSafeInteger(f.id)||f.id<=0)return;
- detailSection.hidden=false;detailContent.replaceChildren();detailContent.textContent="Carregando detalhes...";
+ detailSection.hidden=false;detailContent.textContent="Carregando detalhes da partida...";
  detailSection.scrollIntoView({behavior:"smooth"});
  try{
-  const response=await fetch("/api/futscore/fixture?id="+f.id);
-  if(!response.ok)throw new Error("Detalhes indisponíveis");
-  const data=await response.json(),fixture=data?.data??data?.response??data;
+  const data=await fetchJsonWithTimeout("/api/futscore/fixture?id="+f.id);
+  if(request!==detailRequest||detailSection.hidden)return;
+  const fixture=data?.data??data?.response??data;
+  if(!fixture||typeof fixture!=="object")throw Error("Resposta inválida");
   detailContent.replaceChildren();
   const title=document.createElement("h3");title.textContent=f.homeName+"  "+(f.homeScore??"—")+" × "+(f.awayScore??"—")+"  "+f.awayName;detailContent.append(title);
-  const status=document.createElement("p");status.textContent="Situação: "+(fixture.state?.name??f.state);detailContent.append(status);
-  if(fixture.venue?.name){const venue=document.createElement("p");venue.textContent="Estádio: "+fixture.venue.name;detailContent.append(venue)}
-  const events=Array.isArray(fixture.events)?fixture.events:[];
-  const heading=document.createElement("h4");heading.textContent="Eventos da partida";detailContent.append(heading);
-  if(!events.length){const p=document.createElement("p");p.textContent="Nenhum evento disponível pela API.";detailContent.append(p)}
-  events.sort((a,b)=>(a.minute??0)-(b.minute??0)).forEach(event=>{
-   const line=document.createElement("p");line.style.cssText="border-top:1px solid #2b3647;padding:10px 0;margin:0";
-   const who=event.player_name??event.player?.display_name??event.player?.name??"";
-   const type=event.type?.name??event.type?.developer_name??event.info??"Evento";
-   line.textContent=(event.minute!=null?event.minute+"' · ":"")+type+(who?" · "+who:"");detailContent.append(line);
-  });
-  const lineups=Array.isArray(fixture.lineups)?fixture.lineups:[];
-  const lineupHeading=document.createElement("h4");lineupHeading.textContent="Escalações";detailContent.append(lineupHeading);
-  if(!lineups.length){const p=document.createElement("p");p.textContent="Escalações não disponíveis.";detailContent.append(p)}
-  else{const p=document.createElement("p");p.textContent=lineups.length+" jogadores registrados na API.";detailContent.append(p)}
- }catch(e){detailContent.textContent="Não foi possível carregar os detalhes desta partida."}
+  const status=document.createElement("p");status.style.color="#9caec3";status.textContent=fixture.state?.name??f.state??"Situação não informada";detailContent.append(status);
+  const tabs=document.createElement("div");tabs.className="tabs";tabs.style.marginBottom="16px";
+  const panel=document.createElement("div");panel.style.padding="8px 0";
+  const events=Array.isArray(fixture.events)?[...fixture.events].sort((a,b)=>(a.minute??0)-(b.minute??0)):[],
+        lineups=Array.isArray(fixture.lineups)?fixture.lineups:[],
+        stats=Array.isArray(fixture.statistics)?fixture.statistics:[];
+  const addText=(text,tag="p")=>{const el=document.createElement(tag);el.textContent=text;panel.append(el)};
+  const render=(tab)=>{
+   panel.replaceChildren();
+   [...tabs.children].forEach(button=>button.classList.toggle("active",button.dataset.detailTab===tab));
+   if(tab==="Resumo"){
+    if(fixture.venue?.name)addText("Estádio: "+fixture.venue.name);
+    addText("Situação: "+(fixture.state?.name??f.state??"Não informada"));
+    addText("Eventos registrados: "+events.length);
+    addText("Jogadores na escalação: "+lineups.length);
+   }else if(tab==="Tempo Real"){
+    if(!events.length){addText("Nenhum evento disponível pela SportMonks.");return}
+    for(const event of events){
+     const line=document.createElement("div");line.style.cssText="padding:12px 8px;border-bottom:1px solid #2b3647";
+     const minute=event.minute!=null?event.minute+(event.extra_minute?"+"+event.extra_minute:"")+"' · ":"";
+     const type=event.type?.name??event.type?.developer_name??event.info??"Evento";
+     const who=event.player?.display_name??event.player?.name??event.player_name??"";
+     const club=event.participant?.name??"";
+     line.textContent=minute+type+(who?" · "+who:"")+(club?" · "+club:"");panel.append(line);
+    }
+   }else if(tab==="Escalações"){
+    if(!lineups.length){addText("Escalações não disponíveis para esta partida.");return}
+    const teams=new Map();
+    for(const player of lineups){const key=String(player.team_id??player.participant_id??"outros");if(!teams.has(key))teams.set(key,[]);teams.get(key).push(player)}
+    for(const [key,players] of teams){
+     const team=fixture.participants?.find(p=>String(p.id)===key);
+     addText(team?.name??"Jogadores","h4");
+     players.sort((a,b)=>(a.jersey_number??99)-(b.jersey_number??99));
+     for(const player of players){const person=player.player??{};addText((player.jersey_number!=null?player.jersey_number+" · ":"")+(person.display_name??person.name??player.player_name??"Jogador")+(player.type?.name?" · "+player.type.name:""))}
+    }
+   }else{
+    if(!stats.length){addText("Estatísticas não disponíveis para esta partida.");return}
+    for(const stat of stats){
+     const type=stat.type?.name??stat.type?.developer_name??"Estatística";
+     const value=stat.data?.value??stat.value??stat.data?.total;
+     const team=fixture.participants?.find(p=>p.id===stat.participant_id);
+     if(value==null)continue;
+     addText(type+" · "+(team?.name??"Equipe")+": "+(typeof value==="object"?JSON.stringify(value):value));
+    }
+   }
+  };
+  ["Resumo","Tempo Real","Escalações","Estatísticas"].forEach(tab=>{const button=document.createElement("button");button.className="tab";button.dataset.detailTab=tab;button.textContent=tab;button.addEventListener("click",()=>render(tab));tabs.append(button)});
+  detailContent.append(tabs,panel);render("Resumo");
+ }catch(e){if(request===detailRequest&&!detailSection.hidden){detailContent.replaceChildren();const msg=document.createElement("p");msg.textContent="Não foi possível carregar os detalhes desta partida.";const retry=document.createElement("button");retry.className="tab";retry.textContent="Tentar novamente";retry.addEventListener("click",()=>openFixture(f));detailContent.append(msg,retry)}}
 }
 const tableContent=document.getElementById("table-content");
 const tableStatus=document.getElementById("table-status");
