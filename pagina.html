@@ -39,6 +39,9 @@ function matchClock(f){
 }
 function translateState(state){const key=String(state?.short_name??state?.developer_name??state?.name??"").toUpperCase().replace(/_/g," ");return statusPT[key]??state?.name??"Situação não informada"}
 function formatKickoff(raw){if(!raw)return"";const iso=String(raw).includes("T")?String(raw):String(raw).replace(" ","T")+"Z";const d=new Date(iso);return Number.isNaN(d.getTime())?"":new Intl.DateTimeFormat("pt-BR",{timeZone:"America/Sao_Paulo",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(d)}
+function eventPerson(e,related=false){const p=related?(e.relatedPlayer??e.related_player):e.player;return p?.display_name??p?.name??(!related?e.player_name:null)??null}
+function eventTeam(e,participants){return participants.find(x=>Number(x.id)===Number(e.participant_id))??null}
+function eventMinute(e){return e.minute!=null?String(e.minute)+(Number(e.extra_minute)>0?"+"+Math.floor(Number(e.extra_minute)):"")+"'":"—"}
 const statNames={"BALL POSSESSION":"Posse de bola","SHOTS TOTAL":"Finalizações","TOTAL SHOTS":"Finalizações","SHOTS ON TARGET":"Finalizações no gol","SHOTS OFF TARGET":"Finalizações para fora","CORNERS":"Escanteios","CORNER KICKS":"Escanteios","FOULS":"Faltas","OFFSIDES":"Impedimentos","YELLOWCARDS":"Cartões amarelos","YELLOW CARDS":"Cartões amarelos","REDCARDS":"Cartões vermelhos","RED CARDS":"Cartões vermelhos","SAVES":"Defesas","PASSES":"Passes","SUCCESSFUL PASSES":"Passes certos","GOALKEEPER SAVES":"Defesas do goleiro"};
 function statLabel(item){const raw=String(item.type?.name??item.type?.developer_name??"").trim();return statNames[raw.toUpperCase().replace(/_/g," ")]??(raw||"Estatística sem identificação")}
 function text(v,tag="p",parent=content){const el=document.createElement(tag);el.textContent=String(v);parent.append(el);return el}
@@ -148,9 +151,9 @@ async function run(){
     const seen=new Set();
     events.slice().sort((a,b)=>(Number(a.minute)||0)-(Number(b.minute)||0)||(Number(a.extra_minute)||0)-(Number(b.extra_minute)||0)).forEach(e=>{
      const [label,symbol,kind]=eventName(e);
-     const who=e.player?.display_name??e.player?.name??e.player_name??"";
-     const related=e.relatedPlayer?.display_name??e.relatedPlayer?.name??"";
-     const team=ps.find(x=>Number(x.id)===Number(e.participant_id));
+     const who=eventPerson(e)??"";
+     const related=eventPerson(e,true)??"";
+     const team=eventTeam(e,ps);
      const key=e.id!=null?"id:"+e.id:[e.minute,e.extra_minute,e.type_id,e.participant_id,e.player_id,e.related_player_id,label].join("|");
      if(seen.has(key))return;seen.add(key);
      const box=document.createElement("div");box.className="timeline-event "+(team&&Number(team.id)===Number(away?.id)?"away":"home");
@@ -159,7 +162,7 @@ async function run(){
      const minute=e.minute!=null?e.minute+(e.extra_minute?"+"+e.extra_minute:"")+"'":"—";
      text(minute,"span",box).className="timeline-minute";
      text(" "+symbol+" "+label,"div",box).className="timeline-type";
-     const details=[who,related&&label==="Substituição"?"Entra/sai: "+related:related,team?.name].filter(Boolean);
+     const details=[who,related&&label==="Substituição"?"Outro jogador: "+related:related,team?.name].filter(Boolean);
      if(details.length)text(details.join(" · "),"div",box).className="timeline-meta";
      timeline.append(box)
     });
@@ -209,9 +212,9 @@ async function run(){
      if(bench.length){text("Reservas","h4",section).className="lineup-list-title";const list=document.createElement("div");list.className="lineup-grid";section.append(list);bench.forEach(x=>{const item=document.createElement("div");item.className="lineup-item";text(x.jersey_number??"–","b",item);text(playerName(x),"span",item);list.append(item)})}
     }
     const substitutions=events.filter(x=>/substitut/i.test(String(x.type?.name??x.type?.developer_name??"")));
-    if(substitutions.length){text("Substituições","h3",p);const list=document.createElement("div");list.className="substitutions";p.append(list);substitutions.forEach(e=>{const row=document.createElement("div");row.className="substitution-item";const minute=e.minute!=null?e.minute+"' · ":"";text(minute+(ps.find(t=>Number(t.id)===Number(e.participant_id))?.name??"Equipe"),"strong",row);const players=[e.player?.display_name??e.player?.name,e.relatedPlayer?.display_name??e.relatedPlayer?.name].filter(Boolean);if(players.length)text(players.join(" ↔ "),"div",row);list.append(row)})}
+    if(substitutions.length){text("Substituições","h3",p);const list=document.createElement("div");list.className="substitutions";p.append(list);substitutions.slice().sort((a,b)=>(Number(a.minute)||0)-(Number(b.minute)||0)).forEach(e=>{const row=document.createElement("div");row.className="substitution-item";const team=eventTeam(e,ps);text(eventMinute(e)+" · "+(team?.name??"Equipe não identificada"),"strong",row);const first=eventPerson(e),second=eventPerson(e,true);if(first)text("Jogador: "+first,"div",row);if(second)text("Jogador relacionado: "+second,"div",row);list.append(row)})}
    }
-   if(tab==="Estatísticas"){if(!stats.length){text("Estatísticas não disponíveis.","p",p);return}const groups=new Map();stats.forEach(x=>{const k=statLabel(x);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(x)});for(const [name,items] of groups){const val=t=>{const x=items.find(y=>Number(y.participant_id)===Number(t?.id));const v=x?.data?.value??x?.value;return typeof v==="object"?v?.total??v?.value??null:v};const h=val(home),a=val(away);if(h==null&&a==null)continue;const wrap=document.createElement("div");wrap.className="stat-compare";const labels=document.createElement("div");labels.className="stat-values";text(h??"—","strong",labels);text(a??"—","strong",labels);wrap.append(labels);text(name,"div",wrap).className="stat-name";const hn=Number(String(h).replace("%","")),an=Number(String(a).replace("%",""));if(h!=null&&a!=null&&Number.isFinite(hn)&&Number.isFinite(an)&&hn>=0&&an>=0&&hn+an>0){const bar=document.createElement("div");bar.className="stat-bar";const left=document.createElement("span"),right=document.createElement("span");left.style.width=100*hn/(hn+an)+"%";right.style.width=100*an/(hn+an)+"%";bar.append(left,right);wrap.append(bar)}p.append(wrap)}}
+      if(tab==="Estatísticas"){if(!stats.length){text("Estatísticas não disponíveis.","p",p);return}const groups=new Map();stats.forEach(x=>{const k=statLabel(x);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(x)});for(const [name,items] of groups){const val=t=>{const x=items.find(y=>Number(y.participant_id)===Number(t?.id));const v=x?.data?.value??x?.value;return typeof v==="object"?v?.total??v?.value??null:v};const h=val(home),a=val(away);if(h==null&&a==null)continue;const wrap=document.createElement("div");wrap.className="stat-compare";const labels=document.createElement("div");labels.className="stat-values";text(h??"—","strong",labels);text(a??"—","strong",labels);wrap.append(labels);text(name,"div",wrap).className="stat-name";const hn=Number(String(h).replace("%","")),an=Number(String(a).replace("%",""));if(h!=null&&a!=null&&Number.isFinite(hn)&&Number.isFinite(an)&&hn>=0&&an>=0&&hn+an>0){const bar=document.createElement("div");bar.className="stat-bar";const left=document.createElement("span"),right=document.createElement("span");left.style.width=100*hn/(hn+an)+"%";right.style.width=100*an/(hn+an)+"%";bar.append(left,right);wrap.append(bar)}p.append(wrap)}}
   });
  }else{
   const team=await get("/api/futscore/team?id="+id);
