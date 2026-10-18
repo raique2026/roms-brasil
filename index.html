@@ -115,7 +115,7 @@ async function showTable(league){
    const tr=document.createElement("tr");
    const color=league==="a"?(p<=4?"#e6c343":p===5?"#f28c37":p<=11?"#2194ff":p>=17?"#e04e54":"transparent"):(p<=2?"#39b77d":p<=6?"#8d69ed":p>=17?"#e04e54":"transparent");
    tr.style.borderLeft="4px solid "+color;
-   const values=[p,item.participant.name,item.points??"—",item.played??"—",item.won??"—",item.draw??"—",item.lost??"—",item.goal_difference??"—"];
+   const values=[p,item.participant.name,item.points??"—",item.played??item.details?.find(d=>d.type_id===129)?.value??"—",item.won??item.details?.find(d=>d.type_id===130)?.value??"—",item.draw??item.details?.find(d=>d.type_id===131)?.value??"—",item.lost??item.details?.find(d=>d.type_id===132)?.value??"—",item.goal_difference??((item.details?.find(d=>d.type_id===133)?.value!=null&&item.details?.find(d=>d.type_id===134)?.value!=null)?item.details.find(d=>d.type_id===133).value-item.details.find(d=>d.type_id===134).value:"—")];
    values.forEach((value,i)=>{const td=document.createElement("td");td.textContent=value;td.style.cssText="padding:11px 7px;border-top:1px solid #2b3647"+(i===2?";font-weight:800":"");tr.append(td)});
    table.append(tr);
   }
