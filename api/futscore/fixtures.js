@@ -8,6 +8,7 @@ module.exports = async function handler(req, res) {
   try {
     const upstream = new URL("https://mgliqdahiryxdhssybzv.supabase.co/functions/v1/sportmonks-cache");
     upstream.searchParams.set("path", "fixtures/date/" + date);
+    upstream.searchParams.set("include", "participants;state;scores;league");
     const response = await fetch(upstream, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(10000) });
     if (!response.ok) return res.status(502).json({ error: "Consulta indisponível", upstream_status: response.status });
     const payload = await response.json();
