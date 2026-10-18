@@ -99,6 +99,9 @@ loadFixtures();
 
 const detailSection=document.getElementById("detalhes"),detailContent=document.getElementById("detail-content");
 document.getElementById("close-detail").addEventListener("click",()=>{detailRequest++;detailSection.hidden=true;document.getElementById("jogos").scrollIntoView({behavior:"smooth"})});
+const eventLabels={"goal":"Gol","penalty":"Pênalti","own goal":"Gol contra","yellowcard":"Cartão amarelo","yellow card":"Cartão amarelo","redcard":"Cartão vermelho","red card":"Cartão vermelho","substitution":"Substituição","var":"VAR","offside":"Impedimento","corner":"Escanteio","corner kick":"Escanteio","foul":"Falta","shot":"Finalização","shot on target":"Chute no gol","save":"Defesa","injury":"Atendimento médico","kickoff":"Início da partida","half time":"Intervalo","full time":"Fim de jogo","missed penalty":"Pênalti perdido"};
+const statisticLabels={"ball possession":"Posse de bola","shots total":"Finalizações","shots on target":"Chutes no gol","shots off target":"Chutes para fora","corners":"Escanteios","corner kicks":"Escanteios","fouls":"Faltas","offsides":"Impedimentos","yellowcards":"Cartões amarelos","redcards":"Cartões vermelhos","passes":"Passes","accurate passes":"Passes certos","saves":"Defesas"};
+function translateLabel(raw,dictionary){const label=String(raw??"").replace(/[_-]/g," ").trim();return dictionary[label.toLowerCase()]??label}
 let detailRequest=0;
 async function openFixture(f){
  const request=++detailRequest;
@@ -135,7 +138,7 @@ async function openFixture(f){
      const type=event.type?.name??event.type?.developer_name??event.info??"Evento";
      const who=event.player?.display_name??event.player?.name??event.player_name??"";
      const club=event.participant?.name??"";
-     line.textContent=minute+type+(who?" · "+who:"")+(club?" · "+club:"");panel.append(line);
+     line.textContent=minute+translateLabel(type,eventLabels)+(who?" · "+who:"")+(club?" · "+club:"");panel.append(line);
     }
    }else if(tab==="Escalações"){
     if(!lineups.length){addText("Escalações não disponíveis para esta partida.");return}
@@ -154,7 +157,7 @@ async function openFixture(f){
      const value=stat.data?.value??stat.value??stat.data?.total;
      const team=fixture.participants?.find(p=>p.id===stat.participant_id);
      if(value==null)continue;
-     addText(type+" · "+(team?.name??"Equipe")+": "+(typeof value==="object"?JSON.stringify(value):value));
+     addText(translateLabel(type,statisticLabels)+" · "+(team?.name??"Equipe")+": "+(typeof value==="object"?(value.total??value.value??"Dados disponíveis"):value));
     }
    }
   };
