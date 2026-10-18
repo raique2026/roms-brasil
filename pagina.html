@@ -15,11 +15,28 @@ const params=new URLSearchParams(location.search),tipo=params.get("tipo"),id=Num
 document.getElementById("breadcrumb").textContent="FutScore / "+({partida:"Partida",time:"Clube",competicao:"Competição"}[tipo]??"Detalhes");
 const names={648:"Brasileirão Série A",651:"Brasileirão Série B",654:"Copa do Brasil",1122:"Libertadores",1116:"Sul-Americana"};
 const pt={"goal":"Gol","yellowcard":"Cartão amarelo","yellow card":"Cartão amarelo","redcard":"Cartão vermelho","red card":"Cartão vermelho","substitution":"Substituição","offside":"Impedimento","corner":"Escanteio","var":"VAR","penalty":"Pênalti","own goal":"Gol contra"};
-const statusPT={"FT":"Encerrado","FULL TIME":"Encerrado","FINISHED":"Encerrado","NS":"Não iniciado","NOT STARTED":"Não iniciado","HT":"Intervalo","HALF TIME":"Intervalo","LIVE":"Ao vivo","INPLAY":"Ao vivo","1ST HALF":"1º tempo","2ND HALF":"2º tempo","POSTPONED":"Adiado","CANCELLED":"Cancelado","AET":"Após prorrogação","PEN":"Pênaltis"};
-const liveStates=new Set(["LIVE","INPLAY","1ST_HALF","2ND_HALF","1H","2H","HT","HALF_TIME","ET","EXTRA_TIME","PEN_LIVE","PENALTIES","BREAK"]);
-function stateCode(state){return String(state?.developer_name??state?.short_name??state?.name??"").toUpperCase().replace(/[ -]/g,"_")}
+const statusPT={"FT":"Encerrado","FULL TIME":"Encerrado","FINISHED":"Encerrado","NS":"Não iniciado","NOT STARTED":"Não iniciado","HT":"Intervalo","HALF TIME":"Intervalo","LIVE":"Ao vivo","INPLAY":"Ao vivo","1ST HALF":"1º tempo","2ND HALF":"2º tempo","POSTPONED":"Adiado","CANCELLED":"Cancelado","AET":"Após prorrogação","PEN":"Pênaltis","INPLAY_1ST_HALF":"1º tempo","INPLAY_2ND_HALF":"2º tempo","INPLAY_ET":"Prorrogação","INPLAY_PENALTIES":"Pênaltis","1H":"1º tempo","2H":"2º tempo","BREAK":"Intervalo"};
+const liveStates=new Set(["LIVE","INPLAY","INPLAY_1ST_HALF","INPLAY_2ND_HALF","1ST_HALF","2ND_HALF","1H","2H","HT","HALF_TIME","ET","EXTRA_TIME","PEN_LIVE","PENALTIES","BREAK","INPLAY_ET","INPLAY_PENALTIES"]);
+function stateCode(state){const raw=state?.developer_name??state?.short_name??state?.name??"";return String(raw).trim().toUpperCase().replace(/[ -]+/g,"_")}
 function isLiveFixture(f){return liveStates.has(stateCode(f.state))}
-function matchClock(f){const code=stateCode(f.state);if(code==="HT"||code==="HALF_TIME"||code==="BREAK")return "Intervalo";if(code==="PEN_LIVE"||code==="PENALTIES")return "Pênaltis";if(!isLiveFixture(f))return"";const periods=Array.isArray(f.periods)?f.periods:[];const current=periods.find(x=>x.is_current===true)||periods.filter(x=>x.started||x.started_at).at(-1);const elapsed=Number(current?.minutes??current?.minute??f.minute);if(Number.isFinite(elapsed)&&elapsed>=0&&elapsed<=150)return Math.floor(elapsed)+"′";return translateState(f.state)}
+function matchClock(f){
+ const code=stateCode(f.state);
+ if(["HT","HALF_TIME","BREAK"].includes(code))return "Intervalo";
+ if(["PEN_LIVE","PENALTIES","INPLAY_PENALTIES"].includes(code))return "Pênaltis";
+ if(!isLiveFixture(f))return "";
+ const periods=Array.isArray(f.periods)?f.periods:[];
+ const current=periods.find(x=>x.is_current===true||x.is_current===1)||null;
+ // Nunca utilizar um período anterior: poderia exibir 45′ durante o segundo tempo.
+ const value=current?.minutes??current?.minute??f.minute;
+ const n=value==null||value===""?NaN:Number(value);
+ const phase=code.includes("2ND")||code==="2H"?"2º tempo":code.includes("1ST")||code==="1H"?"1º tempo":code.includes("ET")?"Prorrogação":"";
+ if(Number.isFinite(n)&&n>=0&&n<=150){
+  const added=current?.added_time??current?.extra_minute;
+  const extra=added!=null&&Number.isFinite(Number(added))&&Number(added)>0?"+"+Math.floor(Number(added)):"";
+  return (phase?phase+" · ":"")+Math.floor(n)+extra+"′";
+ }
+ return phase||translateState(f.state);
+}
 function translateState(state){const key=String(state?.short_name??state?.developer_name??state?.name??"").toUpperCase().replace(/_/g," ");return statusPT[key]??state?.name??"Situação não informada"}
 function formatKickoff(raw){if(!raw)return"";const iso=String(raw).includes("T")?String(raw):String(raw).replace(" ","T")+"Z";const d=new Date(iso);return Number.isNaN(d.getTime())?"":new Intl.DateTimeFormat("pt-BR",{timeZone:"America/Sao_Paulo",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(d)}
 const statNames={"BALL POSSESSION":"Posse de bola","SHOTS TOTAL":"Finalizações","TOTAL SHOTS":"Finalizações","SHOTS ON TARGET":"Finalizações no gol","SHOTS OFF TARGET":"Finalizações para fora","CORNERS":"Escanteios","CORNER KICKS":"Escanteios","FOULS":"Faltas","OFFSIDES":"Impedimentos","YELLOWCARDS":"Cartões amarelos","YELLOW CARDS":"Cartões amarelos","REDCARDS":"Cartões vermelhos","RED CARDS":"Cartões vermelhos","SAVES":"Defesas","PASSES":"Passes","SUCCESSFUL PASSES":"Passes certos","GOALKEEPER SAVES":"Defesas do goleiro"};
