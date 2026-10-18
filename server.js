@@ -66,6 +66,32 @@ async function startServer() {
     vercelHandler(patreonSync)
   );
 
+
+  // FutScore: proxy de leitura no servidor; nunca expor tokens ao navegador.
+  app.get("/api/futscore/fixtures", async (req, res) => {
+    const upstream = process.env.FUTSCORE_FIXTURES_URL;
+    if (!upstream) return res.status(503).json({ error: "Integração FutScore ainda não configurada." });
+    try {
+      const date = String(req.query.date || "");
+      if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(date) || Number.isNaN(Date.parse(date + "T12:00:00Z"))) {
+        return res.status(400).json({ error: "Data inválida. Use AAAA-MM-DD." });
+      }
+      const url = new URL(upstream);
+      if (url.protocol !== "https:") return res.status(500).json({ error: "URL de origem deve usar HTTPS." });
+      url.searchParams.set("date", date);
+      const headers = { accept: "application/json" };
+      if (process.env.FUTSCORE_API_TOKEN) headers.authorization = "Bearer " + process.env.FUTSCORE_API_TOKEN;
+      const response = await fetch(url, { headers, signal: AbortSignal.timeout(10000) });
+      if (!response.ok) return res.status(502).json({ error: "Falha ao consultar dados esportivos.", upstream_status: response.status });
+      const payload = await response.json();
+      res.set("Cache-Control", "public, max-age=15, s-maxage=30");
+      res.json(payload);
+    } catch (error) {
+      console.error("FutScore fixtures proxy:", error.message);
+      res.status(502).json({ error: "Dados esportivos temporariamente indisponíveis." });
+    }
+  });
+
   app.use(
     express.static(__dirname, {
       index: "index.html",
