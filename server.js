@@ -73,7 +73,7 @@ async function startServer() {
     if (!upstream) return res.status(503).json({ error: "Integração FutScore ainda não configurada." });
     try {
       const date = String(req.query.date || "");
-      if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(date) || Number.isNaN(Date.parse(date + "T12:00:00Z"))) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date + "T12:00:00Z"))) {
         return res.status(400).json({ error: "Data inválida. Use AAAA-MM-DD." });
       }
       const url = new URL(upstream);
