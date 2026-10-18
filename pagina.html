@@ -7,7 +7,10 @@
 .stat-compare{padding:13px 8px;border-bottom:1px solid var(--line)}.stat-values{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}.stat-name{text-align:center;font-size:13px;color:#c8d8ea;margin:5px 0}.stat-bar{display:flex;gap:3px;height:9px;border-radius:12px;overflow:hidden;background:#28364a}.stat-bar span:first-child{background:#2194ff}.stat-bar span:last-child{background:#e7a95b}.pitch{position:relative;border:2px solid #3a8c6c;border-radius:12px;background:repeating-linear-gradient(#185b44 0 62px,#1d684d 62px 124px);padding:16px 8px;margin:15px 0;min-height:340px;display:flex;flex-direction:column;justify-content:space-around}.pitch:before{content:"";position:absolute;inset:10px;border:1px solid #ffffff65;pointer-events:none}.pitch-line{display:flex;justify-content:space-around;gap:6px;position:relative;z-index:1}.pitch-player{display:flex;flex-direction:column;align-items:center;text-align:center;font-size:11px;max-width:90px;text-shadow:0 1px 3px #000}.pitch-player b{background:#122c45;border:1px solid #a6d5fa;border-radius:9px;padding:6px 9px;font-size:14px}.pitch-player span{margin-top:5px}
 /* Partida FutScore: densidade e hierarquia visual do aplicativo */
 main{max-width:1020px}.card{padding:18px 20px}.scoreboard{padding:17px 18px;background:#182332;border-color:#2b3a4d;margin-bottom:12px}.scoreboard-main{gap:10px;margin-top:12px}.score-team .club{display:flex;flex-direction:column;gap:9px;align-items:center;text-align:center}.score-team .club img{width:66px;height:66px}.score-number{font-size:clamp(32px,5vw,50px)}.score-status{margin-top:8px}.tabs{margin:12px 0 16px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}.tabs button{white-space:nowrap;border-radius:8px;padding:10px 16px}.match-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:12px 0}.match-info>div{background:#1c2939;border:1px solid #293b50;border-radius:10px;padding:12px}.match-info small{display:block;color:#9db0c7;font-size:11px;margin-bottom:5px}.match-info strong{font-size:13px}.stat-compare{max-width:700px;margin:auto}.stat-name{font-weight:650}.pitch{max-width:650px;margin:12px auto}.scoreboard-top{font-size:11px}@media(max-width:600px){.scoreboard{padding:15px 10px}.score-team .club img{width:48px;height:48px}.score-number{font-size:30px}.score-team .club{font-size:12px}.card{padding:12px}.tabs button{padding:9px 12px}}
-.lineup-team{padding:12px 0 22px;border-bottom:1px solid var(--line)}.lineup-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}.lineup-heading img{width:38px;height:38px;object-fit:contain}.lineup-heading h3{margin:0}.lineup-subtitle{color:#a9c7e5;font-size:13px;margin:17px 0 9px}.lineup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.lineup-item{display:flex;align-items:center;gap:10px;padding:9px 11px;background:#1c2939;border:1px solid #293b50;border-radius:9px;font-size:13px}.lineup-item b{background:#293e55;border-radius:7px;min-width:29px;text-align:center;padding:5px;color:#a9d7ff}.lineup-item span{overflow-wrap:anywhere}@media(max-width:550px){.lineup-grid{grid-template-columns:1fr}}</style></head><body><header><div class="nav"><a class="brand" href="/">Fut<b>Score</b></a><a class="back" href="/">← Voltar aos jogos</a></div></header><main><p class="page-note" id="breadcrumb">FutScore / Detalhes</p><h1 id="title">Carregando...</h1><div id="content" class="card">Consultando informações da SportMonks...</div></main><script>
+.lineup-team{padding:12px 0 22px;border-bottom:1px solid var(--line)}.lineup-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}.lineup-heading img{width:38px;height:38px;object-fit:contain}.lineup-heading h3{margin:0}.lineup-subtitle{color:#a9c7e5;font-size:13px;margin:17px 0 9px}.lineup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.lineup-item{display:flex;align-items:center;gap:10px;padding:9px 11px;background:#1c2939;border:1px solid #293b50;border-radius:9px;font-size:13px}.lineup-item b{background:#293e55;border-radius:7px;min-width:29px;text-align:center;padding:5px;color:#a9d7ff}.lineup-item span{overflow-wrap:anywhere}@media(max-width:550px){.lineup-grid{grid-template-columns:1fr}}
+/* Campo oficial FutScore inspirado no aplicativo Android */
+.official-title{font-size:17px;font-weight:800;margin:4px 0}.formation-label{color:#a7bfd5;font-size:12px;margin-bottom:12px}.lineup-team{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:24px}.pitch{max-width:540px;min-height:590px;padding:16px 10px;background:#277b43;border:0;border-radius:0;position:relative;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}.pitch:before{inset:10px;border:1.5px solid #ffffff88;border-radius:0}.pitch:after{content:"";position:absolute;top:50%;left:50%;width:34%;aspect-ratio:1;border:1.5px solid #ffffff88;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.pitch-markings{position:absolute;inset:0;pointer-events:none}.pitch-markings:before,.pitch-markings:after{content:"";position:absolute;left:25%;width:50%;height:15%;border:1.5px solid #ffffff88}.pitch-markings:before{top:10px}.pitch-markings:after{bottom:10px}.pitch-line{width:100%;min-height:90px;display:flex;justify-content:space-around;align-items:center;gap:4px}.pitch-player{width:20%;max-width:98px;color:white;font-size:12px;font-weight:650;line-height:1.2}.pitch-player b{position:absolute;top:-5px;left:calc(50% - 27px);background:#fff;color:#182b31;padding:2px 5px;border:1px solid #d8e5df;border-radius:50%;font-size:11px;min-width:23px}.pitch-player{position:relative}.pitch-player .avatar{display:flex;justify-content:center;align-items:center;width:58px;height:58px;overflow:hidden;border-radius:50%;border:2px solid white;background:#344b56;margin:0 auto 5px;font-size:21px}.pitch-player .avatar img{width:100%;height:100%;object-fit:cover}.pitch-player .player-name{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.formation-chip{position:absolute;bottom:15px;left:15px;background:#103d28e8;color:white;border-radius:20px;padding:7px 12px;font-size:14px;font-weight:800;z-index:2}.lineup-list-title{margin:18px 0 8px;color:#d6e8f7;font-size:14px}.lineup-grid{max-width:800px}.substitutions{margin:20px 0}.substitution-item{background:#202e3c;border-radius:11px;padding:10px 13px;margin:7px 0;font-size:13px}.substitution-item strong{color:#91d7a2}.substitution-item em{color:#f19a9a;font-style:normal}@media(max-width:600px){.pitch{min-height:480px;padding:13px 5px}.pitch-line{min-height:75px}.pitch-player .avatar{width:44px;height:44px}.pitch-player{font-size:10px}.pitch-player b{left:calc(50% - 24px)}}
+</style></head><body><header><div class="nav"><a class="brand" href="/">Fut<b>Score</b></a><a class="back" href="/">← Voltar aos jogos</a></div></header><main><p class="page-note" id="breadcrumb">FutScore / Detalhes</p><h1 id="title">Carregando...</h1><div id="content" class="card">Consultando informações da SportMonks...</div></main><script>
 const params=new URLSearchParams(location.search),tipo=params.get("tipo"),id=Number(params.get("id")),title=document.getElementById("title"),content=document.getElementById("content");
 document.getElementById("breadcrumb").textContent="FutScore / "+({partida:"Partida",time:"Clube",competicao:"Competição"}[tipo]??"Detalhes");
 const names={648:"Brasileirão Série A",651:"Brasileirão Série B",654:"Copa do Brasil",1122:"Libertadores",1116:"Sul-Americana"};
@@ -113,38 +116,50 @@ async function run(){
     })
    }
    if(tab==="Escalações"){
-    if(!lineups.length){text("Escalações ainda não disponíveis para esta partida.","p",p);return}
-    const getName=x=>x.player?.display_name??x.player?.name??x.player_name??"Nome indisponível";
-    const getType=x=>String(x.type?.developer_name??x.type?.name??x.lineup_type??"").toLowerCase();
-    const getPosition=x=>{const raw=String(x.formation_position??x.position?.formation_position??"").trim();const m=/^(\d{1,2})[:.,-](\d{1,2})$/.exec(raw);return m?{row:Number(m[1]),column:Number(m[2])}:null};
+    if(!lineups.length){text("Escalações não disponíveis.","p",p);return}
+    const playerName=x=>x.player?.display_name??x.player?.name??x.player_name??"Nome indisponível";
+    const lineupType=x=>String(x.type?.developer_name??x.type?.name??x.lineup_type??"").toLowerCase();
+    const position=x=>{const raw=String(x.formation_position??x.position?.formation_position??"").trim();const pair=/^(\d{1,2})[:.,-](\d{1,2})$/.exec(raw);return pair?{row:+pair[1],col:+pair[2]}:null};
+    text("Escalação oficial","h2",p).className="official-title";
     for(const team of [home,away]){
      if(!team)continue;
      const rows=lineups.filter(x=>Number(x.team_id??x.participant_id)===Number(team.id));
      const section=document.createElement("section");section.className="lineup-team";p.append(section);
-     const heading=document.createElement("div");heading.className="lineup-heading";section.append(heading);if(team.image_path){const img=document.createElement("img");img.src=team.image_path;img.alt="";heading.append(img)}text(team.name,"h3",heading);
+     const heading=document.createElement("div");heading.className="lineup-heading";section.append(heading);
+     if(team.image_path){const img=document.createElement("img");img.src=team.image_path;img.alt="";heading.append(img)}
+     text(team.name,"h3",heading);
      if(!rows.length){text("Escalação não informada.","p",section);continue}
-     const starters=rows.filter(x=>/starting|starter|lineup/.test(getType(x))||x.type_id===11);
-     const subs=rows.filter(x=>/bench|substitute/.test(getType(x))||x.type_id===12);
-     const selected=starters.length?starters:rows.filter(x=>getPosition(x));
-     const first=selected.length?selected:rows;
-     const located=first.map(x=>({player:x,pos:getPosition(x)})).filter(x=>x.pos&&x.pos.row>0&&x.pos.column>0);
-     const unique=new Set(located.map(x=>x.pos.row+":"+x.pos.column));
-     if(located.length>=7&&located.length<=11&&unique.size===located.length){
+     const starters=rows.filter(x=>/start|lineup/.test(lineupType(x))||x.type_id===11);
+     const reserves=rows.filter(x=>/bench|substitute/.test(lineupType(x))||x.type_id===12);
+     const first=starters.length?starters:rows.filter(x=>position(x));
+     const formation=String(team.meta?.formation??team.formation??f.formations?.[team.id]??"").trim();
+     const parts=/^\d(?:-\d){2,5}$/.test(formation)?formation.split("-").map(Number):[];
+     const mapped=first.map(x=>({x,pos:position(x)})).filter(o=>o.pos&&o.pos.row>0&&o.pos.col>0);
+     let groups=null;
+     if(mapped.length===11&&new Set(mapped.map(o=>o.pos.row+":"+o.pos.col)).size===11){
+      groups=[...new Set(mapped.map(o=>o.pos.row))].sort((a,b)=>a-b).map(row=>mapped.filter(o=>o.pos.row===row).sort((a,b)=>a.pos.col-b.pos.col).map(o=>o.x));
+     }else if(parts.length>=3&&parts.reduce((a,b)=>a+b,0)===10&&first.length===11&&first.every(x=>Number.isInteger(Number(x.formation_position))&&Number(x.formation_position)>0)&&new Set(first.map(x=>Number(x.formation_position))).size===11){
+      const sorted=first.slice().sort((a,b)=>Number(a.formation_position)-Number(b.formation_position));groups=[];let cursor=0;for(const n of [1,...parts]){groups.push(sorted.slice(cursor,cursor+n));cursor+=n}
+     }
+     if(groups){
+      if(formation)text("Formação: "+formation,"div",section).className="formation-label";
       const pitch=document.createElement("div");pitch.className="pitch";section.append(pitch);
-      const groups=new Map();located.forEach(x=>{if(!groups.has(x.pos.row))groups.set(x.pos.row,[]);groups.get(x.pos.row).push(x)});
-      for(const row of [...groups.keys()].sort((a,b)=>a-b)){
-       const line=document.createElement("div");line.className="pitch-line";pitch.append(line);
-       groups.get(row).sort((a,b)=>a.pos.column-b.pos.column).forEach(({player:x})=>{
-        const el=document.createElement("div");el.className="pitch-player";line.append(el);
-        text(x.jersey_number??"•","b",el);text(getName(x),"span",el)
-       })
-      }
-     }else{const hint=text("Titulares","h4",section);hint.className="lineup-subtitle"}
-     const list=document.createElement("div");list.className="lineup-grid";section.append(list);
-     first.forEach(x=>{const item=document.createElement("div");item.className="lineup-item";text(x.jersey_number??"–","b",item);text(getName(x),"span",item);list.append(item)});
-     const bench=subs.length?subs:starters.length?rows.filter(x=>!starters.includes(x)):[];
-     if(bench.length){text("Reservas","h4",section).className="lineup-subtitle";const list2=document.createElement("div");list2.className="lineup-grid";section.append(list2);bench.forEach(x=>{const item=document.createElement("div");item.className="lineup-item";text(x.jersey_number??"–","b",item);text(getName(x),"span",item);list2.append(item)})}
+      const markings=document.createElement("div");markings.className="pitch-markings";pitch.append(markings);
+      groups.slice().reverse().forEach(group=>{const line=document.createElement("div");line.className="pitch-line";pitch.append(line);group.forEach(x=>{
+       const el=document.createElement("div");el.className="pitch-player";line.append(el);
+       const avatar=document.createElement("div");avatar.className="avatar";el.append(avatar);
+       const url=x.player?.image_path;if(typeof url==="string"&&url.startsWith("https://")){const img=document.createElement("img");img.src=url;img.alt=playerName(x);img.loading="lazy";img.onerror=()=>{img.remove();avatar.textContent="⚽"};avatar.append(img)}else avatar.textContent="⚽";
+       text(x.jersey_number??"–","b",el);text(playerName(x).split(" ").slice(-1)[0],"span",el).className="player-name";
+      })});
+      if(formation)text(formation,"div",pitch).className="formation-chip";
+     }else{text("Titulares","h4",section).className="lineup-list-title"}
+     const grid=document.createElement("div");grid.className="lineup-grid";section.append(grid);
+     (first.length?first:rows).forEach(x=>{const item=document.createElement("div");item.className="lineup-item";text(x.jersey_number??"–","b",item);text(playerName(x),"span",item);grid.append(item)});
+     const bench=reserves.length?reserves:starters.length?rows.filter(x=>!starters.includes(x)):[];
+     if(bench.length){text("Reservas","h4",section).className="lineup-list-title";const list=document.createElement("div");list.className="lineup-grid";section.append(list);bench.forEach(x=>{const item=document.createElement("div");item.className="lineup-item";text(x.jersey_number??"–","b",item);text(playerName(x),"span",item);list.append(item)})}
     }
+    const substitutions=events.filter(x=>/substitut/i.test(String(x.type?.name??x.type?.developer_name??"")));
+    if(substitutions.length){text("Substituições","h3",p);const list=document.createElement("div");list.className="substitutions";p.append(list);substitutions.forEach(e=>{const row=document.createElement("div");row.className="substitution-item";const minute=e.minute!=null?e.minute+"' · ":"";text(minute+(ps.find(t=>Number(t.id)===Number(e.participant_id))?.name??"Equipe"),"strong",row);const players=[e.player?.display_name??e.player?.name,e.relatedPlayer?.display_name??e.relatedPlayer?.name].filter(Boolean);if(players.length)text(players.join(" ↔ "),"div",row);list.append(row)})}
    }
    if(tab==="Estatísticas"){if(!stats.length){text("Estatísticas não disponíveis.","p",p);return}const groups=new Map();stats.forEach(x=>{const k=statLabel(x);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(x)});for(const [name,items] of groups){const val=t=>{const x=items.find(y=>Number(y.participant_id)===Number(t?.id));const v=x?.data?.value??x?.value;return typeof v==="object"?v?.total??v?.value??null:v};const h=val(home),a=val(away);if(h==null&&a==null)continue;const wrap=document.createElement("div");wrap.className="stat-compare";const labels=document.createElement("div");labels.className="stat-values";text(h??"—","strong",labels);text(a??"—","strong",labels);wrap.append(labels);text(name,"div",wrap).className="stat-name";const hn=Number(String(h).replace("%","")),an=Number(String(a).replace("%",""));if(h!=null&&a!=null&&Number.isFinite(hn)&&Number.isFinite(an)&&hn>=0&&an>=0&&hn+an>0){const bar=document.createElement("div");bar.className="stat-bar";const left=document.createElement("span"),right=document.createElement("span");left.style.width=100*hn/(hn+an)+"%";right.style.width=100*an/(hn+an)+"%";bar.append(left,right);wrap.append(bar)}p.append(wrap)}}
   });
