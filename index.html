@@ -13,6 +13,7 @@
 <section id="classificacao"><div class="section-head"><h2>Classificação</h2><span class="status" id="table-status">Série A</span></div><div class="tabs"><button class="tab active" data-league-table="a">Série A</button><button class="tab" data-league-table="b">Série B</button></div><div class="card" id="table-content">Carregando tabela...</div></section><section id="sobre"><div class="section-head"><h2>Sobre o FutScore</h2></div><div class="card"><p>Projeto independente de futebol, desenvolvido no Brasil. A versão web está em construção e compartilhará os dados e as personalizações do aplicativo Android.</p><p>Novidades: <a href="https://x.com/_FutScore_" target="_blank" rel="noopener noreferrer" style="color:#8cc7ff">@_FutScore_ no X ↗</a></p></div></section>
 </main></div><footer class="footer"><div class="wrap">© <span id="year"></span> FutScore · Projeto independente · <a href="https://x.com/_FutScore_" target="_blank" rel="noopener noreferrer">X oficial</a></div></footer>
 <script>
+const leagueIds=[648,651,654,1122,1116];
 const competitions=["Brasileirão Série A","Brasileirão Série B","Copa do Brasil","Libertadores","Sul-Americana"];
 const comps=document.getElementById("comps"),side=document.getElementById("side");
 competitions.forEach((name,i)=>{const item=document.createElement("div");item.className="comp";const region=document.createElement("span");region.textContent=i<3?"Brasil":"América do Sul";const title=document.createElement("strong");title.textContent=name;item.append(region,title);item.dataset.filterLeague=String(leagueIds[i]);item.setAttribute("role","button");item.tabIndex=0;item.setAttribute("aria-pressed","false");item.addEventListener("click",()=>chooseLeague(leagueIds[i]));item.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();chooseLeague(leagueIds[i])}});comps.append(item);const b=document.createElement("button");b.className="league";b.dataset.filterLeague=String(leagueIds[i]);b.setAttribute("aria-pressed","false");const dot=document.createElement("span");dot.className="dot";b.append(dot,document.createTextNode(name));b.addEventListener("click",()=>chooseLeague(leagueIds[i]));side.append(b)});
@@ -46,7 +47,6 @@ function normalizeFixtures(payload){
  }).filter(f=>allowedLeagues.has(f.leagueId)&&f.homeName&&f.awayName);
 }
 let currentTab="hoje", fixtureRows=[], selectedLeague=null;
-const leagueIds=[648,651,654,1122,1116];
 function chooseLeague(id){selectedLeague=selectedLeague===id?null:id;document.querySelectorAll("[data-filter-league]").forEach(el=>{const active=selectedLeague===Number(el.dataset.filterLeague);el.classList.toggle("active",active);el.setAttribute("aria-pressed",String(active))});document.getElementById("jogos").scrollIntoView({behavior:"smooth"});renderMatches()}
 function renderMatches(){
  const liveStates=["LIVE","INPLAY","1ST_HALF","2ND_HALF","HT","ET","PEN_LIVE","1H","2H"];
