@@ -10,7 +10,7 @@
 <section class="hero"><div class="eyebrow">Seu futebol em um só lugar</div><h1>O futebol acontece aqui.</h1><p>Resultados, tabelas, escalações e estatísticas das principais competições sul-americanas.</p></section>
 <section id="jogos"><div class="section-head"><h2>Partidas</h2><span class="status" id="status">Integração de dados em preparação</span></div><div class="tabs" id="tabs"><button class="tab active" data-tab="hoje">Hoje</button><button class="tab" data-tab="ao-vivo">Ao vivo</button><button class="tab" data-tab="proximos">Próximos</button><button class="tab" data-tab="encerrados">Encerrados</button></div><div class="card" id="matches" aria-live="polite"><div class="empty"><strong>Em preparação</strong>Os jogos aparecerão aqui quando a integração com o backend FutScore estiver configurada. Nenhum resultado fictício será exibido.</div></div></section>
 <section id="competicoes"><div class="section-head"><h2>Competições</h2></div><div class="comp-grid" id="comps"></div></section>
-<section id="sobre"><div class="section-head"><h2>Sobre o FutScore</h2></div><div class="card"><p>Projeto independente de futebol, desenvolvido no Brasil. A versão web está em construção e compartilhará os dados e as personalizações do aplicativo Android.</p><p>Novidades: <a href="https://x.com/_FutScore_" target="_blank" rel="noopener noreferrer" style="color:#8cc7ff">@_FutScore_ no X ↗</a></p></div></section>
+<section id="classificacao"><div class="section-head"><h2>Classificação</h2><span class="status" id="table-status">Série A</span></div><div class="tabs"><button class="tab active" data-league-table="a">Série A</button><button class="tab" data-league-table="b">Série B</button></div><div class="card" id="table-content">Carregando tabela...</div></section><section id="sobre"><div class="section-head"><h2>Sobre o FutScore</h2></div><div class="card"><p>Projeto independente de futebol, desenvolvido no Brasil. A versão web está em construção e compartilhará os dados e as personalizações do aplicativo Android.</p><p>Novidades: <a href="https://x.com/_FutScore_" target="_blank" rel="noopener noreferrer" style="color:#8cc7ff">@_FutScore_ no X ↗</a></p></div></section>
 </main></div><footer class="footer"><div class="wrap">© <span id="year"></span> FutScore · Projeto independente · <a href="https://x.com/_FutScore_" target="_blank" rel="noopener noreferrer">X oficial</a></div></footer>
 <script>
 const competitions=["Brasileirão Série A","Brasileirão Série B","Copa do Brasil","Libertadores","Sul-Americana"];
@@ -85,4 +85,43 @@ document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()
  }catch(e){statusEl.textContent="Integração aguardando configuração"; }
 })();
 
+
+const tableContent=document.getElementById("table-content");
+const tableStatus=document.getElementById("table-status");
+let selectedTable="a";
+function tableRows(data){
+ const root=data?.data??data?.response??data;
+ const sections=Array.isArray(root)?root:(Array.isArray(root?.data)?root.data:[]);
+ return sections.flatMap(x=>Array.isArray(x?.standings)?x.standings:[x]).filter(x=>x&&x.position!=null&&x.participant?.name).sort((a,b)=>a.position-b.position);
+}
+async function showTable(league){
+ selectedTable=league;
+ tableStatus.textContent="Carregando...";
+ tableContent.textContent="Consultando classificação...";
+ try{
+  const response=await fetch("/api/futscore/standings?season="+(league==="a"?26763:26764));
+  if(!response.ok)throw new Error("Tabela indisponível");
+  const rows=tableRows(await response.json());
+  if(selectedTable!==league)return;
+  tableContent.replaceChildren();
+  if(!rows.length){tableContent.textContent="Nenhuma classificação disponível.";tableStatus.textContent="Sem dados";return}
+  const scroll=document.createElement("div");scroll.style.overflowX="auto";
+  const table=document.createElement("table");table.style.cssText="width:100%;border-collapse:collapse;min-width:440px;font-size:13px";
+  const header=document.createElement("tr");
+  ["#","Clube","P","J","V","E","D","SG"].forEach(label=>{const th=document.createElement("th");th.textContent=label;th.style.cssText="padding:10px 7px;text-align:left;color:#9caec3";header.append(th)});
+  table.append(header);
+  for(const item of rows){
+   const p=Number(item.position);
+   const tr=document.createElement("tr");
+   const color=league==="a"?(p<=4?"#e6c343":p===5?"#f28c37":p<=11?"#2194ff":p>=17?"#e04e54":"transparent"):(p<=2?"#39b77d":p<=6?"#8d69ed":p>=17?"#e04e54":"transparent");
+   tr.style.borderLeft="4px solid "+color;
+   const values=[p,item.participant.name,item.points??"—",item.played??"—",item.won??"—",item.draw??"—",item.lost??"—",item.goal_difference??"—"];
+   values.forEach((value,i)=>{const td=document.createElement("td");td.textContent=value;td.style.cssText="padding:11px 7px;border-top:1px solid #2b3647"+(i===2?";font-weight:800":"");tr.append(td)});
+   table.append(tr);
+  }
+  scroll.append(table);tableContent.append(scroll);tableStatus.textContent=rows.length+" clubes";
+ }catch(e){if(selectedTable===league){tableStatus.textContent="Indisponível";tableContent.textContent="Não foi possível carregar a classificação agora."}}
+}
+document.querySelectorAll("[data-league-table]").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll("[data-league-table]").forEach(x=>x.classList.toggle("active",x===button));showTable(button.dataset.leagueTable)}));
+showTable("a");
 </script></body></html>
