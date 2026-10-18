@@ -22,7 +22,7 @@ document.getElementById("year").textContent=new Date().getFullYear();
 const pad=n=>String(n).padStart(2,"0");
 const today=new Date(), localDate=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(today);
 const statusEl=document.getElementById("status"), matchesEl=document.getElementById("matches");
-const allowedLeagues=new Set([648,651,1122,271,1123]);
+const allowedLeagues=new Set([648,651,654,1122,1116]);
 function normalizeFixtures(payload){
  const root=payload?.data ?? payload?.fixtures ?? payload?.response ?? payload;
  const rows=Array.isArray(root)?root:(Array.isArray(root?.data)?root.data:[]);
@@ -49,7 +49,7 @@ function renderMatches(){
  const list=fixtureRows.filter(f=>currentTab==="hoje"|| (currentTab==="ao-vivo"?liveStates.includes(f.state):currentTab==="encerrados"?finishedStates.includes(f.state):!liveStates.includes(f.state)&&!finishedStates.includes(f.state)));
  matchesEl.replaceChildren();
  if(!list.length){const el=document.createElement("div");el.className="empty";const title=document.createElement("strong");title.textContent="Nenhuma partida disponível";el.append(title,document.createTextNode("Não há dados confirmados para este filtro."));matchesEl.append(el);return;}
- const leagueNames={648:"Brasileirão Série A",651:"Brasileirão Série B",1122:"Copa do Brasil",271:"Libertadores",1123:"Sul-Americana"};
+ const leagueNames={648:"Brasileirão Série A",651:"Brasileirão Série B",654:"Copa do Brasil",1122:"Libertadores",1116:"Sul-Americana"};
  const groups=new Map();
  list.sort((a,b)=>(a.timestamp||0)-(b.timestamp||0)).forEach(f=>{if(!groups.has(f.leagueId))groups.set(f.leagueId,[]);groups.get(f.leagueId).push(f)});
  for(const [league,fixtures] of groups){
@@ -99,7 +99,7 @@ async function showTable(league){
  tableStatus.textContent="Carregando...";
  tableContent.textContent="Consultando classificação...";
  try{
-  const response=await fetch("/api/futscore/standings?season="+(league==="a"?26763:26764));
+  const response=await fetch("/api/futscore/standings?season="+(league==="a"?26763:27198));
   if(!response.ok)throw new Error("Tabela indisponível");
   const rows=tableRows(await response.json());
   if(selectedTable!==league)return;
