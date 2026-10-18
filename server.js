@@ -69,7 +69,7 @@ async function startServer() {
 
   // FutScore: proxy de leitura no servidor; nunca expor tokens ao navegador.
   app.get("/api/futscore/fixtures", async (req, res) => {
-    const upstream = process.env.FUTSCORE_FIXTURES_URL;
+    const upstream = process.env.FUTSCORE_FIXTURES_URL || "https://mgliqdahiryxdhssybzv.supabase.co/functions/v1/sportmonks-cache";
     if (!upstream) return res.status(503).json({ error: "Integração FutScore ainda não configurada." });
     try {
       const date = String(req.query.date || "");
@@ -78,7 +78,7 @@ async function startServer() {
       }
       const url = new URL(upstream);
       if (url.protocol !== "https:") return res.status(500).json({ error: "URL de origem deve usar HTTPS." });
-      url.searchParams.set("date", date);
+      url.searchParams.set("path", "fixtures/date/" + date);
       const headers = { accept: "application/json" };
       if (process.env.FUTSCORE_API_TOKEN) headers.authorization = "Bearer " + process.env.FUTSCORE_API_TOKEN;
       const response = await fetch(url, { headers, signal: AbortSignal.timeout(10000) });
