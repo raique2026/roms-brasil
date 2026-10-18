@@ -16,7 +16,7 @@
 const competitions=["Brasileirão Série A","Brasileirão Série B","Copa do Brasil","Libertadores","Sul-Americana"];
 const comps=document.getElementById("comps"),side=document.getElementById("side");
 competitions.forEach((name,i)=>{const item=document.createElement("div");item.className="comp";const region=document.createElement("span");region.textContent=i<3?"Brasil":"América do Sul";const title=document.createElement("strong");title.textContent=name;item.append(region,title);comps.append(item);const b=document.createElement("button");b.className="league";const dot=document.createElement("span");dot.className="dot";b.append(dot,document.createTextNode(name));b.addEventListener("click",()=>document.getElementById("competicoes").scrollIntoView({behavior:"smooth"}));side.append(b)});
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));const name=({hoje:"de hoje","ao-vivo":"ao vivo",proximos:"próximos",encerrados:"encerrados"})[b.dataset.tab];document.querySelector("#matches .empty strong").textContent="Jogos "+name+" em preparação"}));
+
 document.getElementById("year").textContent=new Date().getFullYear();
 
 const pad=n=>String(n).padStart(2,"0");
