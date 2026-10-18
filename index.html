@@ -20,7 +20,7 @@ document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()
 document.getElementById("year").textContent=new Date().getFullYear();
 
 const pad=n=>String(n).padStart(2,"0");
-const today=new Date(), localDate=today.getFullYear()+"-"+pad(today.getMonth()+1)+"-"+pad(today.getDate());
+const today=new Date(), localDate=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(today);
 const statusEl=document.getElementById("status"), matchesEl=document.getElementById("matches");
 const allowedLeagues=new Set([648,651,1122,271,1123]);
 function normalizeFixtures(payload){
@@ -31,14 +31,14 @@ function normalizeFixtures(payload){
   const home=participants.find(p=>p.meta?.location==="home"||p.location==="home");
   const away=participants.find(p=>p.meta?.location==="away"||p.location==="away");
   const leagueId=Number(f.league_id??f.league?.id??f.leagues?.[0]?.id);
-  const time=f.starting_at??f.starting_at_timestamp??f.fixture?.date??f.date??"";
+  const time=f.starting_at_timestamp??f.starting_at??f.fixture?.date??f.date??"";
   const timestamp=typeof time==="number"?time*1000:Date.parse(String(time).replace(" ","T"));
   const name=p=>p?.name??p?.participant?.name??"";
   const scores=Array.isArray(f.scores)?f.scores:[];
-  const scoreFor=(side)=>scores.find(x=>x.description==="CURRENT"&&(x.score?.participant===side||x.participant===side))?.score?.goals;
+  const scoreFor=(side)=>{const p=side==="home"?home:away;return scores.find(x=>x.description==="CURRENT"&&Number(x.participant_id)===Number(p?.id))?.score?.goals??scores.find(x=>x.description==="CURRENT"&&x.score?.participant===side)?.score?.goals};
   const homeName=name(home)||f.teams?.home?.name||f.home?.name||f.homeTeam?.name||"";
   const awayName=name(away)||f.teams?.away?.name||f.away?.name||f.awayTeam?.name||"";
-  const state=String(f.state?.state??f.state?.name??f.fixture?.status?.short??f.status??"").toUpperCase();
+  const state=String(f.state?.state??f.state?.short_name??f.state?.name??f.fixture?.status?.short??f.status??"").toUpperCase();
   return {homeName,awayName,leagueId,timestamp,state,homeScore:scoreFor("home")??f.goals?.home??f.score?.home,awayScore:scoreFor("away")??f.goals?.away??f.score?.away};
  }).filter(f=>allowedLeagues.has(f.leagueId)&&f.homeName&&f.awayName);
 }
@@ -58,13 +58,13 @@ function renderMatches(){
   el.append(names,result);matchesEl.append(el);
  });
 }
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.tab;if(fixtureRows.length)renderMatches()}));
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.tab;renderMatches()}));
 (async()=>{
  try{
   const response=await fetch("/api/futscore/fixtures?date="+encodeURIComponent(localDate),{headers:{accept:"application/json"}});
   if(!response.ok)throw new Error("Serviço ainda não disponível");
   fixtureRows=normalizeFixtures(await response.json());
-  statusEl.textContent="Dados do backend FutScore";
+  statusEl.textContent="Dados do backend FutScore · "+fixtureRows.length+" partidas";
   renderMatches();
  }catch(e){statusEl.textContent="Integração aguardando configuração"; }
 })();
