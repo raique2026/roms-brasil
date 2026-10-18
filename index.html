@@ -16,7 +16,7 @@
 const leagueIds=[648,651,654,1122,1116];
 const competitions=["Brasileirão Série A","Brasileirão Série B","Copa do Brasil","Libertadores","Sul-Americana"];
 const comps=document.getElementById("comps"),side=document.getElementById("side");
-competitions.forEach((name,i)=>{const item=document.createElement("div");item.className="comp";const region=document.createElement("span");region.textContent=i<3?"Brasil":"América do Sul";const title=document.createElement("strong");title.textContent=name;item.append(region,title);item.dataset.filterLeague=String(leagueIds[i]);item.setAttribute("role","button");item.tabIndex=0;item.setAttribute("aria-pressed","false");item.addEventListener("click",()=>chooseLeague(leagueIds[i]));item.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();chooseLeague(leagueIds[i])}});comps.append(item);const b=document.createElement("button");b.className="league";b.dataset.filterLeague=String(leagueIds[i]);b.setAttribute("aria-pressed","false");const dot=document.createElement("span");dot.className="dot";b.append(dot,document.createTextNode(name));b.addEventListener("click",()=>chooseLeague(leagueIds[i]));side.append(b)});
+competitions.forEach((name,i)=>{const item=document.createElement("div");item.className="comp";const region=document.createElement("span");region.textContent=i<3?"Brasil":"América do Sul";const title=document.createElement("strong");title.textContent=name;item.append(region,title);item.dataset.filterLeague=String(leagueIds[i]);item.setAttribute("role","button");item.tabIndex=0;item.setAttribute("aria-pressed","false");item.addEventListener("click",()=>location.assign("/pagina.html?tipo=competicao&id="+leagueIds[i]));item.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();location.assign("/pagina.html?tipo=competicao&id="+leagueIds[i])}});comps.append(item);const b=document.createElement("button");b.className="league";b.dataset.filterLeague=String(leagueIds[i]);b.setAttribute("aria-pressed","false");const dot=document.createElement("span");dot.className="dot";b.append(dot,document.createTextNode(name));b.addEventListener("click",()=>location.assign("/pagina.html?tipo=competicao&id="+leagueIds[i]));side.append(b)});
 
 document.getElementById("year").textContent=new Date().getFullYear();
 
@@ -43,7 +43,7 @@ function normalizeFixtures(payload){
   const homeName=name(home)||f.teams?.home?.name||f.home?.name||f.homeTeam?.name||"";
   const awayName=name(away)||f.teams?.away?.name||f.away?.name||f.awayTeam?.name||"";
   const state=String(f.state?.state??f.state?.short_name??f.state?.name??f.fixture?.status?.short??f.status??"").toUpperCase();
-  return {id:Number(f.id),homeName,awayName,leagueId,timestamp,state,homeLogo:home?.image_path??f.teams?.home?.logo??null,awayLogo:away?.image_path??f.teams?.away?.logo??null,homeScore:scoreFor("home")??f.goals?.home??f.score?.home,awayScore:scoreFor("away")??f.goals?.away??f.score?.away};
+  return {id:Number(f.id),homeName,awayName,homeId:Number(home?.id),awayId:Number(away?.id),leagueId,timestamp,state,homeLogo:home?.image_path??f.teams?.home?.logo??null,awayLogo:away?.image_path??f.teams?.away?.logo??null,homeScore:scoreFor("home")??f.goals?.home??f.score?.home,awayScore:scoreFor("away")??f.goals?.away??f.score?.away};
  }).filter(f=>allowedLeagues.has(f.leagueId)&&f.homeName&&f.awayName);
 }
 let currentTab="hoje", fixtureRows=[], selectedLeague=null;
@@ -58,9 +58,9 @@ function renderMatches(){
  const groups=new Map();
  list.sort((a,b)=>(a.timestamp||0)-(b.timestamp||0)).forEach(f=>{if(!groups.has(f.leagueId))groups.set(f.leagueId,[]);groups.get(f.leagueId).push(f)});
  for(const [league,fixtures] of groups){
-  const heading=document.createElement("div");heading.className="league-heading";heading.textContent=leagueNames[league]||"Competição";matchesEl.append(heading);
+  const heading=document.createElement("div");heading.className="league-heading";heading.textContent=leagueNames[league]||"Competição";heading.style.cursor="pointer";heading.title="Abrir página da competição";heading.addEventListener("click",()=>location.assign("/pagina.html?tipo=competicao&id="+league));matchesEl.append(heading);
   fixtures.forEach(f=>{
-   const el=document.createElement("div");el.className="match-row";el.style.cursor="pointer";el.tabIndex=0;el.setAttribute("role","button");el.setAttribute("aria-label","Ver detalhes de "+f.homeName+" e "+f.awayName);el.addEventListener("click",()=>openFixture(f));el.addEventListener("keydown",e=>{if(e.key==="Enter"){openFixture(f)}});
+   const el=document.createElement("div");el.className="match-row";el.style.cursor="pointer";el.tabIndex=0;el.setAttribute("role","button");el.setAttribute("aria-label","Ver detalhes de "+f.homeName+" e "+f.awayName);el.addEventListener("click",()=>location.assign("/pagina.html?tipo=partida&id="+f.id));el.addEventListener("keydown",e=>{if(e.key==="Enter"){location.assign("/pagina.html?tipo=partida&id="+f.id)}});
    const meta=document.createElement("div");meta.className="match-meta";
    const when=Number.isFinite(f.timestamp)?new Date(f.timestamp).toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo",hour:"2-digit",minute:"2-digit"}):"—";
    meta.textContent=when;
@@ -69,7 +69,7 @@ function renderMatches(){
     const line=document.createElement("div");line.className="team-line";
     if(typeof logo==="string"&&/^https:\/\//.test(logo)){const img=document.createElement("img");img.src=logo;img.alt="";img.loading="lazy";img.className="team-logo";img.referrerPolicy="no-referrer";line.append(img)}
     else{const badge=document.createElement("span");badge.className="team-placeholder";badge.textContent=name.slice(0,2).toUpperCase();line.append(badge)}
-    const label=document.createElement("span");label.textContent=name;line.append(label);teams.append(line);
+    const label=document.createElement("span");label.textContent=name;line.append(label);line.style.cursor="pointer";line.title="Abrir página do clube";const teamId=name===f.homeName?f.homeId:f.awayId;line.addEventListener("click",e=>{e.stopPropagation();if(Number.isSafeInteger(teamId)&&teamId>0)location.assign("/pagina.html?tipo=time&id="+teamId)});teams.append(line);
    });
    const score=document.createElement("div");score.className="match-score";
    if(f.homeScore!=null&&f.awayScore!=null){score.textContent=f.homeScore+" - "+f.awayScore}
