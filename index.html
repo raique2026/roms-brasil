@@ -82,7 +82,7 @@ function renderMatches(){
   });
  }
 }
-document.getElementById("search-games").addEventListener("input",e=>{searchQuery=e.target.value.trim().toLocaleLowerCase("pt-BR");renderMatches()});document.querySelectorAll("[data-quick]").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.quick;document.querySelectorAll("[data-tab]").forEach(t=>t.classList.toggle("active",t.dataset.tab===currentTab));document.getElementById("jogos").scrollIntoView({behavior:"smooth"});renderMatches()}));document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.tab;renderMatches()}));
+document.getElementById("search-games").addEventListener("input",e=>{searchQuery=e.target.value.trim().toLocaleLowerCase("pt-BR");renderMatches()});document.querySelectorAll("[data-quick]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.quick==="ao-vivo"){location.assign("/ao-vivo.html");return}currentTab=b.dataset.quick;document.querySelectorAll("[data-tab]").forEach(t=>t.classList.toggle("active",t.dataset.tab===currentTab));document.getElementById("jogos").scrollIntoView({behavior:"smooth"});renderMatches()}));document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab==="ao-vivo"){location.assign("/ao-vivo.html");return}currentTab=b.dataset.tab;renderMatches()}));
 async function fetchJsonWithTimeout(url){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),15000);try{const response=await fetch(url,{headers:{accept:"application/json"},signal:controller.signal});if(!response.ok)throw new Error("HTTP "+response.status);return await response.json()}finally{clearTimeout(timer)}}
 async function loadFixtures(){
  const request=++requestSequence;
