@@ -12,8 +12,9 @@ async function run(){
   if(!names[id])throw Error("Competição não disponível");
   title.textContent=names[id];content.replaceChildren();
   const leagueId=id;
-  tabs(["Jogos","Classificação","Detalhes"],(tab,p)=>{
+  tabs(["Jogos","Classificação",...(leagueId===654||leagueId===1122||leagueId===1116?["Mata-mata"]:[]),"Detalhes"],(tab,p)=>{
    if(tab==="Detalhes"){text("Competição: "+names[leagueId],"h2",p);text("Resultados e classificação são consultados diretamente pela integração SportMonks.","p",p);return}
+   if(tab==="Mata-mata"){text("Confrontos de mata-mata","h3",p);text("A consulta atual retorna partidas por data. A chave completa da temporada ainda depende do endpoint de fases da SportMonks.","p",p);const a=document.createElement("a");a.href="/#jogos";a.textContent="Consultar jogos disponíveis";p.append(a);return}
    if(tab==="Classificação"){
     if(leagueId!==648&&leagueId!==651){text("Classificação por grupos ou mata-mata ainda não disponível nesta versão.","p",p);return}
     text("Carregando classificação...","p",p);
