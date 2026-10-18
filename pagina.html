@@ -14,7 +14,28 @@ async function run(){
   const leagueId=id;
   tabs(["Jogos","Classificação",...(leagueId===654||leagueId===1122||leagueId===1116?["Mata-mata"]:[]),"Detalhes"],(tab,p)=>{
    if(tab==="Detalhes"){text("Competição: "+names[leagueId],"h2",p);text("Resultados e classificação são consultados diretamente pela integração SportMonks.","p",p);return}
-   if(tab==="Mata-mata"){text("Confrontos de mata-mata","h3",p);text("A consulta atual retorna partidas por data. A chave completa da temporada ainda depende do endpoint de fases da SportMonks.","p",p);const a=document.createElement("a");a.href="/#jogos";a.textContent="Consultar jogos disponíveis";p.append(a);return}
+   if(tab==="Mata-mata"){
+    text("Carregando confrontos oficiais...","p",p);
+    const season={654:26784,1122:27897,1116:26785}[leagueId];
+    get("/api/futscore/bracket?season="+season).then(payload=>{
+     if(!p.isConnected)return;p.replaceChildren();
+     const rows=Array.isArray(payload)?payload:Array.isArray(payload?.data)?payload.data:[];
+     const knock=rows.filter(f=>f.stage&&(/final|oitav|quart|semi|round of|knock|fase|playoff/i.test(f.stage.name??"")||f.aggregate_id!=null));
+     if(!knock.length){text("Nenhum confronto de mata-mata confirmado na resposta da SportMonks.","p",p);return}
+     const stages=new Map();knock.forEach(f=>{const key=f.stage?.name??"Mata-mata";if(!stages.has(key))stages.set(key,[]);stages.get(key).push(f)});
+     for(const [stage,fixtures] of stages){
+      text(stage,"h3",p);
+      const ties=new Map();fixtures.forEach(f=>{const ps=Array.isArray(f.participants)?f.participants:[];const ids=ps.map(x=>x.id).sort((a,b)=>a-b).join("-");const key=f.aggregate_id!=null?"agg:"+f.aggregate_id:ids?"teams:"+ids:"fixture:"+f.id;if(!ties.has(key))ties.set(key,[]);ties.get(key).push(f)});
+      for(const matches of ties.values()){
+       const box=document.createElement("div");box.className="row";p.append(box);
+       matches.sort((a,b)=>String(a.starting_at??"").localeCompare(String(b.starting_at??"")));
+       matches.forEach(f=>{const ps=Array.isArray(f.participants)?f.participants:[],home=ps.find(x=>x.meta?.location==="home"),away=ps.find(x=>x.meta?.location==="away");const a=document.createElement("a");a.href="/pagina.html?tipo=partida&id="+f.id;a.style.display="block";const score=Array.isArray(f.scores)?f.scores:[];const goals=x=>score.find(y=>y.description==="CURRENT"&&Number(y.participant_id)===Number(x?.id))?.score?.goals;const h=goals(home),v=goals(away);a.textContent=(home?.name??ps[0]?.name??"Mandante")+" "+(h??"–")+" × "+(v??"–")+" "+(away?.name??ps[1]?.name??"Visitante")+(f.leg?" · "+f.leg:"");box.append(a)})
+      }
+     }
+     if(payload?.complete===false)text("Parte dos jogos não foi retornada; os confrontos podem estar incompletos.","p",p)
+    }).catch(()=>{if(p.isConnected){p.replaceChildren();text("Não foi possível consultar o mata-mata nesta temporada.","p",p)}});
+    return
+   }
    if(tab==="Classificação"){
     if(leagueId!==648&&leagueId!==651){text("Classificação por grupos ou mata-mata ainda não disponível nesta versão.","p",p);return}
     text("Carregando classificação...","p",p);
