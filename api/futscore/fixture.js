@@ -5,7 +5,7 @@ module.exports=async function handler(req,res){
  try{
   const url=new URL("https://mgliqdahiryxdhssybzv.supabase.co/functions/v1/sportmonks-cache");
   url.searchParams.set("path","fixtures/"+id);
-  url.searchParams.set("include","participants;state;scores;league;events;lineups;venue;statistics");
+  url.searchParams.set("include","participants;state;scores;league;events.type;events.player;lineups.player;lineups.type;venue;statistics.type");
   const upstream=await fetch(url,{headers:{accept:"application/json"},signal:AbortSignal.timeout(12000)});
   if(!upstream.ok)return res.status(502).json({error:"Detalhes indisponíveis",upstream_status:upstream.status});
   res.setHeader("Cache-Control","public,max-age=15,s-maxage=30");
