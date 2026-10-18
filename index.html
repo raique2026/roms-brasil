@@ -9,7 +9,7 @@
 <div class="wrap layout"><aside class="sidebar"><h3>Competições</h3><div id="side"></div></aside><main>
 <section class="hero"><div class="eyebrow">Seu futebol em um só lugar</div><h1>O futebol acontece aqui.</h1><p>Resultados, tabelas, escalações e estatísticas das principais competições sul-americanas.</p></section>
 <section id="jogos"><div class="section-head"><h2>Partidas</h2><span class="status" id="status">Integração de dados em preparação</span></div><div class="date-nav"><button id="date-prev" type="button" aria-label="Dia anterior">‹</button><span id="date-label">Hoje</span><button id="date-next" type="button" aria-label="Próximo dia">›</button><button id="date-today" type="button">Hoje</button></div><div class="tabs" id="tabs"><button class="tab active" data-tab="hoje">Hoje</button><button class="tab" data-tab="ao-vivo">Ao vivo</button><button class="tab" data-tab="proximos">Próximos</button><button class="tab" data-tab="encerrados">Encerrados</button></div><div class="card" id="matches" aria-live="polite"><div class="empty"><strong>Em preparação</strong>Os jogos aparecerão aqui quando a integração com o backend FutScore estiver configurada. Nenhum resultado fictício será exibido.</div></div></section>
-<section id="competicoes"><div class="section-head"><h2>Competições</h2></div><div class="comp-grid" id="comps"></div></section>
+<section id="detalhes" hidden><div class="section-head"><h2>Detalhes da partida</h2><button class="tab" id="close-detail">Fechar</button></div><div class="card" id="detail-content"></div></section><section id="competicoes"><div class="section-head"><h2>Competições</h2></div><div class="comp-grid" id="comps"></div></section>
 <section id="classificacao"><div class="section-head"><h2>Classificação</h2><span class="status" id="table-status">Série A</span></div><div class="tabs"><button class="tab active" data-league-table="a">Série A</button><button class="tab" data-league-table="b">Série B</button></div><div class="card" id="table-content">Carregando tabela...</div></section><section id="sobre"><div class="section-head"><h2>Sobre o FutScore</h2></div><div class="card"><p>Projeto independente de futebol, desenvolvido no Brasil. A versão web está em construção e compartilhará os dados e as personalizações do aplicativo Android.</p><p>Novidades: <a href="https://x.com/_FutScore_" target="_blank" rel="noopener noreferrer" style="color:#8cc7ff">@_FutScore_ no X ↗</a></p></div></section>
 </main></div><footer class="footer"><div class="wrap">© <span id="year"></span> FutScore · Projeto independente · <a href="https://x.com/_FutScore_" target="_blank" rel="noopener noreferrer">X oficial</a></div></footer>
 <script>
@@ -42,7 +42,7 @@ function normalizeFixtures(payload){
   const homeName=name(home)||f.teams?.home?.name||f.home?.name||f.homeTeam?.name||"";
   const awayName=name(away)||f.teams?.away?.name||f.away?.name||f.awayTeam?.name||"";
   const state=String(f.state?.state??f.state?.short_name??f.state?.name??f.fixture?.status?.short??f.status??"").toUpperCase();
-  return {homeName,awayName,leagueId,timestamp,state,homeLogo:home?.image_path??f.teams?.home?.logo??null,awayLogo:away?.image_path??f.teams?.away?.logo??null,homeScore:scoreFor("home")??f.goals?.home??f.score?.home,awayScore:scoreFor("away")??f.goals?.away??f.score?.away};
+  return {id:Number(f.id),homeName,awayName,leagueId,timestamp,state,homeLogo:home?.image_path??f.teams?.home?.logo??null,awayLogo:away?.image_path??f.teams?.away?.logo??null,homeScore:scoreFor("home")??f.goals?.home??f.score?.home,awayScore:scoreFor("away")??f.goals?.away??f.score?.away};
  }).filter(f=>allowedLeagues.has(f.leagueId)&&f.homeName&&f.awayName);
 }
 let currentTab="hoje", fixtureRows=[], selectedLeague=null;
@@ -60,7 +60,7 @@ function renderMatches(){
  for(const [league,fixtures] of groups){
   const heading=document.createElement("div");heading.className="league-heading";heading.textContent=leagueNames[league]||"Competição";matchesEl.append(heading);
   fixtures.forEach(f=>{
-   const el=document.createElement("div");el.className="match-row";
+   const el=document.createElement("div");el.className="match-row";el.style.cursor="pointer";el.tabIndex=0;el.setAttribute("role","button");el.setAttribute("aria-label","Ver detalhes de "+f.homeName+" e "+f.awayName);el.addEventListener("click",()=>openFixture(f));el.addEventListener("keydown",e=>{if(e.key==="Enter"){openFixture(f)}});
    const meta=document.createElement("div");meta.className="match-meta";
    const when=Number.isFinite(f.timestamp)?new Date(f.timestamp).toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo",hour:"2-digit",minute:"2-digit"}):"—";
    meta.textContent=when;
@@ -98,6 +98,35 @@ document.getElementById("date-next").addEventListener("click",()=>{selectedDate=
 document.getElementById("date-today").addEventListener("click",()=>{selectedDate=localDate;loadFixtures()});
 loadFixtures();
 
+const detailSection=document.getElementById("detalhes"),detailContent=document.getElementById("detail-content");
+document.getElementById("close-detail").addEventListener("click",()=>{detailSection.hidden=true;document.getElementById("jogos").scrollIntoView({behavior:"smooth"})});
+async function openFixture(f){
+ if(!Number.isSafeInteger(f.id)||f.id<=0)return;
+ detailSection.hidden=false;detailContent.replaceChildren();detailContent.textContent="Carregando detalhes...";
+ detailSection.scrollIntoView({behavior:"smooth"});
+ try{
+  const response=await fetch("/api/futscore/fixture?id="+f.id);
+  if(!response.ok)throw new Error("Detalhes indisponíveis");
+  const data=await response.json(),fixture=data?.data??data?.response??data;
+  detailContent.replaceChildren();
+  const title=document.createElement("h3");title.textContent=f.homeName+"  "+(f.homeScore??"—")+" × "+(f.awayScore??"—")+"  "+f.awayName;detailContent.append(title);
+  const status=document.createElement("p");status.textContent="Situação: "+(fixture.state?.name??f.state);detailContent.append(status);
+  if(fixture.venue?.name){const venue=document.createElement("p");venue.textContent="Estádio: "+fixture.venue.name;detailContent.append(venue)}
+  const events=Array.isArray(fixture.events)?fixture.events:[];
+  const heading=document.createElement("h4");heading.textContent="Eventos da partida";detailContent.append(heading);
+  if(!events.length){const p=document.createElement("p");p.textContent="Nenhum evento disponível pela API.";detailContent.append(p)}
+  events.sort((a,b)=>(a.minute??0)-(b.minute??0)).forEach(event=>{
+   const line=document.createElement("p");line.style.cssText="border-top:1px solid #2b3647;padding:10px 0;margin:0";
+   const who=event.player_name??event.player?.display_name??event.player?.name??"";
+   const type=event.type?.name??event.type?.developer_name??event.info??"Evento";
+   line.textContent=(event.minute!=null?event.minute+"' · ":"")+type+(who?" · "+who:"");detailContent.append(line);
+  });
+  const lineups=Array.isArray(fixture.lineups)?fixture.lineups:[];
+  const lineupHeading=document.createElement("h4");lineupHeading.textContent="Escalações";detailContent.append(lineupHeading);
+  if(!lineups.length){const p=document.createElement("p");p.textContent="Escalações não disponíveis.";detailContent.append(p)}
+  else{const p=document.createElement("p");p.textContent=lineups.length+" jogadores registrados na API.";detailContent.append(p)}
+ }catch(e){detailContent.textContent="Não foi possível carregar os detalhes desta partida."}
+}
 const tableContent=document.getElementById("table-content");
 const tableStatus=document.getElementById("table-status");
 let selectedTable="a";
