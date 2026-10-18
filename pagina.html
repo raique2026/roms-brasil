@@ -30,7 +30,31 @@ async function run(){
    if(tab==="Estatísticas"){if(!stats.length)text("Estatísticas não disponíveis.","p",p);stats.forEach(x=>text((x.type?.name??"Estatística")+" · "+(ps.find(p=>p.id===x.participant_id)?.name??"Equipe")+": "+(x.data?.value??x.value??"—"),"div",p).className="row")}
   });
  }else{
-  title.textContent="Perfil do clube";content.replaceChildren();text("Perfil do clube · ID SportMonks: "+id);text("O acesso à página do clube já funciona. Dados completos, elenco e jogos dependem da integração do endpoint de equipes.");const a=document.createElement("a");a.href="/";a.textContent="Voltar às partidas";content.append(a)
+  const team=await get("/api/futscore/team?id="+id);
+  if(!team||typeof team!=="object"||Array.isArray(team))throw Error("Dados do clube indisponíveis");
+  title.textContent=team.name??"Clube";content.replaceChildren();
+  const head=document.createElement("div");head.className="club";head.style.gap="18px";
+  if(typeof team.image_path==="string"&&team.image_path.startsWith("https://")){const img=document.createElement("img");img.src=team.image_path;img.alt="Escudo do clube";img.style.cssText="width:78px;height:78px;object-fit:contain";img.onerror=()=>img.remove();head.append(img)}
+  const info=document.createElement("div");text(team.name??"Clube","h2",info);
+  if(team.short_code)text("Sigla: "+team.short_code,"p",info);
+  if(team.founded)text("Fundação: "+team.founded,"p",info);
+  head.append(info);content.append(head);
+  tabs(["Visão geral","Jogos","Elenco"],(tab,p)=>{
+   if(tab==="Visão geral"){
+    if(team.venue?.name)text("Estádio: "+team.venue.name,"p",p);
+    if(team.country?.name)text("País: "+team.country.name,"p",p);
+    if(team.coaches?.length)team.coaches.forEach(c=>text("Técnico: "+(c.name??c.coach?.name??"Não informado"),"p",p));
+    if(!team.venue?.name&&!team.country?.name&&!team.coaches?.length)text("Informações adicionais ainda não disponíveis na resposta da API.","p",p)
+   }else if(tab==="Elenco"){
+    const players=Array.isArray(team.players)?team.players:Array.isArray(team.squad)?team.squad:[];
+    if(!players.length)text("Elenco não disponível neste endpoint.","p",p);
+    players.forEach(x=>text(x.player?.display_name??x.player?.name??x.name??"Jogador","div",p).className="row")
+   }else{
+    const fixtures=Array.isArray(team.fixtures)?team.fixtures:[];
+    if(!fixtures.length)text("Jogos do clube ainda não disponíveis neste endpoint.","p",p);
+    fixtures.forEach(x=>{const a=document.createElement("a");a.href="/pagina.html?tipo=partida&id="+x.id;a.textContent=x.name??("Partida "+x.id);a.className="row";a.style.display="block";p.append(a)})
+   }
+  })
  }
 }
 run().catch(e=>{title.textContent="Informações indisponíveis";content.replaceChildren();text("Não foi possível carregar esta página. "+e.message);const b=document.createElement("button");b.textContent="Tentar novamente";b.onclick=()=>{title.textContent="Carregando...";content.textContent="Consultando...";run().catch(()=>{content.textContent="Falha na consulta."})};content.append(b)});
